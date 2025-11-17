@@ -26,7 +26,7 @@ export const calculateBattle = (cards: MovieCard[]): BattleResult => {
   });
   
   // Genre synergies
-  const genres = cards.flatMap(c => c.genres.map(g => g.name));
+  const genres = cards.flatMap(c => c.genres.slice(0, 2).map(g => g.name));
   const genreCounts = genres.reduce((acc, g) => {
     acc[g] = (acc[g] || 0) + 1;
     return acc;
@@ -68,7 +68,7 @@ export const calculateBattle = (cards: MovieCard[]): BattleResult => {
     synergies.push(`💥 Action Bonus: +300 damage`);
   }
   if (genres.includes('Horror')) {
-    const lifesteal = Math.round(totalDamage * 0.2);
+    const lifesteal = Math.round(totalDamage * 0.1);
     synergies.push(`🩸 Horror Lifesteal: Heal ${lifesteal} HP`);
   }
   

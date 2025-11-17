@@ -148,12 +148,12 @@ const ShopScreen: React.FC<ShopScreenProps> = ({ onPick, deck, usedCardIds }) =>
                         isSelected={false}
                         onSelect={() => handleCardSelect(card)}
                       />
-                      <button
+                      {/* <button
                         onClick={() => handleCardSelect(card)}
                         className="mt-2 bg-yellow-500 hover:bg-yellow-600 text-black font-bold px-6 py-2 rounded-lg"
                       >
                         Select
-                      </button>
+                      </button> */}
                     </div>
                   ))}
                 </div>

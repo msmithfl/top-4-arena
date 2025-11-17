@@ -7,6 +7,7 @@ import type { MovieCard, BossCard, BattleResult } from '../types';
 
 interface GameSidebarProps {
   turn: number;
+  round: number;
   playerHP: number;
   selectedCards: number[];
   hand: MovieCard[];
@@ -17,6 +18,7 @@ interface GameSidebarProps {
 
 const GameSidebar: React.FC<GameSidebarProps> = ({
   turn,
+  round,
   playerHP,
   selectedCards,
   hand,
@@ -26,7 +28,7 @@ const GameSidebar: React.FC<GameSidebarProps> = ({
 }) => {
   return (
     <div className="w-80 shrink-0 flex flex-col gap-4 h-full overflow-hidden">
-      <TurnCounter turn={turn} />
+      <TurnCounter turn={turn} round={round}/>
       <LifePoints playerHP={playerHP} />
       <AttackPreview
         selectedCards={selectedCards}

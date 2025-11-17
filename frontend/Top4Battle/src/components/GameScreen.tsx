@@ -28,6 +28,7 @@ const QuadFeatureGame: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [pickedMovies, setPickedMovies] = useState<MovieCard[] | null>(null);
   const [usedCardIds, setUsedCardIds] = useState<number[]>([]);
+  const [round, setRound] = useState(1);
 
   // Modify your useEffect to depend on pickedMovies
   useEffect(() => {
@@ -184,7 +185,7 @@ const QuadFeatureGame: React.FC = () => {
     let newPlayerHP = playerHP - damageTaken;
 
     if (genres.includes('Horror')) {
-      lifestealAmount = Math.round(playerDamage * 0.2);
+      lifestealAmount = Math.round(playerDamage * 0.1);
       setBattleLog(prev => [...prev, `🩸 You lifesteal ${lifestealAmount} HP!`]);
       newPlayerHP = Math.min(3000, Math.max(0, newPlayerHP + lifestealAmount));
     } else {
@@ -260,8 +261,11 @@ const QuadFeatureGame: React.FC = () => {
     
     // Check win/loss
     if (newBossHP === 0) {
-      setGameState('shop');
-      setUsedCardIds([]);
+      // Delay shop opening for 1.5 seconds to show victory
+      setTimeout(() => {
+        setGameState('shop');
+        setUsedCardIds([]);
+      }, 1500);
     } else if (newPlayerHP <= 0) {
       setGameState('lost');
     }
@@ -337,6 +341,7 @@ const QuadFeatureGame: React.FC = () => {
       setBattleLog([]);
       setUsedCardIds([]);
       setGameState('playing');
+      setRound(prev => prev + 1);
       
       // Use the passed deck or current deck
       const deckToUse = newDeck || deck;
@@ -397,6 +402,7 @@ const QuadFeatureGame: React.FC = () => {
         {/* Left Sidebar - Player Stats */}
         <GameSidebar
           turn={turn}
+          round={round}
           playerHP={playerHP}
           selectedCards={selectedCards}
           hand={hand}
@@ -421,7 +427,7 @@ const QuadFeatureGame: React.FC = () => {
               <p className="text-xl mb-6">{boss.title} was too powerful...</p>
               <button
                 onClick={() => window.location.href = '/'}
-                className="bg-purple-600 hover:bg-purple-700 px-8 py-3 rounded-lg font-bold text-xl"
+                className="cursor-pointer hover:scale-105 transition-all bg-purple-600 hover:bg-purple-700 px-8 py-3 rounded-lg font-bold text-xl"
               >
                 Back to Home
               </button>
