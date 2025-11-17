@@ -67,7 +67,7 @@ const LandingPage = () => {
             className="bg-yellow-600 hover:bg-yellow-700 text-black text-lg md:text-xl justify-center font-bold py-4 px-8 rounded-full shadow-2xl transform hover:scale-105 transition-all duration-200 flex items-center gap-2 w-full md:w-auto cursor-pointer"
           >
             <Mail className="w-5 h-5" />
-            Feedback
+            Send Feedback
           </button>
         </div>
 

@@ -268,13 +268,16 @@ const QuadFeatureGame: React.FC = () => {
   };
 
   // New handler for shop card selection
-  const handleShopPick = (card: MovieCard) => {
-    // Add the picked card to the deck
-    const updatedDeck = [...deck, card];
-    setDeck(updatedDeck);
-    
-    // Pass the updated deck to resetRound
-    resetRound(updatedDeck);
+  const handleShopPick = (card: MovieCard | null) => {
+    if (card) {
+      // Correct answer - add card to deck
+      const updatedDeck = [...deck, card];
+      setDeck(updatedDeck);
+      resetRound(updatedDeck);
+    } else {
+      // Wrong answer - continue without adding card
+      resetRound();
+    }
   };
 
   // const resetGame = async () => {
