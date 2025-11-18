@@ -11,6 +11,7 @@ import PickTopFilms from './PickTopFilms';
 import DeckPopup from './DeckPopup';
 import ShopScreen from './ShopScreen';
 import { PREBUILT_BOSSES } from '../data/prebuiltBosses';
+import { createPrebuiltBossCard } from '../utils/bossCard';
 
 const GameScreen: React.FC = () => {
   const [deck, setDeck] = useState<MovieCard[]>([]);
@@ -80,32 +81,7 @@ const GameScreen: React.FC = () => {
 
         // Set boss from prebuilt list, mapping poster_url to poster_path for compatibility
         const rawBoss = getRandomBoss();
-        const bossCard = {
-          ...rawBoss,
-          id: -1, // BossCard expects a number, but prebuilt uses string; -1 is safe for display only
-          poster_path: rawBoss.poster_url, // Map poster_url to poster_path
-          vote_average: 0,
-          vote_count: 0,
-          revenue: 0,
-          runtime: 0,
-          release_date: '',
-          popularity: 0,
-          starPowerTier: '',
-          revenueTier: '',
-          eraTier: '',
-          decade: '',
-          ability: {
-            ...rawBoss.ability,
-            effect: (turn: number, baseDamage: number) => {
-              const result = rawBoss.ability.effect(turn, baseDamage);
-              return {
-                damage: result.damage,
-                heal: result.heal ?? 0, // Always return a number for heal
-                message: result.message ?? '',
-              };
-            }
-          }
-        };
+        const bossCard = createPrebuiltBossCard(rawBoss);
         setBoss(bossCard);
         setBossHP(bossCard.maxHP);
 
@@ -355,67 +331,43 @@ const GameScreen: React.FC = () => {
   // Modify resetRound to accept the updated deck
   
   const resetRound = async (newDeck?: MovieCard[]) => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      // Set boss from prebuilt list
-      const rawBoss = getRandomBoss();
-      const bossCard = {
-        ...rawBoss,
-        id: -1,
-        poster_path: rawBoss.poster_url,
-        vote_average: 0,
-        vote_count: 0,
-        revenue: 0,
-        runtime: 0,
-        release_date: '',
-        popularity: 0,
-        starPowerTier: '',
-        revenueTier: '',
-        eraTier: '',
-        decade: '',
-        ability: {
-          ...rawBoss.ability,
-          effect: (turn: number, baseDamage: number) => {
-            const result = rawBoss.ability.effect(turn, baseDamage);
-            return {
-              damage: result.damage,
-              heal: result.heal ?? 0,
-              message: result.message ?? '',
-            };
-          }
-        }
-      };
-      
-      // Use the passed deck or current deck
-      const deckToUse = newDeck || deck;
-      
-      // Shuffle deck and draw new hand
-      const shuffledDeck = [...deckToUse].sort(() => Math.random() - 0.5);
-      
-      // Set all state BEFORE changing gameState to 'playing'
-      setBoss(bossCard);
-      setBossHP(bossCard.maxHP);
-      setPlayerHP(3000);
-      setTurn(1);
-      setSelectedCards([]);
-      setHasDiscarded(false);
-      setBattleLog([]);
-      setUsedCardIds([]);
-      setRound(prev => prev + 1);
-      setDeck(shuffledDeck);
-      setHand(shuffledDeck.slice(0, 7));
-      setDeckPosition(7);
-      
-      setIsLoading(false);
-      
-      // Set gameState to 'playing' LAST, after all other state is set
+  setIsLoading(true);
+  setError(null);
+  try {
+    // Set boss from prebuilt list
+    const rawBoss = getRandomBoss();
+    const bossCard = createPrebuiltBossCard(rawBoss);
+    
+    // Use the passed deck or current deck
+    const deckToUse = newDeck || deck;
+    
+    // Shuffle deck and draw new hand
+    const shuffledDeck = [...deckToUse].sort(() => Math.random() - 0.5);
+    
+    // Set all boss/game state first
+    setBoss(bossCard);
+    setBossHP(bossCard.maxHP);
+    setPlayerHP(3000);
+    setTurn(1);
+    setSelectedCards([]);
+    setHasDiscarded(false);
+    setBattleLog([]);
+    setUsedCardIds([]);
+    setRound(prev => prev + 1);
+    setDeck(shuffledDeck);
+    setHand(shuffledDeck.slice(0, 7));
+    setDeckPosition(7);
+    setIsLoading(false);
+    
+    // Wait for all state updates to flush, then change game state
+    setTimeout(() => {
       setGameState('playing');
-    } catch (err) {
-      setError('Failed to load new boss.');
-      setIsLoading(false);
-    }
-  };
+    }, 0);
+  } catch (err) {
+    setError('Failed to load new boss.');
+    setIsLoading(false);
+  }
+};
 
   if (!pickedMovies) {
     return <PickTopFilms onComplete={setPickedMovies} />;
@@ -493,7 +445,7 @@ const GameScreen: React.FC = () => {
         )}
 
         {/* Boss Section */}
-        <BossCardDisplay boss={boss} bossHP={bossHP} />
+        <BossCardDisplay key={`${boss.id}-${round}`} boss={boss} bossHP={bossHP} />
 
         {/* Spacer to push content to bottom */}
         <div className="flex-1"></div>
