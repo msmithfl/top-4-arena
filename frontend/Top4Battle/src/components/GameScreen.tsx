@@ -4,7 +4,7 @@ import PlayerCard from './MovieCard';
 import BossCardDisplay from './BossCard';
 import GameSidebar from './GameSidebar';
 import type { MovieCard, BossCard } from '../types';
-import { fetchPopularMovies, fetchPopularBoss } from '../utils/tmdbApi';
+import { fetchPopularMovies, fetchPopularBoss, fetchMovieDetails } from '../utils/tmdbApi';
 import { enhanceMovie } from '../utils/enhanceMovie';
 import { createBossCard } from '../utils/bossCard';
 import { calculateBattle } from '../utils/battleCalc';
@@ -40,44 +40,47 @@ const GameScreen: React.FC = () => {
       try {
         setIsLoading(true);
         setError(null);
-        
+
         // Fetch deck from random page (1-100) for variety
         const randomPage = Math.floor(Math.random() * 100) + 1;
         const deckMovies = await fetchPopularMovies(randomPage);
-        
+
         // Fetch boss separately from popular movies
         const bossMovie = await fetchPopularBoss();
-        
+
         if (!isMounted) return;
-        
-        if (deckMovies.length < 15) { // Need fewer since we're adding 4 picked
+
+        if (deckMovies.length < 15) {
           throw new Error('Not enough movies fetched');
         }
-        
+
         // Enhance picked movies and add them to the deck first
         const enhancedPicked = pickedMovies.map(enhanceMovie);
-        
-        // Take only 15 random movies (so total deck is 19: 4 picked + 15 random)
-        const enhancedRandom = deckMovies.slice(0, 15).map(enhanceMovie);
-        
+
+        // Fetch details for the 15 random movies
+        const randomDetails = await Promise.all(
+          deckMovies.slice(0, 15).map(m => fetchMovieDetails(m.id))
+        );
+        const enhancedRandom = randomDetails.map(enhanceMovie);
+
         // Combine: picked movies first, then random
         const enhancedDeck = [...enhancedPicked, ...enhancedRandom];
-        
+
         // Shuffle the deck so picked movies aren't always at the start
         const shuffledDeck = enhancedDeck.sort(() => Math.random() - 0.5);
-        
+
         setDeck(shuffledDeck);
-        
+
         // Draw initial hand
         const initialHand = shuffledDeck.slice(0, 7);
         setHand(initialHand);
         setDeckPosition(7);
-        
+
         // Set boss
         const bossCard = createBossCard(bossMovie);
         setBoss(bossCard);
         setBossHP(bossCard.maxHP);
-        
+
         setIsLoading(false);
       } catch (err) {
         if (!isMounted) return;

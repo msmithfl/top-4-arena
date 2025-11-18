@@ -56,36 +56,44 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
     setError(null);
     setDuplicateError(null);
     try {
-        // Calculate how many empty slots we need to fill
-        const emptySlots = 4 - picked.length;
-        
-        if (emptySlots === 0) {
+      // Calculate how many empty slots we need to fill
+      const emptySlots = 4 - picked.length;
+
+      if (emptySlots === 0) {
         setLoading(false);
         return;
-        }
-        
-        // Pick a random page and get movies
-        const randomPage = Math.floor(Math.random() * 100) + 1;
-        const movies = await fetchPopularMovies(randomPage);
-        
-        // Filter out any movies already picked (by id)
-        const pickedIds = new Set(picked.map(m => m.id));
-        const availableMovies = movies.filter(m => !pickedIds.has(m.id));
-        
-        // Shuffle and pick the number we need
-        const shuffled = availableMovies.sort(() => Math.random() - 0.5).slice(0, emptySlots);
-        
-        // Fetch full details for each
-        const details = await Promise.all(shuffled.map(m => fetchMovieDetails(m.id)));
-        
-        // Add to existing picked movies
-        setPicked([...picked, ...details]);
-        setSearch('');
+      }
+
+      // Pick a random page and get movies
+      const randomPage = Math.floor(Math.random() * 100) + 1;
+      const movies = await fetchPopularMovies(randomPage);
+
+      // Filter out any movies already picked (by id)
+      const pickedIds = new Set(picked.map(m => m.id));
+      const availableMovies = movies.filter(m => !pickedIds.has(m.id));
+
+      // Just take the first N available movies (they're already random from TMDB)
+      const chosen = availableMovies.slice(0, emptySlots);
+
+      // Log how many details will be fetched
+      //console.log(`[RandomPick] Fetching details for ${chosen.length} movies:`, chosen.map(m => m.title));
+
+      // Fetch full details only for the needed movies and log each response
+      const details = await Promise.all(
+        chosen.map(async m => {
+          const detail = await fetchMovieDetails(m.id);
+          //console.log(`[RandomPick] Details response for "${detail.title}":`, detail);
+          return detail;
+        })
+      );
+
+      setPicked([...picked, ...details]);
+      setSearch('');
     } catch (err) {
-        setError('Failed to pick random movies.');
+      setError('Failed to pick random movies.');
     }
     setLoading(false);
-    };
+  };
 
   const handleRemove = (idx: number) => {
     setPicked(picked.filter((_, i) => i !== idx));

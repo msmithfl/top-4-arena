@@ -9,6 +9,8 @@ interface MovieCardProps {
 }
 
 const MovieCardComponent: React.FC<MovieCardProps> = ({ card, isSelected, onSelect }) => {
+  const genres = Array.isArray(card.genres) ? card.genres.slice(0, 2) : [];
+
   return (
     <div
       onClick={() => onSelect(card.id)}
@@ -27,23 +29,29 @@ const MovieCardComponent: React.FC<MovieCardProps> = ({ card, isSelected, onSele
         {/* Rating - Top Left */}
         <div className="absolute top-1 left-1 bg-black bg-opacity-75 rounded px-2 py-1 flex items-center gap-1">
           <Sword className="w-3 h-3 text-red-400" />
-          <p className="text-xs font-bold text-yellow-400">{card.vote_average.toFixed(1)}</p>
+          <p className="text-xs font-bold text-yellow-400">{card.vote_average?.toFixed(1) ?? '--'}</p>
         </div>
         
         {/* Runtime - Top Right */}
         <div className="absolute top-1 right-1 bg-black bg-opacity-75 rounded px-2 py-1 flex items-center gap-1">
           <Shield className="w-3 h-3 text-blue-400" />
-          <p className="text-xs font-bold text-gray-300">{card.runtime}m</p>
+          <p className="text-xs font-bold text-gray-300">{card.runtime ? `${card.runtime}m` : '--'}</p>
         </div>
         
         {/* Genres - Bottom */}
         <div className="absolute bottom-0 left-0 right-0 bg-linear-to-t from-black via-black/80 to-transparent p-2">
           <div className="flex gap-1 justify-center">
-            {card.genres.slice(0, 2).map(g => (
-              <span key={g.id} className="text-xs px-2 py-1 bg-blue-600 bg-opacity-90 rounded font-semibold">
-                {g.name}
+            {genres.length > 0 ? (
+              genres.map(g => (
+                <span key={g.id} className="text-xs px-2 py-1 bg-blue-600 bg-opacity-90 rounded font-semibold">
+                  {g.name}
+                </span>
+              ))
+            ) : (
+              <span className="text-xs px-2 py-1 bg-gray-700 bg-opacity-90 rounded font-semibold">
+                No genres
               </span>
-            ))}
+            )}
           </div>
         </div>
       </div>

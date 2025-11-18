@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import type { MovieCard } from '../types';
-import { fetchPopularMovies } from '../utils/tmdbApi';
+import { fetchMovieDetails, fetchPopularMovies } from '../utils/tmdbApi';
 import { enhanceMovie } from '../utils/enhanceMovie';
 import PlayerCard from './MovieCard';
 import DeckPopup from './DeckPopup';
@@ -63,30 +63,42 @@ const ShopScreen: React.FC<ShopScreenProps> = ({ onPick, deck, usedCardIds }) =>
   };
 
   const rerollShopCards = async () => {
+  setLoading(true);
+  const randomPage = Math.floor(Math.random() * 100) + 1;
+  const movies = await fetchPopularMovies(randomPage);
+  // Fetch details for the 3 shop cards
+  const cards = await Promise.all(
+    movies.slice(0, 3).map(async m => {
+      const detail = await fetchMovieDetails(m.id);
+      return enhanceMovie(detail);
+    })
+  );
+  setShopCards(cards);
+  setLoading(false);
+  setRerolled(true);
+};
+
+useEffect(() => {
+  if (hasFetched.current) return;
+  hasFetched.current = true;
+
+  const getShopCards = async () => {
     setLoading(true);
     const randomPage = Math.floor(Math.random() * 100) + 1;
     const movies = await fetchPopularMovies(randomPage);
-    const cards = movies.slice(0, 3).map(enhanceMovie);
+    // Fetch details for the 3 shop cards
+    const cards = await Promise.all(
+      movies.slice(0, 3).map(async m => {
+        const detail = await fetchMovieDetails(m.id);
+        return enhanceMovie(detail);
+      })
+    );
     setShopCards(cards);
+    await fetchTrivia();
     setLoading(false);
-    setRerolled(true);
   };
-
-  React.useEffect(() => {
-    if (hasFetched.current) return;
-    hasFetched.current = true;
-
-    const getShopCards = async () => {
-      setLoading(true);
-      const randomPage = Math.floor(Math.random() * 100) + 1;
-      const movies = await fetchPopularMovies(randomPage);
-      const cards = movies.slice(0, 3).map(enhanceMovie);
-      setShopCards(cards);
-      await fetchTrivia();
-      setLoading(false);
-    };
-    getShopCards();
-  }, []);
+  getShopCards();
+}, []);
 
   const handleCardSelect = (card: MovieCard) => {
     setSelectedCard(card);
