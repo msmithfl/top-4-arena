@@ -1,10 +1,16 @@
 import { useNavigate } from 'react-router-dom'
-import { Swords, Film, Trophy, AlertCircle, Mail, X } from 'lucide-react'
+import { Swords, Film, Trophy, AlertCircle, Mail, X, Smile } from 'lucide-react'
 import { useState } from 'react'
+import { FaYoutube } from "react-icons/fa";
+
+const APP_VERSION = "0.4.0-early"; // Set your version here
 
 const LandingPage = () => {
   const navigate = useNavigate()
-  const [formData, setFormData] = useState({ name: '', message: '' })
+  const [formData, setFormData] = useState({
+    name: '',
+    message: `\n\n---\nFeedback for Top 4 Arena v${APP_VERSION}\n`
+  })
   const [isPanelOpen, setIsPanelOpen] = useState(false)
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -12,7 +18,7 @@ const LandingPage = () => {
     const subject = encodeURIComponent('Top 4 Arena Feedback')
     const body = encodeURIComponent(`From: ${formData.name}\n\n${formData.message}`)
     window.location.href = `mailto:top4arena@proton.me?subject=${subject}&body=${body}`
-    setFormData({ name: '', message: '' })
+    setFormData({ name: '', message: `\n\n---\nFeedback for Top 4 Arena v${APP_VERSION}\n` })
     setIsPanelOpen(false)
   }
 
@@ -49,8 +55,8 @@ const LandingPage = () => {
           </div>
           <div className="bg-white/10 backdrop-blur-sm p-5 rounded-lg border border-white/20">
             <Trophy className="w-10 h-10 mx-auto mb-3 text-yellow-400" />
-            <h3 className="text-lg font-bold mb-2">Slay Bosses</h3>
-            <p className="text-sm text-gray-300">Defeat blockbusters with specials abilities</p>
+            <h3 className="text-lg font-bold mb-2">Defeat Bosses</h3>
+            <p className="text-sm text-gray-300">Slay blockbusters with specials abilities</p>
           </div>
         </div>
 
@@ -62,13 +68,13 @@ const LandingPage = () => {
           >
             Start Battle
           </button>
-          <button
+          {/* <button
             onClick={() => setIsPanelOpen(true)}
             className="bg-yellow-600 hover:bg-yellow-700 text-black text-lg md:text-xl justify-center font-bold py-4 px-8 rounded-full shadow-2xl transform hover:scale-105 transition-all duration-200 flex items-center gap-2 w-full md:w-auto cursor-pointer"
           >
             <Mail className="w-5 h-5" />
-            Feedback
-          </button>
+            Send Feedback
+          </button> */}
         </div>
 
         {/* How to Play */}
@@ -123,7 +129,7 @@ const LandingPage = () => {
                 onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                 required
                 className="flex-1 w-full bg-white/10 border border-white/20 rounded-lg px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 resize-none"
-                placeholder="Tell us what you think, report bugs, or suggest features..."
+                placeholder={`Tell us what you think, report bugs, or suggest features...\n\n---\nFeedback for Top 4 Arena v${APP_VERSION}\n`}
               />
             </div>
             <button
@@ -143,6 +149,42 @@ const LandingPage = () => {
           className="fixed inset-0 bg-black/50 z-40"
         />
       )}
+
+      {/* Floating Buttons Bottom Right */}
+      {!isPanelOpen && (
+        <div className="fixed bottom-4 right-4 flex flex-col gap-3 z-50 items-end">
+          <a
+            href="https://buymeacoffee.com/msmithfls"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-3 px-6 rounded-full shadow-lg flex items-center gap-2 transition-all"
+          >
+            <Smile className="w-5 h-5" />
+            Support This Project
+          </a>
+          <button
+            onClick={() => setIsPanelOpen(true)}
+            className="bg-yellow-600 hover:bg-yellow-700 text-black font-bold py-3 px-6 rounded-full shadow-lg flex items-center gap-2 transition-all"
+          >
+            <Mail className="w-5 h-5" />
+            Send Feedback
+          </button>
+          <a
+            href="https://www.youtube.com/@JangoDisc"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-red-500 hover:bg-red-600 text-black font-bold py-3 px-6 rounded-full shadow-lg flex items-center gap-2 transition-all"
+          >
+            Game Inspiration Credit to JangoDisc
+            <FaYoutube className="w-5 h-5" />
+          </a>
+        </div>
+      )}
+
+      {/* Version Number Bottom Left */}
+      <div className="fixed bottom-4 left-4 z-40 bg-gray-900 bg-opacity-80 px-4 py-2 rounded-lg text-yellow-300 font-mono text-sm shadow-lg">
+        v{APP_VERSION} Early Access
+      </div>
     </div>
   );
 };

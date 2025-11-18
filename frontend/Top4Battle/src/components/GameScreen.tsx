@@ -12,10 +12,10 @@ import PickTopFilms from './PickTopFilms';
 import DeckPopup from './DeckPopup';
 import ShopScreen from './ShopScreen';
 
-const QuadFeatureGame: React.FC = () => {
+const GameScreen: React.FC = () => {
   const [deck, setDeck] = useState<MovieCard[]>([]);
   const [hand, setHand] = useState<MovieCard[]>([]);
-  const [deckPosition, setDeckPosition] = useState(0); // Track position in deck
+  const [deckPosition, setDeckPosition] = useState(0);
   const [selectedCards, setSelectedCards] = useState<number[]>([]);
   const [boss, setBoss] = useState<BossCard | null>(null);
   const [bossHP, setBossHP] = useState(0);
@@ -28,8 +28,8 @@ const QuadFeatureGame: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [pickedMovies, setPickedMovies] = useState<MovieCard[] | null>(null);
   const [usedCardIds, setUsedCardIds] = useState<number[]>([]);
+  const [round, setRound] = useState(1);
 
-  // Modify your useEffect to depend on pickedMovies
   useEffect(() => {
     // Don't initialize until we have picked movies
     if (!pickedMovies) return;
@@ -92,7 +92,7 @@ const QuadFeatureGame: React.FC = () => {
     return () => {
       isMounted = false;
     };
-  }, [pickedMovies]); // Add dependency on pickedMovies
+  }, [pickedMovies]);
 
   const toggleCardSelection = (cardId: number) => {
     setSelectedCards(prev => {
@@ -184,7 +184,7 @@ const QuadFeatureGame: React.FC = () => {
     let newPlayerHP = playerHP - damageTaken;
 
     if (genres.includes('Horror')) {
-      lifestealAmount = Math.round(playerDamage * 0.2);
+      lifestealAmount = Math.round(playerDamage * 0.1);
       setBattleLog(prev => [...prev, `🩸 You lifesteal ${lifestealAmount} HP!`]);
       newPlayerHP = Math.min(3000, Math.max(0, newPlayerHP + lifestealAmount));
     } else {
@@ -260,21 +260,26 @@ const QuadFeatureGame: React.FC = () => {
     
     // Check win/loss
     if (newBossHP === 0) {
-      setGameState('shop');
-      setUsedCardIds([]);
+      // Delay shop opening for 1.5 seconds to show victory
+      setTimeout(() => {
+        setGameState('shop');
+        setUsedCardIds([]);
+      }, 1500);
     } else if (newPlayerHP <= 0) {
       setGameState('lost');
     }
   };
 
-  // New handler for shop card selection
-  const handleShopPick = (card: MovieCard) => {
-    // Add the picked card to the deck
-    const updatedDeck = [...deck, card];
-    setDeck(updatedDeck);
-    
-    // Pass the updated deck to resetRound
-    resetRound(updatedDeck);
+  const handleShopPick = (card: MovieCard | null) => {
+    if (card) {
+      // Correct answer - add card to deck
+      const updatedDeck = [...deck, card];
+      setDeck(updatedDeck);
+      resetRound(updatedDeck);
+    } else {
+      // Wrong answer - continue without adding card
+      resetRound();
+    }
   };
 
   // const resetGame = async () => {
@@ -334,6 +339,7 @@ const QuadFeatureGame: React.FC = () => {
       setBattleLog([]);
       setUsedCardIds([]);
       setGameState('playing');
+      setRound(prev => prev + 1);
       
       // Use the passed deck or current deck
       const deckToUse = newDeck || deck;
@@ -387,13 +393,13 @@ const QuadFeatureGame: React.FC = () => {
   
   if (!boss) return <div className="p-8">Loading...</div>;
 
-
   return (
     <div className="h-screen bg-linear-to-r from-purple-900 via-blue-900 to-black text-white p-4 overflow-hidden">
       <div className="max-w-full mx-auto flex gap-4 h-full">
         {/* Left Sidebar - Player Stats */}
         <GameSidebar
           turn={turn}
+          round={round}
           playerHP={playerHP}
           selectedCards={selectedCards}
           hand={hand}
@@ -418,7 +424,7 @@ const QuadFeatureGame: React.FC = () => {
               <p className="text-xl mb-6">{boss.title} was too powerful...</p>
               <button
                 onClick={() => window.location.href = '/'}
-                className="bg-purple-600 hover:bg-purple-700 px-8 py-3 rounded-lg font-bold text-xl"
+                className="cursor-pointer hover:scale-105 transition-all bg-purple-600 hover:bg-purple-700 px-8 py-3 rounded-lg font-bold text-xl"
               >
                 Back to Home
               </button>
@@ -490,4 +496,4 @@ const QuadFeatureGame: React.FC = () => {
   );
 };
 
-export default QuadFeatureGame;
+export default GameScreen;
