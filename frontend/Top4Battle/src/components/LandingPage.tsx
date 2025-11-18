@@ -157,14 +157,14 @@ const LandingPage = () => {
             href="https://buymeacoffee.com/msmithfls"
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-3 px-6 rounded-full shadow-lg flex items-center gap-2 transition-all"
+            className="bg-blue-500 hover:bg-blue-600 text-black font-bold py-3 px-6 rounded-full shadow-lg flex items-center gap-2 transition-all"
           >
             <Smile className="w-5 h-5" />
             Support This Project
           </a>
           <button
             onClick={() => setIsPanelOpen(true)}
-            className="bg-yellow-600 hover:bg-yellow-700 text-black font-bold py-3 px-6 rounded-full shadow-lg flex items-center gap-2 transition-all"
+            className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-3 px-6 rounded-full shadow-lg flex items-center gap-2 transition-all"
           >
             <Mail className="w-5 h-5" />
             Send Feedback / Bug Reports
