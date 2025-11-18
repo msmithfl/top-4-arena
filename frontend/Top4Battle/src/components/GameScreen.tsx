@@ -12,10 +12,10 @@ import PickTopFilms from './PickTopFilms';
 import DeckPopup from './DeckPopup';
 import ShopScreen from './ShopScreen';
 
-const QuadFeatureGame: React.FC = () => {
+const GameScreen: React.FC = () => {
   const [deck, setDeck] = useState<MovieCard[]>([]);
   const [hand, setHand] = useState<MovieCard[]>([]);
-  const [deckPosition, setDeckPosition] = useState(0); // Track position in deck
+  const [deckPosition, setDeckPosition] = useState(0);
   const [selectedCards, setSelectedCards] = useState<number[]>([]);
   const [boss, setBoss] = useState<BossCard | null>(null);
   const [bossHP, setBossHP] = useState(0);
@@ -30,7 +30,6 @@ const QuadFeatureGame: React.FC = () => {
   const [usedCardIds, setUsedCardIds] = useState<number[]>([]);
   const [round, setRound] = useState(1);
 
-  // Modify your useEffect to depend on pickedMovies
   useEffect(() => {
     // Don't initialize until we have picked movies
     if (!pickedMovies) return;
@@ -93,7 +92,7 @@ const QuadFeatureGame: React.FC = () => {
     return () => {
       isMounted = false;
     };
-  }, [pickedMovies]); // Add dependency on pickedMovies
+  }, [pickedMovies]);
 
   const toggleCardSelection = (cardId: number) => {
     setSelectedCards(prev => {
@@ -271,7 +270,6 @@ const QuadFeatureGame: React.FC = () => {
     }
   };
 
-  // New handler for shop card selection
   const handleShopPick = (card: MovieCard | null) => {
     if (card) {
       // Correct answer - add card to deck
@@ -395,7 +393,6 @@ const QuadFeatureGame: React.FC = () => {
   
   if (!boss) return <div className="p-8">Loading...</div>;
 
-
   return (
     <div className="h-screen bg-linear-to-r from-purple-900 via-blue-900 to-black text-white p-4 overflow-hidden">
       <div className="max-w-full mx-auto flex gap-4 h-full">
@@ -499,4 +496,4 @@ const QuadFeatureGame: React.FC = () => {
   );
 };
 
-export default QuadFeatureGame;
+export default GameScreen;

@@ -120,7 +120,7 @@ const ShopScreen: React.FC<ShopScreenProps> = ({ onPick, deck, usedCardIds }) =>
     <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4">
       <div
         className="bg-gray-900 rounded-lg max-w-3xl w-full border-4 border-yellow-500 shadow-2xl p-8 text-center flex flex-col"
-        style={{ minHeight: '600px' }}
+        style={{ minHeight: '650px' }}
       >
         <div className='flex justify-between mb-5'>
           <button
@@ -135,7 +135,7 @@ const ShopScreen: React.FC<ShopScreenProps> = ({ onPick, deck, usedCardIds }) =>
 
         {!selectedCard ? (
           <>
-            <h2 className="text-3xl font-bold text-yellow-400 mb-6">Shop: Choose a Card</h2>
+            <h2 className="text-3xl pt-5 font-bold text-yellow-400">Pick a New Card</h2>
             <div className="flex-1 flex items-center justify-center">
               {loading ? (
                 <div className="text-white text-xl w-full">Loading...</div>
@@ -162,7 +162,7 @@ const ShopScreen: React.FC<ShopScreenProps> = ({ onPick, deck, usedCardIds }) =>
           </>
         ) : (
           <>
-            <h2 className="text-3xl font-bold text-yellow-400 mb-4">Answer the Trivia!</h2>
+            {/* <h2 className="text-3xl font-bold text-yellow-400 mb-4">Answer the Trivia!</h2> */}
             <div className="bg-gray-800 p-4 rounded-lg mb-4">
               <p className="text-xl text-white mb-4">{triviaQuestion ? decodeHTML(triviaQuestion.question) : 'Loading question...'}</p>
             </div>

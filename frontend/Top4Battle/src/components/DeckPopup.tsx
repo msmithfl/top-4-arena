@@ -25,7 +25,7 @@ const DeckPopup: React.FC<DeckPopupProps> = ({ deck, usedCardIds }) => {
           <div
             className="bg-gray-900 rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto border-4 border-blue-500 shadow-2xl relative"
             style={{
-              scrollbarColor: "#3b82f6 #1e293b", // blue-500 and gray-800
+              scrollbarColor: "#3b82f6 #1e293b",
               scrollbarWidth: "auto"
             }}
           >
@@ -57,7 +57,7 @@ const DeckPopup: React.FC<DeckPopupProps> = ({ deck, usedCardIds }) => {
             <div className="text-blue-300 text-xl font-mono mb-4 text-center">
               {deck.length - usedCardIds.length}/{deck.length}
             </div>
-            <div className="deck-scroll grid grid-cols-2 md:grid-cols-4 gap-6 px-8 pb-8 overflow-y-auto">
+            <div className="deck-scroll grid grid-cols-2 md:grid-cols-4 gap-6 px-8 pb-8 pt-2 overflow-y-auto">
               {deck.map(card => (
                 <div key={card.id} className="relative">
                   <MovieCardComponent
