@@ -167,7 +167,7 @@ const LandingPage = () => {
             className="bg-yellow-600 hover:bg-yellow-700 text-black font-bold py-3 px-6 rounded-full shadow-lg flex items-center gap-2 transition-all"
           >
             <Mail className="w-5 h-5" />
-            Send Feedback
+            Send Feedback / Bug Reports
           </button>
           <a
             href="https://www.youtube.com/@JangoDisc"
