@@ -94,6 +94,10 @@ const GameScreen: React.FC = () => {
     };
   }, [pickedMovies]);
 
+  const selectedGenres = hand
+    .filter(card => selectedCards.includes(card.id))
+    .flatMap(card => card.genres.slice(0, 2).map(g => g.name));
+
   const toggleCardSelection = (cardId: number) => {
     setSelectedCards(prev => {
       if (prev.includes(cardId)) {
@@ -444,6 +448,31 @@ const GameScreen: React.FC = () => {
           <div className="flex justify-end">
             <DeckPopup deck={deck} usedCardIds={usedCardIds} />
           </div>
+          
+
+          {/* Hand */}
+          <div className="mb-4">
+            <div className="grid grid-cols-7 gap-2">
+              {hand.map(card => {
+                // Highlight if card shares a genre with any selected card (but is not selected itself)
+                const cardGenres = card.genres.slice(0, 2).map(g => g.name);
+                const hasSynergy =
+                  selectedCards.length > 0 &&
+                  selectedCards.length < 4 &&
+                  !selectedCards.includes(card.id) &&
+                  cardGenres.some(g => selectedGenres.includes(g));
+                return (
+                  <PlayerCard
+                    key={card.id}
+                    card={card}
+                    isSelected={selectedCards.includes(card.id)}
+                    onSelect={toggleCardSelection}
+                    highlightSynergy={hasSynergy}
+                  />
+                );
+              })}
+            </div>
+          </div>
           {/* Action Buttons */}
           <div className="flex gap-4">
             <button
@@ -453,12 +482,13 @@ const GameScreen: React.FC = () => {
                 bg-linear-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700
                 ${selectedCards.length === 0
                   ? 'disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed'
-                  : 'transform hover:scale-102'
+                  : 'transform'
                 }`
               }
             >
               <Swords className="w-6 h-6" />
-              ATTACK ({selectedCards.length}/4)
+              ATTACK
+              {/* ({selectedCards.length}/4) */}
             </button>
             <button
               onClick={handleDiscard}
@@ -467,27 +497,13 @@ const GameScreen: React.FC = () => {
                 bg-linear-to-r from-yellow-600 to-orange-600 hover:from-yellow-700 hover:to-orange-700
                 ${(hasDiscarded || selectedCards.length === 0)
                   ? 'disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed'
-                  : 'transform hover:scale-105'
+                  : 'transform'
                 }`
               }
             >
               <Trash2 className="w-5 h-5" />
               DISCARD {hasDiscarded ? '(Used)' : ''}
             </button>
-          </div>
-
-          {/* Hand */}
-          <div className="mb-4">
-            <div className="grid grid-cols-7 gap-2">
-              {hand.map(card => (
-                <PlayerCard
-                  key={card.id}
-                  card={card}
-                  isSelected={selectedCards.includes(card.id)}
-                  onSelect={toggleCardSelection}
-                />
-              ))}
-            </div>
           </div>
         </div>
       </div>

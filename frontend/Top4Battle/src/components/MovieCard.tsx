@@ -6,14 +6,19 @@ interface MovieCardProps {
   card: MovieCard;
   isSelected: boolean;
   onSelect: (cardId: number) => void;
+  highlightSynergy?: boolean;
 }
 
-const MovieCardComponent: React.FC<MovieCardProps> = ({ card, isSelected, onSelect }) => {
+const MovieCardComponent: React.FC<MovieCardProps> = ({ card, isSelected, onSelect, highlightSynergy }) => {
   return (
     <div
       onClick={() => onSelect(card.id)}
       className={`cursor-pointer transition-all transform hover:scale-105 ${
-        isSelected ? 'ring-4 ring-yellow-400 scale-105 -translate-y-2' : ''
+        isSelected
+          ? 'ring-4 ring-yellow-400 scale-105 -translate-y-2'
+          : highlightSynergy
+          ? 'ring-4 ring-blue-400 scale-105'
+          : ''
       }`}
     >
       <div className="relative bg-gray-800 rounded-lg overflow-hidden shadow-lg border-2 border-gray-700 aspect-2/3 w-full">

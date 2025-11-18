@@ -6,7 +6,7 @@ export const createBossAbility = (genres: { id: number; name: string }[]): BossA
   
   if (genreNames.includes('Action')) {
     return {
-      name: '⚔️ RAMPAGE',
+      name: 'RAMPAGE',
       description: 'Deals 2x damage every 3rd turn',
       effect: (turn, damage) => {
         if (turn % 3 === 0) {
@@ -19,7 +19,7 @@ export const createBossAbility = (genres: { id: number; name: string }[]): BossA
   
   if (genreNames.includes('Horror')) {
     return {
-      name: '🩸 LIFESTEAL',
+      name: 'LIFESTEAL',
       description: 'Heals 15% of max HP each turn',
       effect: (_turn, damage) => {
         return { damage, heal: 0.15, message: '🩸 Boss regenerates health!' };
@@ -29,7 +29,7 @@ export const createBossAbility = (genres: { id: number; name: string }[]): BossA
   
   if (genreNames.includes('Drama')) {
     return {
-      name: '😢 EMOTIONAL WEIGHT',
+      name: 'EMOTIONAL WEIGHT',
       description: 'Your attacks deal 30% less damage',
       effect: (_turn, damage) => {
         return { damage, heal: 0, message: '😢 Your attacks feel less impactful...' };
@@ -39,7 +39,7 @@ export const createBossAbility = (genres: { id: number; name: string }[]): BossA
   
   if (genreNames.includes('Sci-Fi')) {
     return {
-      name: '🛡️ TECH SHIELD',
+      name: 'TECH SHIELD',
       description: 'Absorbs first 1500 damage each turn',
       effect: (_turn, damage) => {
         return { damage, heal: 0, message: '🛡️ Tech shield absorbing damage!' };
@@ -49,7 +49,7 @@ export const createBossAbility = (genres: { id: number; name: string }[]): BossA
   
   if (genreNames.includes('Crime') || genreNames.includes('Thriller')) {
     return {
-      name: '🎯 PRECISION STRIKE',
+      name: 'PRECISION STRIKE',
       description: 'Ignores 75% of your defense',
       effect: (_turn, damage) => {
         return { damage, heal: 0, message: '🎯 Critical hit! Defense shattered!' };
@@ -58,7 +58,7 @@ export const createBossAbility = (genres: { id: number; name: string }[]): BossA
   }
   
   return {
-    name: '💥 BLOCKBUSTER',
+    name: 'BLOCKBUSTER',
     description: 'All damage increased by 50%',
     effect: (_turn, damage) => {
       return { damage: damage * 1.5, heal: 0, message: '💥 Legendary power surges!' };

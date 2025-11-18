@@ -38,12 +38,12 @@ const AttackPreview: React.FC<AttackPreviewProps> = ({
         <span className="text-lg font-bold">Attack Preview</span>
       </div>
       <div className="space-y-2">
-        <div className="flex justify-between items-center">
+        {/* <div className="flex justify-between items-center">
           <span className="text-sm text-gray-300">Cards Selected:</span>
           <span className="text-xl font-bold text-yellow-400">
             {selectedCards.length > 0 ? selectedCards.length : '--'}
           </span>
-        </div>
+        </div> */}
         <div className="flex justify-between items-center">
           <span className="text-sm text-gray-300">Damage:</span>
           <span className="text-2xl font-bold text-red-400">
