@@ -94,10 +94,6 @@ const GameScreen: React.FC = () => {
     };
   }, [pickedMovies]);
 
-  const selectedGenres = hand
-    .filter(card => selectedCards.includes(card.id))
-    .flatMap(card => card.genres.slice(0, 2).map(g => g.name));
-
   const toggleCardSelection = (cardId: number) => {
     setSelectedCards(prev => {
       if (prev.includes(cardId)) {
@@ -453,24 +449,14 @@ const GameScreen: React.FC = () => {
           {/* Hand */}
           <div className="mb-4">
             <div className="grid grid-cols-7 gap-2">
-              {hand.map(card => {
-                // Highlight if card shares a genre with any selected card (but is not selected itself)
-                const cardGenres = card.genres.slice(0, 2).map(g => g.name);
-                const hasSynergy =
-                  selectedCards.length > 0 &&
-                  selectedCards.length < 4 &&
-                  !selectedCards.includes(card.id) &&
-                  cardGenres.some(g => selectedGenres.includes(g));
-                return (
-                  <PlayerCard
-                    key={card.id}
-                    card={card}
-                    isSelected={selectedCards.includes(card.id)}
-                    onSelect={toggleCardSelection}
-                    highlightSynergy={hasSynergy}
-                  />
-                );
-              })}
+              {hand.map(card => (
+                <PlayerCard
+                  key={card.id}
+                  card={card}
+                  isSelected={selectedCards.includes(card.id)}
+                  onSelect={toggleCardSelection}
+                />
+              ))}
             </div>
           </div>
           {/* Action Buttons */}
