@@ -2,7 +2,7 @@ import React from 'react';
 import TurnCounter from './TurnCounter';
 import LifePoints from './LifePoints';
 import AttackPreview from './AttackPreview';
-import BattleLog from './BattleLog';
+//import BattleLog from './BattleLog';
 import type { MovieCard, BossCard, BattleResult } from '../types';
 
 interface GameSidebarProps {
@@ -23,7 +23,7 @@ const GameSidebar: React.FC<GameSidebarProps> = ({
   selectedCards,
   hand,
   boss,
-  battleLog,
+  //battleLog,
   calculateBattle
 }) => {
   return (
@@ -36,7 +36,7 @@ const GameSidebar: React.FC<GameSidebarProps> = ({
         boss={boss}
         calculateBattle={calculateBattle}
       />
-      <BattleLog battleLog={battleLog} />
+      {/* <BattleLog battleLog={battleLog} /> */}
     </div>
   );
 };

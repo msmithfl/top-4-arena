@@ -444,37 +444,7 @@ const GameScreen: React.FC = () => {
           <div className="flex justify-end">
             <DeckPopup deck={deck} usedCardIds={usedCardIds} />
           </div>
-          {/* Action Buttons */}
-          <div className="flex gap-4">
-            <button
-              onClick={handleAttack}
-              disabled={selectedCards.length === 0}
-              className={`flex-1 cursor-pointer px-6 py-4 rounded-lg font-bold text-xl flex items-center justify-center gap-2 shadow-lg transition-all
-                bg-linear-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700
-                ${selectedCards.length === 0
-                  ? 'disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed'
-                  : 'transform hover:scale-102'
-                }`
-              }
-            >
-              <Swords className="w-6 h-6" />
-              ATTACK ({selectedCards.length}/4)
-            </button>
-            <button
-              onClick={handleDiscard}
-              disabled={hasDiscarded || selectedCards.length === 0}
-              className={`cursor-pointer px-6 py-4 rounded-lg font-bold text-xl flex items-center justify-center gap-2 shadow-lg transition-all
-                bg-linear-to-r from-yellow-600 to-orange-600 hover:from-yellow-700 hover:to-orange-700
-                ${(hasDiscarded || selectedCards.length === 0)
-                  ? 'disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed'
-                  : 'transform hover:scale-105'
-                }`
-              }
-            >
-              <Trash2 className="w-5 h-5" />
-              DISCARD {hasDiscarded ? '(Used)' : ''}
-            </button>
-          </div>
+          
 
           {/* Hand */}
           <div className="mb-4">
@@ -488,6 +458,38 @@ const GameScreen: React.FC = () => {
                 />
               ))}
             </div>
+          </div>
+          {/* Action Buttons */}
+          <div className="flex gap-4">
+            <button
+              onClick={handleAttack}
+              disabled={selectedCards.length === 0}
+              className={`flex-1 cursor-pointer px-6 py-4 rounded-lg font-bold text-xl flex items-center justify-center gap-2 shadow-lg transition-all
+                bg-linear-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700
+                ${selectedCards.length === 0
+                  ? 'disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed'
+                  : 'transform'
+                }`
+              }
+            >
+              <Swords className="w-6 h-6" />
+              ATTACK
+              {/* ({selectedCards.length}/4) */}
+            </button>
+            <button
+              onClick={handleDiscard}
+              disabled={hasDiscarded || selectedCards.length === 0}
+              className={`cursor-pointer px-6 py-4 rounded-lg font-bold text-xl flex items-center justify-center gap-2 shadow-lg transition-all
+                bg-linear-to-r from-yellow-600 to-orange-600 hover:from-yellow-700 hover:to-orange-700
+                ${(hasDiscarded || selectedCards.length === 0)
+                  ? 'disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed'
+                  : 'transform'
+                }`
+              }
+            >
+              <Trash2 className="w-5 h-5" />
+              DISCARD {hasDiscarded ? '(Used)' : ''}
+            </button>
           </div>
         </div>
       </div>
