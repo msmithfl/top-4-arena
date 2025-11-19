@@ -206,9 +206,9 @@ const GameScreen: React.FC = () => {
     if (genres.includes('Horror')) {
       lifestealAmount = Math.round(playerDamage * 0.1);
       setBattleLog(prev => [...prev, `🩸 You lifesteal ${lifestealAmount} HP!`]);
-      newPlayerHP = Math.min(3000, Math.max(0, newPlayerHP + lifestealAmount));
+      newPlayerHP = Math.round(Math.min(3000, Math.max(0, newPlayerHP + lifestealAmount)));
     } else {
-      newPlayerHP = Math.min(3000, Math.max(0, newPlayerHP));
+      newPlayerHP = Math.round(Math.min(3000, Math.max(0, newPlayerHP)));
     }
 
     const netHPChange = -damageTaken + lifestealAmount;
