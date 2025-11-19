@@ -4,7 +4,7 @@ export const PREBUILT_BOSSES: PrebuiltBoss[] = [
   {
     id: 'jaws',
     title: 'Jaws',
-    poster_url: '/lxM6kqilAdpdhqUl2biYp5frUxE.jpg', // or TMDB poster path
+    poster_url: '/lxM6kqilAdpdhqUl2biYp5frUxE.jpg',
     maxHP: 5000,
     basePower: 300,
     baseDamage: 600,
@@ -14,7 +14,7 @@ export const PREBUILT_BOSSES: PrebuiltBoss[] = [
       { id: 53, name: 'Thriller' }
     ],
     ability: {
-      name: '🦈 Blood Frenzy',
+      name: 'Blood Frenzy',
       description: 'Deals extra damage every 3 turns.',
       effect: (turn, baseDamage) => ({
         damage: turn % 3 === 0 ? baseDamage + 400 : baseDamage,
@@ -35,7 +35,7 @@ export const PREBUILT_BOSSES: PrebuiltBoss[] = [
       { id: 878, name: 'Science Fiction' }
     ],
     ability: {
-      name: '👽 Acid Blood',
+      name: 'Acid Blood',
       description: 'Heals self when attacked.',
       effect: (_turn, baseDamage) => ({
         damage: baseDamage,

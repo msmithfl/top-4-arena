@@ -31,8 +31,20 @@ const GameScreen: React.FC = () => {
   const [usedCardIds, setUsedCardIds] = useState<number[]>([]);
   const [round, setRound] = useState(1);
 
+  let bossCycle: number[] = [];
+
   const getRandomBoss = () => {
-    const idx = Math.floor(Math.random() * PREBUILT_BOSSES.length);
+    // If we've cycled through all bosses, reset the cycle
+    if (bossCycle.length === 0) {
+      bossCycle = Array.from({ length: PREBUILT_BOSSES.length }, (_, i) => i);
+      // Shuffle the cycle
+      for (let i = bossCycle.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [bossCycle[i], bossCycle[j]] = [bossCycle[j], bossCycle[i]];
+      }
+    }
+    // Pop the next boss index from the cycle
+    const idx = bossCycle.pop()!;
     return PREBUILT_BOSSES[idx];
   };
 
@@ -331,43 +343,43 @@ const GameScreen: React.FC = () => {
   // Modify resetRound to accept the updated deck
   
   const resetRound = async (newDeck?: MovieCard[]) => {
-  setIsLoading(true);
-  setError(null);
-  try {
-    // Set boss from prebuilt list
-    const rawBoss = getRandomBoss();
-    const bossCard = createPrebuiltBossCard(rawBoss);
-    
-    // Use the passed deck or current deck
-    const deckToUse = newDeck || deck;
-    
-    // Shuffle deck and draw new hand
-    const shuffledDeck = [...deckToUse].sort(() => Math.random() - 0.5);
-    
-    // Set all boss/game state first
-    setBoss(bossCard);
-    setBossHP(bossCard.maxHP);
-    setPlayerHP(3000);
-    setTurn(1);
-    setSelectedCards([]);
-    setHasDiscarded(false);
-    setBattleLog([]);
-    setUsedCardIds([]);
-    setRound(prev => prev + 1);
-    setDeck(shuffledDeck);
-    setHand(shuffledDeck.slice(0, 7));
-    setDeckPosition(7);
-    setIsLoading(false);
-    
-    // Wait for all state updates to flush, then change game state
-    setTimeout(() => {
-      setGameState('playing');
-    }, 0);
-  } catch (err) {
-    setError('Failed to load new boss.');
-    setIsLoading(false);
-  }
-};
+    setIsLoading(true);
+    setError(null);
+    try {
+      // Set boss from prebuilt list
+      const rawBoss = getRandomBoss();
+      const bossCard = createPrebuiltBossCard(rawBoss);
+      
+      // Use the passed deck or current deck
+      const deckToUse = newDeck || deck;
+      
+      // Shuffle deck and draw new hand
+      const shuffledDeck = [...deckToUse].sort(() => Math.random() - 0.5);
+      
+      // Set all boss/game state first
+      setBoss(bossCard);
+      setBossHP(bossCard.maxHP);
+      setPlayerHP(3000);
+      setTurn(1);
+      setSelectedCards([]);
+      setHasDiscarded(false);
+      setBattleLog([]);
+      setUsedCardIds([]);
+      setRound(prev => prev + 1);
+      setDeck(shuffledDeck);
+      setHand(shuffledDeck.slice(0, 7));
+      setDeckPosition(7);
+      setIsLoading(false);
+      
+      // Wait for all state updates to flush, then change game state
+      setTimeout(() => {
+        setGameState('playing');
+      }, 0);
+    } catch (err) {
+      setError('Failed to load new boss.');
+      setIsLoading(false);
+    }
+  };
 
   if (!pickedMovies) {
     return <PickTopFilms onComplete={setPickedMovies} />;
