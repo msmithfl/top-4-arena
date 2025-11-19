@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import { Swords, Film, Trophy, AlertCircle, Mail, X, Smile } from 'lucide-react'
+import { Swords, Film, Trophy, Mail, X, Smile } from 'lucide-react'
 import { useState } from 'react'
 import { FaYoutube } from "react-icons/fa";
 import MovieCarousel from './MovieCarousel';
