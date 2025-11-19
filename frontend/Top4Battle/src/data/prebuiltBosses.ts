@@ -29,29 +29,29 @@ export const PREBUILT_BOSSES: PrebuiltBoss[] = [
     }
   },
   {
-    id: 'kpop-demon-hunters',
-    tmdbId: 803796, // K-Pop: Demon Hunters
-    poster_url: '/zT7Lhw3BhJbMkRqm9Zlx2YGMsY0.jpg',
+    id: 'the-babadook',
+    tmdbId: 242224, // The Babadook
+    poster_url: '/6gbQp25jkRuKoDvDIEym3McsLbc.jpg',
     ability: {
-      name: 'Dance of Shadows',
-      description: 'Heals self when attacked.',
+      name: 'Psychological Torture',
+      description: 'Hides the genre for some cards.',
       effect: (_turn, baseDamage) => ({
         damage: baseDamage,
         heal: 0.05,
-        message: 'Heals with every move!'
+        message: 'Babadook terrorizes 3 cards!'
       })
     }
   },
   {
-    id: 'turbo',
-    tmdbId: 77950, // Turbo
-    poster_url: '/aE3A98CfBWVReurJqpOBFbzIwMf.jpg',
+    id: 'christine',
+    tmdbId: 8769, // Christine
+    poster_url: '/mMtUJke2TtIoT6JB9hkvERmsSu8.jpg',
     ability: {
-      name: 'Nitro Boost',
-      description: 'Speed increases damage.',
+      name: 'Exhaust Fumes',
+      description: 'Slowly drains your health.',
       effect: (_turn, baseDamage) => ({
         damage: baseDamage * 1.2,
-        message: 'Nitro boost activated!'
+        message: 'Fumes activated!'
       })
     }
   },
@@ -77,7 +77,7 @@ export const PREBUILT_BOSSES: PrebuiltBoss[] = [
       description: 'Predicts and counters attacks.',
       effect: (_turn, baseDamage) => ({
         damage: baseDamage * 1.25,
-        message: 'AI predicts your move!'
+        message: 'Ava predicts your move!'
       })
     }
   },
@@ -96,15 +96,15 @@ export const PREBUILT_BOSSES: PrebuiltBoss[] = [
     }
   },
   {
-    id: 'fantastic-mr-fox',
-    tmdbId: 10315, // Fantastic Mr. Fox
-    poster_url: '/pYbIT04CMXAbVEPj9mhFzcM73XS.jpg',
+    id: 'goodfellas',
+    tmdbId: 769, // Goodfellas
+    poster_url: '/6QMSLvU5ziIL2T6VrkaKzN2YkxK.jpg',
     ability: {
-      name: 'Sneak King',
-      description: 'Cunning strikes deal extra damage.',
+      name: 'Made Man',
+      description: 'Chance of deadly blow.',
       effect: (turn, baseDamage) => ({
         damage: turn % 2 === 0 ? baseDamage * 1.3 : baseDamage,
-        message: turn % 2 === 0 ? 'Cunning sneak attack!' : ''
+        message: turn % 2 === 0 ? 'Ruthless sneak attack!' : ''
       })
     }
   },
