@@ -35,13 +35,13 @@ export const calculateBattle = (cards: MovieCard[]): BattleResult => {
   Object.entries(genreCounts).forEach(([genre, count]) => {
     if (count >= 4) {
       multiplier *= 3;
-      synergies.push(`🔥 ${genre} MASTERY (4): 3x damage`);
+      synergies.push(`${genre} Combo\n 3x damage`);
     } else if (count >= 3) {
       multiplier *= 2;
-      synergies.push(`⚡ ${genre} Mastery (3): 2x damage`);
+      synergies.push(`${genre} Combo\n 2x damage`);
     } else if (count >= 2) {
       multiplier *= 1.5;
-      synergies.push(`✨ ${genre} Synergy (2): 1.5x damage`);
+      synergies.push(`${genre} Combo\n 1.5x damage`);
     }
   });
   
@@ -49,27 +49,27 @@ export const calculateBattle = (cards: MovieCard[]): BattleResult => {
   const decades = cards.map(c => c.decade);
   if (new Set(decades).size === 1) {
     multiplier *= 1.4;
-    synergies.push(`📅 ${decades[0]} Era Unity: 1.4x damage`);
+    synergies.push(`${decades[0]} Era Unity 1.4x damage`);
   }
   
   // High rating synergy
   const avgRating = cards.reduce((sum, c) => sum + c.vote_average, 0) / cards.length;
   if (avgRating >= 8.5) {
     totalDamage += 800;
-    synergies.push(`⭐ Masterpiece (avg 8.5+): +800 damage`);
+    synergies.push(`Masterpiece (avg 8.5+): +800 damage`);
   } else if (avgRating >= 8.0) {
     totalDamage += 500;
-    synergies.push(`⭐ Critical Darling (avg 8.0+): +500 damage`);
+    synergies.push(`Critical Darling (avg 8.0+): +500 damage`);
   }
   
   // Genre-specific bonuses
   if (genres.includes('Action')) {
     totalDamage += 300;
-    synergies.push(`💥 Action Bonus: +300 damage`);
+    synergies.push(`Action Bonus +300 damage`);
   }
   if (genres.includes('Horror')) {
     const lifesteal = Math.round(totalDamage * 0.1);
-    synergies.push(`🩸 Horror Lifesteal: Heal ${lifesteal} HP`);
+    synergies.push(`Horror Lifesteal Heal ${lifesteal} HP`);
   }
   
   totalDamage *= multiplier;

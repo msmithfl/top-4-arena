@@ -12,7 +12,7 @@ const BattleLog: React.FC<BattleLogProps> = ({ battleLog }) => {
         <Film className="w-5 h-5" />
         Battle Log
       </h3>
-      <div className="space-y-1 text-sm font-mono overflow-y-auto flex-1">
+      <div className="space-y-1 text-sm font-mono overflow-y-auto flex-1 scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800 hover:scrollbar-thumb-gray-500">
         {battleLog.length === 0 && (
           <div className="text-gray-500 italic">Battle log will appear here...</div>
         )}

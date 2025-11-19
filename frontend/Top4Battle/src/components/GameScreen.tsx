@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Film, Swords, Trash2 } from 'lucide-react';
+import { Film } from 'lucide-react';
 import PlayerCard from './MovieCard';
 import BossCardDisplay from './BossCard';
 import GameSidebar from './GameSidebar';
@@ -388,7 +388,7 @@ const GameScreen: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-linear-to-br from-purple-900 via-blue-900 to-black text-white flex items-center justify-center">
+      <div className="min-h-screen bg-[#14181C] text-white flex items-center justify-center">
         <div className="text-center">
           <Film className="w-16 h-16 animate-spin mx-auto mb-4" />
           <h2 className="text-2xl font-bold">Loading Movies...</h2>
@@ -400,14 +400,14 @@ const GameScreen: React.FC = () => {
   
   if (error) {
     return (
-      <div className="min-h-screen bg-linear-to-br from-purple-900 via-blue-900 to-black text-white flex items-center justify-center">
+      <div className="min-h-screen bg-[#14181C] text-white flex items-center justify-center">
         <div className="text-center">
           <div className="text-red-500 text-6xl mb-4">❌</div>
           <h2 className="text-2xl font-bold mb-2">Error Loading Game</h2>
           <p className="text-gray-400 mb-4">{error}</p>
           <button 
             onClick={() => window.location.reload()}
-            className="bg-purple-600 hover:bg-purple-700 px-6 py-3 rounded-lg font-bold"
+            className="bg-linear-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 px-6 py-3 rounded-lg font-bold cursor-pointer"
           >
             Retry
           </button>
@@ -419,8 +419,8 @@ const GameScreen: React.FC = () => {
   if (!boss) return <div className="p-8">Loading...</div>;
 
   return (
-    <div className="h-screen bg-linear-to-r from-purple-900 via-blue-900 to-black text-white p-4 overflow-hidden">
-      <div className="max-w-full mx-auto flex gap-4 h-full">
+    <div className="h-screen bg-[#14181C] text-white overflow-hidden">
+      <div className="max-w-full mx-auto flex h-full">
         {/* Left Sidebar - Player Stats */}
         <GameSidebar
           turn={turn}
@@ -434,7 +434,7 @@ const GameScreen: React.FC = () => {
         />
 
         {/* Main Content */}
-        <div className="flex-1 overflow-y-auto h-full flex flex-col">
+        <div className="flex-1 overflow-y-auto mx-3 py-3 h-full flex flex-col">
         
         {/* Shop Screen - shows after victory */}
         {gameState === 'shop' && (
@@ -444,12 +444,12 @@ const GameScreen: React.FC = () => {
         {/* Loss Screen */}
         {gameState === 'lost' && (
           <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
-            <div className="bg-gray-900 p-8 rounded-lg text-center border-4 border-red-500">
+            <div className="bg-[#2C3440] p-8 rounded-lg text-center border-4 border-red-500">
               <h2 className="text-4xl font-bold mb-4">💀 DEFEATED</h2>
               <p className="text-xl mb-6">{boss.title} was too powerful...</p>
               <button
                 onClick={() => window.location.href = '/'}
-                className="cursor-pointer hover:scale-105 transition-all bg-purple-600 hover:bg-purple-700 px-8 py-3 rounded-lg font-bold text-xl"
+                className="cursor-pointer hover:scale-105 transition-all bg-linear-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 px-8 py-3 rounded-lg font-bold text-xl"
               >
                 Back to Home
               </button>
@@ -489,7 +489,7 @@ const GameScreen: React.FC = () => {
             <button
               onClick={handleAttack}
               disabled={selectedCards.length === 0}
-              className={`flex-1 cursor-pointer px-6 py-4 rounded-lg font-bold text-xl flex items-center justify-center gap-2 shadow-lg transition-all
+              className={`flex-1 cursor-pointer px-6 py-4 rounded-full font-bold text-xl flex items-center justify-center gap-2 shadow-lg transition-all
                 bg-linear-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700
                 ${selectedCards.length === 0
                   ? 'disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed'
@@ -497,14 +497,14 @@ const GameScreen: React.FC = () => {
                 }`
               }
             >
-              <Swords className="w-6 h-6" />
+              {/* <Swords className="w-6 h-6" /> */}
               ATTACK
               {/* ({selectedCards.length}/4) */}
             </button>
             <button
               onClick={handleDiscard}
               disabled={hasDiscarded || selectedCards.length === 0}
-              className={`cursor-pointer px-6 py-4 rounded-lg font-bold text-xl flex items-center justify-center gap-2 shadow-lg transition-all
+              className={`cursor-pointer px-8 py-4 rounded-lg font-bold text-xl flex items-center justify-center gap-2 shadow-lg transition-all
                 bg-linear-to-r from-yellow-600 to-orange-600 hover:from-yellow-700 hover:to-orange-700
                 ${(hasDiscarded || selectedCards.length === 0)
                   ? 'disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed'
@@ -512,7 +512,7 @@ const GameScreen: React.FC = () => {
                 }`
               }
             >
-              <Trash2 className="w-5 h-5" />
+              {/* <Trash2 className="w-5 h-5" /> */}
               DISCARD {hasDiscarded ? '(Used)' : ''}
             </button>
           </div>
