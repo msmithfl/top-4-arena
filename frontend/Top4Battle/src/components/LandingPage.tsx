@@ -64,7 +64,7 @@ const LandingPage = () => {
           <div className="bg-white/10 backdrop-blur-sm p-5 rounded-lg border border-white/20">
             <Trophy className="w-10 h-10 mx-auto mb-3 text-blue-400" />
             <h3 className="text-lg font-bold mb-2">Defeat Bosses</h3>
-            <p className="text-sm text-gray-300">Slay baddies with specials abilities</p>
+            <p className="text-sm text-gray-300">Slay movie villians with specials abilities</p>
           </div>
         </div>
 
