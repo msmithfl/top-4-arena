@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Sword, Shield } from 'lucide-react';
 import { fetchPopularMovies } from '../utils/tmdbApi';
+import Marquee from "react-fast-marquee";
 
 interface PosterData {
   url: string;
@@ -23,8 +24,7 @@ const MovieCarousel: React.FC = () => {
             attack: Math.round(m.vote_average * 10) / 10,
             defense: Math.floor(Math.random() * 71) + 90
           }));
-        // Duplicate the posters for seamless infinite scroll
-        setPosters([...posterData, ...posterData]);
+        setPosters(posterData);
       } catch (err) {
         console.error('Failed to load carousel posters:', err);
       }
@@ -37,12 +37,12 @@ const MovieCarousel: React.FC = () => {
   }
 
   return (
-    <div className="w-screen overflow-hidden py-8 pb-16">
-      <div className="flex animate-scroll">
+    <div className="w-screen py-8 pb-16">
+      <Marquee speed={50} gradient={false}>
         {posters.map((poster, idx) => (
           <div
             key={idx}
-            className="shrink-0 mx-2 relative"
+            className="mx-2 relative"
             style={{ width: '150px', height: '225px' }}
           >
             <img
@@ -62,7 +62,7 @@ const MovieCarousel: React.FC = () => {
             </div>
           </div>
         ))}
-      </div>
+      </Marquee>
     </div>
   );
 };
