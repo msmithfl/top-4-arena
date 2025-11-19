@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Film } from 'lucide-react';
 import PlayerCard from './MovieCard';
 import BossCardDisplay from './BossCard';
 import GameSidebar from './GameSidebar';
@@ -12,6 +11,7 @@ import DeckPopup from './DeckPopup';
 import ShopScreen from './ShopScreen';
 import { PREBUILT_BOSSES } from '../data/prebuiltBosses';
 import { createPrebuiltBossCard } from '../utils/bossCard';
+import spinnerImg from '../assets/imgs/top4-spinner.png';
 
 let bossCycle: number[] = [];
 
@@ -390,7 +390,11 @@ const GameScreen: React.FC = () => {
     return (
       <div className="min-h-screen bg-[#14181C] text-white flex items-center justify-center">
         <div className="text-center">
-          <Film className="w-16 h-16 animate-spin mx-auto mb-4" />
+          <img 
+            src={spinnerImg} 
+            alt="Loading" 
+            className="w-20 h-20 animate-spin mx-auto mb-4" 
+          />
           <h2 className="text-2xl font-bold">Loading Movies...</h2>
           <p className="text-gray-400 mt-2">Fetching from TMDB</p>
         </div>

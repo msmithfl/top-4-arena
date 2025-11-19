@@ -1,5 +1,5 @@
 import React from 'react';
-import InstructionsButton from './InstructionsButton';
+//import InstructionsButton from './InstructionsButton';
 import { HiOutlineBackspace } from "react-icons/hi2";
 import { Link } from 'react-router-dom';
 
@@ -14,11 +14,11 @@ const TurnCounter: React.FC<TurnCounterProps> = ({ turn, round }) => {
       <div>
         <Link
           to='/'
-          className="bg-rose-500 hover:bg-rose-700 py-2 mb-2 rounded-lg font-bold flex items-center gap-2 justify-center shadow-lg transition-all"
+          className="bg-rose-500 hover:bg-rose-700 py-6 px-2 ml-1 rounded-lg font-bold flex items-center gap-2 justify-center shadow-lg transition-all"
         >
-          <HiOutlineBackspace className="w-5 h-5" />
+          <HiOutlineBackspace className="w-10 h-10" />
         </Link>
-        <InstructionsButton />
+        {/* <InstructionsButton /> */}
       </div>
       <div className='px-6 py-3 bg-gray-800 bg-opacity-50 border-2 rounded-lg border-gray-600 flex gap-6 items-center'>
         <div>
