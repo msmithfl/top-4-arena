@@ -34,13 +34,8 @@ export interface BossCard extends MovieCard {
 
 export interface PrebuiltBoss {
   id: string;
-  title: string;
-  poster_url: string; // Use a static image or TMDB poster path
-  maxHP: number;
-  basePower: number;
-  baseDamage: number;
-  defenseIgnore: number;
-  genres: { id: number; name: string }[];
+  tmdbId: number;
+  poster_url?: string; // Optional custom poster, falls back to TMDB poster
   ability: {
     name: string;
     description: string;

@@ -3,16 +3,8 @@ import type { PrebuiltBoss } from '../types/index';
 export const PREBUILT_BOSSES: PrebuiltBoss[] = [
   {
     id: 'jaws',
-    title: 'Jaws',
+    tmdbId: 578, // Jaws (1975)
     poster_url: '/lxM6kqilAdpdhqUl2biYp5frUxE.jpg',
-    maxHP: 5000,
-    basePower: 300,
-    baseDamage: 600,
-    defenseIgnore: 0.3,
-    genres: [
-      { id: 27, name: 'Horror' },
-      { id: 53, name: 'Thriller' }
-    ],
     ability: {
       name: 'Blood Frenzy',
       description: 'Deals extra damage every 3 turns.',
@@ -24,16 +16,8 @@ export const PREBUILT_BOSSES: PrebuiltBoss[] = [
   },
   {
     id: 'alien',
-    title: 'Alien',
+    tmdbId: 348, // Alien (1979)
     poster_url: '/ctaETvc0KmHTiwGo2GFUlPpm6Oo.jpg',
-    maxHP: 6000,
-    basePower: 350,
-    baseDamage: 700,
-    defenseIgnore: 0.4,
-    genres: [
-      { id: 27, name: 'Horror' },
-      { id: 878, name: 'Science Fiction' }
-    ],
     ability: {
       name: 'Acid Blood',
       description: 'Heals self when attacked.',
@@ -46,206 +30,121 @@ export const PREBUILT_BOSSES: PrebuiltBoss[] = [
   },
   {
     id: 'kpop-demon-hunters',
-    title: 'KPop Demon Hunters',
+    tmdbId: 803796, // K-Pop: Demon Hunters
     poster_url: '/zT7Lhw3BhJbMkRqm9Zlx2YGMsY0.jpg',
-    maxHP: 6000,
-    basePower: 350,
-    baseDamage: 700,
-    defenseIgnore: 0.4,
-    genres: [
-      { id: 14, name: 'Horror' },
-      { id: 10402, name: 'Music' },
-      { id: 35, name: 'Comedy' },
-      { id: 16, name: 'Animation' }
-    ],
     ability: {
       name: 'Dance of Shadows',
       description: 'Heals self when attacked.',
       effect: (_turn, baseDamage) => ({
         damage: baseDamage,
         heal: 0.05,
-        message: 'Alien heals from acid blood!'
+        message: 'Heals with every move!'
       })
     }
   },
   {
     id: 'turbo',
-    title: 'Turbo',
+    tmdbId: 77950, // Turbo
     poster_url: '/aE3A98CfBWVReurJqpOBFbzIwMf.jpg',
-    maxHP: 6000,
-    basePower: 350,
-    baseDamage: 700,
-    defenseIgnore: 0.4,
-    genres: [
-      { id: 16, name: 'Animation' },
-      { id: 10751, name: 'Family' }
-    ],
     ability: {
       name: 'Nitro Boost',
-      description: 'Heals self when attacked.',
+      description: 'Speed increases damage.',
       effect: (_turn, baseDamage) => ({
-        damage: baseDamage,
-        heal: 0.05,
-        message: 'Alien heals from acid blood!'
+        damage: baseDamage * 1.2,
+        message: 'Nitro boost activated!'
       })
     }
   },
   {
     id: 'hook',
-    title: 'Hook',
+    tmdbId: 879, // Hook
     poster_url: '/4ZPOIhQJiK8BFc0VF8BZahPVXR0.jpg',
-    maxHP: 6000,
-    basePower: 350,
-    baseDamage: 700,
-    defenseIgnore: 0.4,
-    genres: [
-      { id: 12, name: 'Adventure' },
-      { id: 14, name: 'Fantasy' },
-      { id: 35, name: 'Comedy' },
-      { id: 10751, name: 'Family' }
-    ],
     ability: {
-      name: 'Pirate’s Revenge',
-      description: 'Heals self when attacked.',
+      name: "Pirate's Revenge",
+      description: 'Strikes back with vengeance.',
       effect: (_turn, baseDamage) => ({
-        damage: baseDamage,
-        heal: 0.05,
-        message: 'Alien heals from acid blood!'
+        damage: baseDamage * 1.15,
+        message: 'The captain strikes back!'
       })
     }
   },
   {
     id: 'ex-machina',
-    title: 'Ex Machina',
+    tmdbId: 264660, // Ex Machina
     poster_url: '/dmJW8IAKHKxFNiUnoDR7JfsK7Rp.jpg',
-    maxHP: 6000,
-    basePower: 350,
-    baseDamage: 700,
-    defenseIgnore: 0.4,
-    genres: [
-      { id: 18, name: 'Drama' },
-      { id: 878, name: 'Science Fiction' }
-    ],
     ability: {
       name: 'AI Manipulation',
-      description: 'Heals self when attacked.',
+      description: 'Predicts and counters attacks.',
       effect: (_turn, baseDamage) => ({
-        damage: baseDamage,
-        heal: 0.05,
-        message: 'Alien heals from acid blood!'
+        damage: baseDamage * 1.25,
+        message: 'AI predicts your move!'
       })
     }
   },
   {
     id: 'the-blob',
-    title: 'The Blob',
+    tmdbId: 9599, // The Blob (1988)
     poster_url: '/zXXDmz5cPuSo9LveCNjZ1j16szC.jpg',
-    maxHP: 6000,
-    basePower: 350,
-    baseDamage: 700,
-    defenseIgnore: 0.4,
-    genres: [
-      { id: 27, name: 'Horror' },
-      { id: 878, name: 'Science Fiction' }
-    ],
     ability: {
       name: 'Slime Cannon',
-      description: 'Heals self when attacked.',
+      description: 'Absorbs and reflects damage.',
       effect: (_turn, baseDamage) => ({
         damage: baseDamage,
-        heal: 0.05,
-        message: 'Alien heals from acid blood!'
+        heal: 0.03,
+        message: 'The blob absorbs your attack!'
       })
     }
   },
   {
-    id: 'fanstastic-mr-fox',
-    title: 'Fantastic Mr. Fox',
+    id: 'fantastic-mr-fox',
+    tmdbId: 10315, // Fantastic Mr. Fox
     poster_url: '/pYbIT04CMXAbVEPj9mhFzcM73XS.jpg',
-    maxHP: 6000,
-    basePower: 350,
-    baseDamage: 700,
-    defenseIgnore: 0.4,
-    genres: [
-      { id: 12, name: 'Adventure' },
-      { id: 16, name: 'Animation' },
-      { id: 35, name: 'Comedy' },
-      { id: 10751, name: 'Family' }
-    ],
     ability: {
       name: 'Sneak King',
-      description: 'Heals self when attacked.',
-      effect: (_turn, baseDamage) => ({
-        damage: baseDamage,
-        heal: 0.05,
-        message: 'Alien heals from acid blood!'
+      description: 'Cunning strikes deal extra damage.',
+      effect: (turn, baseDamage) => ({
+        damage: turn % 2 === 0 ? baseDamage * 1.3 : baseDamage,
+        message: turn % 2 === 0 ? 'Cunning sneak attack!' : ''
       })
     }
   },
   {
     id: 'pink-flamingos',
-    title: 'Pink Flamingos',
+    tmdbId: 692, // Pink Flamingos
     poster_url: '/10N8SvTQwUqyWgocPam1P18Jgr.jpg',
-    maxHP: 6000,
-    basePower: 350,
-    baseDamage: 700,
-    defenseIgnore: 0.4,
-    genres: [
-      { id: 35, name: 'Comedy' },
-      { id: 80, name: 'Crime' }
-    ],
     ability: {
-      name: 'Barf Bag',
-      description: 'Heals self when attacked.',
+      name: "Divine's Fury",
+      description: 'Unleashes shocking power.',
       effect: (_turn, baseDamage) => ({
-        damage: baseDamage,
-        heal: 0.05,
-        message: 'Alien heals from acid blood!'
+        damage: baseDamage * 1.4,
+        message: 'Divine fury unleashed!'
       })
     }
   },
   {
     id: 'cujo',
-    title: 'Cujo',
+    tmdbId: 10489, // Cujo
     poster_url: '/zqRxnH7Dn1EXaLZWVNXVzBYWSR.jpg',
-    maxHP: 6000,
-    basePower: 350,
-    baseDamage: 700,
-    defenseIgnore: 0.4,
-    genres: [
-      { id: 27, name: 'Horror' },
-      { id: 53, name: 'Thriller' }
-    ],
     ability: {
       name: 'Rabid Assault',
-      description: 'Heals self when attacked.',
-      effect: (_turn, baseDamage) => ({
-        damage: baseDamage,
-        heal: 0.05,
-        message: 'Alien heals from acid blood!'
+      description: 'Wild attacks with increasing fury.',
+      effect: (turn, baseDamage) => ({
+        damage: baseDamage + (turn * 50),
+        message: 'Rabid fury intensifies!'
       })
     }
   },
   {
     id: 'the-thing',
-    title: 'The Thing',
+    tmdbId: 1091, // The Thing (1982)
     poster_url: '/tzGY49kseSE9QAKk47uuDGwnSCu.jpg',
-    maxHP: 6000,
-    basePower: 350,
-    baseDamage: 700,
-    defenseIgnore: 0.4,
-    genres: [
-      { id: 27, name: 'Horror' },
-      { id: 9648, name: 'Mystery' },
-      { id: 878, name: 'Science Fiction' }
-    ],
     ability: {
       name: 'Shape Shift',
-      description: 'Heals self when attacked.',
+      description: 'Adapts to avoid damage.',
       effect: (_turn, baseDamage) => ({
-        damage: baseDamage,
-        heal: 0.05,
-        message: 'Alien heals from acid blood!'
+        damage: baseDamage * 0.9,
+        heal: 0.08,
+        message: 'The Thing adapts and regenerates!'
       })
     }
   },

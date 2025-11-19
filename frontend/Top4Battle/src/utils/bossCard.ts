@@ -17,21 +17,29 @@ export const createBossCard = (movie: Movie): BossCard => {
   };
 };
 
-export function createPrebuiltBossCard(rawBoss: PrebuiltBoss): BossCard {
+export async function createPrebuiltBossCard(rawBoss: PrebuiltBoss, fetchMovieDetails: (id: number) => Promise<Movie>): Promise<BossCard> {
+  // Fetch movie data from TMDB
+  const movieData = await fetchMovieDetails(rawBoss.tmdbId);
+  
+  // Use custom poster if provided, otherwise use TMDB poster
+  const posterPath = rawBoss.poster_url || movieData.poster_path;
+  
+  // Enhance movie with stats
+  const enhancedMovie = enhanceMovie({
+    ...movieData,
+    poster_path: posterPath
+  });
+  
+  // Calculate boss stats from enhanced movie (like before)
+  const maxHP = enhancedMovie.basePower * 50;
+  const baseDamage = enhancedMovie.basePower * 3;
+  const defenseIgnore = rawBoss.ability.name.includes('PRECISION') ? 0.75 : 0.5;
+  
   return {
-    ...rawBoss,
-    id: -1,
-    poster_path: rawBoss.poster_url,
-    vote_average: 0,
-    vote_count: 0,
-    revenue: 0,
-    runtime: 0,
-    release_date: '',
-    popularity: 0,
-    starPowerTier: '',
-    revenueTier: '',
-    eraTier: '',
-    decade: '',
+    ...enhancedMovie,
+    maxHP,
+    baseDamage,
+    defenseIgnore,
     ability: {
       ...rawBoss.ability,
       effect: (turn: number, baseDamage: number) => {
