@@ -4,6 +4,7 @@ import LifePoints from './LifePoints';
 import AttackPreview from './AttackPreview';
 //import BattleLog from './BattleLog';
 import type { MovieCard, BossCard, BattleResult } from '../types';
+import InstructionsButton from './InstructionsButton';
 
 interface GameSidebarProps {
   turn: number;
@@ -39,6 +40,22 @@ const GameSidebar: React.FC<GameSidebarProps> = ({
         />
       </div>
       {/* <BattleLog battleLog={battleLog} /> */}
+      
+      {/* Logo and Title at Bottom */}
+      <div className="mt-auto flex items-center gap-3 pt-4 border-t border-white/10">
+        <img 
+          src="/favicon-top4.png" 
+          alt="Top 4 Arena Logo" 
+          className="w-10 h-10"
+        />
+        <div className="flex flex-col">
+          <span className="text-2xl font-bold text-white">Top 4 Arena</span>
+          {/* <span className="text-xs text-gray-400">Movie Battle Deckbuilder</span> */}
+        </div>
+        <div className='ml-3'>
+          <InstructionsButton />
+        </div>
+      </div>
     </div>
   );
 };
