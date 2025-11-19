@@ -11,7 +11,6 @@ const InstructionsButton: React.FC = () => {
         className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg font-bold flex items-center gap-2 shadow-lg transition-all cursor-pointer"
       >
         <HelpCircle className="w-5 h-5" />
-        How to Play
       </button>
 
       {isOpen && (

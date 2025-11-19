@@ -27,15 +27,17 @@ const GameSidebar: React.FC<GameSidebarProps> = ({
   calculateBattle
 }) => {
   return (
-    <div className="w-80 shrink-0 flex flex-col gap-4 h-full overflow-hidden">
+    <div className="px-6 py-6 w-80 bg-[#2C3440] shrink-0 flex flex-col justify-start gap-4 h-full overflow-hidden">
       <TurnCounter turn={turn} round={round}/>
       <LifePoints playerHP={playerHP} />
-      <AttackPreview
-        selectedCards={selectedCards}
-        hand={hand}
-        boss={boss}
-        calculateBattle={calculateBattle}
-      />
+      <div className="h-1/2 flex flex-col">
+        <AttackPreview
+          selectedCards={selectedCards}
+          hand={hand}
+          boss={boss}
+          calculateBattle={calculateBattle}
+        />
+      </div>
       {/* <BattleLog battleLog={battleLog} /> */}
     </div>
   );

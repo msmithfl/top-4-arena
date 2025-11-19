@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Film, Swords, Trash2 } from 'lucide-react';
+import { Film } from 'lucide-react';
 import PlayerCard from './MovieCard';
 import BossCardDisplay from './BossCard';
 import GameSidebar from './GameSidebar';
@@ -419,8 +419,8 @@ const GameScreen: React.FC = () => {
   if (!boss) return <div className="p-8">Loading...</div>;
 
   return (
-    <div className="h-screen bg-[#14181C] text-white p-4 overflow-hidden">
-      <div className="max-w-full mx-auto flex gap-4 h-full">
+    <div className="h-screen bg-[#14181C] text-white overflow-hidden">
+      <div className="max-w-full mx-auto flex h-full">
         {/* Left Sidebar - Player Stats */}
         <GameSidebar
           turn={turn}
@@ -434,7 +434,7 @@ const GameScreen: React.FC = () => {
         />
 
         {/* Main Content */}
-        <div className="flex-1 overflow-y-auto h-full flex flex-col">
+        <div className="flex-1 overflow-y-auto mx-3 py-3 h-full flex flex-col">
         
         {/* Shop Screen - shows after victory */}
         {gameState === 'shop' && (
@@ -489,7 +489,7 @@ const GameScreen: React.FC = () => {
             <button
               onClick={handleAttack}
               disabled={selectedCards.length === 0}
-              className={`flex-1 cursor-pointer px-6 py-4 rounded-lg font-bold text-xl flex items-center justify-center gap-2 shadow-lg transition-all
+              className={`flex-1 cursor-pointer px-6 py-4 rounded-full font-bold text-xl flex items-center justify-center gap-2 shadow-lg transition-all
                 bg-linear-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700
                 ${selectedCards.length === 0
                   ? 'disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed'
@@ -497,14 +497,14 @@ const GameScreen: React.FC = () => {
                 }`
               }
             >
-              <Swords className="w-6 h-6" />
+              {/* <Swords className="w-6 h-6" /> */}
               ATTACK
               {/* ({selectedCards.length}/4) */}
             </button>
             <button
               onClick={handleDiscard}
               disabled={hasDiscarded || selectedCards.length === 0}
-              className={`cursor-pointer px-6 py-4 rounded-lg font-bold text-xl flex items-center justify-center gap-2 shadow-lg transition-all
+              className={`cursor-pointer px-8 py-4 rounded-lg font-bold text-xl flex items-center justify-center gap-2 shadow-lg transition-all
                 bg-linear-to-r from-yellow-600 to-orange-600 hover:from-yellow-700 hover:to-orange-700
                 ${(hasDiscarded || selectedCards.length === 0)
                   ? 'disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed'
@@ -512,7 +512,7 @@ const GameScreen: React.FC = () => {
                 }`
               }
             >
-              <Trash2 className="w-5 h-5" />
+              {/* <Trash2 className="w-5 h-5" /> */}
               DISCARD {hasDiscarded ? '(Used)' : ''}
             </button>
           </div>

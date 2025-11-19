@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { fetchMovieDetails, fetchPopularMovies } from '../utils/tmdbApi';
-import { Film, Shuffle, X, ArrowLeft } from 'lucide-react';
+import { Film, Shuffle, X, ArrowLeft, Layers } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const TMDB_API_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmODZmYTE3MzcwNzRmMzY3NzkwNzc1Y2Q1NTQwNmExYyIsIm5iZiI6MTY4NzYyNzAzOC40MDEsInN1YiI6IjY0OTcyNTFlYjM0NDA5MDBhZDUyNTY4YSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.YA8K57yrPNiM_UwefPB6Bv2t8fZdY_v1GD9AS3rRrU0';
@@ -120,9 +120,12 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
         </div>
         <div className="space-y-4">
             <h2 className="text-4xl font-bold text-white bg-clip-text flex items-center justify-center gap-2">
-            Pick Your Top 4 Films
+            Pick Your Top 4
             </h2>
-            <p className="text-xl text-gray-300">Search for your top 4 and add them to your deck!</p>
+            <div className='flex items-center justify-center gap-2'>
+              <p className="text-xl text-gray-300">Search movie titles and add them to your deck</p>
+              <Layers/>
+            </div>
         </div>
         {/* ...rest of your component unchanged... */}
         <div className="flex gap-2 max-w-lg mx-auto mb-6">
