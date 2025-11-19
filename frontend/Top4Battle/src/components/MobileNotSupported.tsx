@@ -1,27 +1,32 @@
-import { useNavigate } from 'react-router-dom'
-import { Swords, Film, Trophy, Mail, X, Smile } from 'lucide-react'
-import { useState } from 'react'
-import { FaYoutube } from "react-icons/fa";
+import { useNavigate } from 'react-router-dom';
+import { Monitor, ArrowLeft } from 'lucide-react';
 import MovieCarousel from './MovieCarousel';
+import { Smile, Mail } from 'lucide-react';
+import { FaYoutube } from "react-icons/fa";
+import { useState, useEffect } from 'react';
 
-const APP_VERSION = "0.1.0-early"; // Set your version here
+const APP_VERSION = "0.1.0-early";
 
-const LandingPage = () => {
-  const navigate = useNavigate()
+const MobileNotSupported = () => {
+  const navigate = useNavigate();
+  const [isPanelOpen, setIsPanelOpen] = useState(false);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   const [formData, setFormData] = useState({
     name: '',
     message: `\n\n---\nFeedback for Top 4 Arena v${APP_VERSION}\n`
-  })
-  const [isPanelOpen, setIsPanelOpen] = useState(false)
+  });
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    const subject = encodeURIComponent('Top 4 Arena Feedback')
-    const body = encodeURIComponent(`From: ${formData.name}\n\n${formData.message}`)
-    window.location.href = `mailto:top4arena@proton.me?subject=${subject}&body=${body}`
-    setFormData({ name: '', message: `\n\n---\nFeedback for Top 4 Arena v${APP_VERSION}\n` })
-    setIsPanelOpen(false)
-  }
+    e.preventDefault();
+    const subject = encodeURIComponent('Top 4 Arena Feedback');
+    const body = encodeURIComponent(`From: ${formData.name}\n\n${formData.message}`);
+    window.location.href = `mailto:top4arena@proton.me?subject=${subject}&body=${body}`;
+    setFormData({ name: '', message: `\n\n---\nFeedback for Top 4 Arena v${APP_VERSION}\n` });
+    setIsPanelOpen(false);
+  };
 
   return (
     <div className="min-h-screen bg-[#14181C] text-white flex flex-col items-center overflow-x-hidden relative">
@@ -32,77 +37,22 @@ const LandingPage = () => {
         className="absolute top-4 left-1/2 -translate-x-1/2 md:left-4 md:translate-x-0 w-16 h-16 z-10"
       />
       
-      <div className="max-w-5xl w-full flex flex-col items-center justify-end space-y-6 grow pt-16 md:pt-0">
-        {/* Early Access Banner */}
-        {/* <div className="bg-yellow-500/20 border-2 border-yellow-500 rounded-lg p-3 flex items-center justify-center gap-3 w-full">
-          <AlertCircle className="w-5 h-5 text-yellow-400" />
-          <p className="text-base font-bold text-yellow-300">
-            EARLY TESTING - We welcome your feedback!
-          </p>
-        </div> */}
-
-        {/* Title */}
-        <div className="mb-2 mt-8 md:mb-6 w-full text-center">
-          <h1 className="pb-2 md:pb-0 text-5xl md:text-7xl font-bold text-white bg-clip-text">
-            TOP 4 ARENA<span className='text-xs text-amber-300 md:inline block'>EARLY ACCESSv0.1.0</span>
-          <p className="pt-4 text-xl md:text-2xl text-gray-300 ">Movie Battle Deckbuilder</p>
-          </h1>
-        </div>
-
-        {/* Features */}
-        <div className="px-3 grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 w-full text-center">
-          <div className="bg-white/10 backdrop-blur-sm p-5 rounded-lg border border-white/20">
-            <Film className="w-10 h-10 mx-auto mb-3 text-orange-500" />
-            <h3 className="text-lg font-bold mb-2">Build Your Deck</h3>
-            <p className="text-sm text-gray-300">Take your Top 4 films into battle</p>
-          </div>
-          <div className="bg-white/10 backdrop-blur-sm p-5 rounded-lg border border-white/20">
-            <Swords className="w-10 h-10 mx-auto mb-3 text-green-400" />
-            <h3 className="text-lg font-bold mb-2">Strategic Combat</h3>
-            <p className="text-sm text-gray-300">Stat combos and genre synergies</p>
-          </div>
-          <div className="bg-white/10 backdrop-blur-sm p-5 rounded-lg border border-white/20">
-            <Trophy className="w-10 h-10 mx-auto mb-3 text-blue-400" />
-            <h3 className="text-lg font-bold mb-2">Defeat Bosses</h3>
-            <p className="text-sm text-gray-300">Slay baddies with specials abilities</p>
-          </div>
-        </div>
-
-        {/* Buttons */}
-        <div className="flex flex-col md:flex-row gap-4 justify-center px-3 py-4 w-full">
-          <button
-            onClick={() => {
-              const isMobile = window.innerWidth < 768;
-              window.scrollTo(0, 0);
-              navigate(isMobile ? '/mobile-not-supported' : '/game');
-            }}
-            className="bg-linear-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 text-white text-xl md:text-2xl font-bold py-4 px-8 md:px-12 rounded-full shadow-2xl transform hover:scale-105 transition-all duration-200 w-full md:w-auto cursor-pointer"
-          >
-            Start Battle
-          </button>
-          {/* <button
-            onClick={() => setIsPanelOpen(true)}
-            className="bg-yellow-600 hover:bg-yellow-700 text-black text-lg md:text-xl justify-center font-bold py-4 px-8 rounded-full shadow-2xl transform hover:scale-105 transition-all duration-200 flex items-center gap-2 w-full md:w-auto cursor-pointer"
-          >
-            <Mail className="w-5 h-5" />
-            Send Feedback
-          </button> */}
-        </div>
-
-        {/* How to Play */}
-        {/* <div className="text-left bg-white/5 backdrop-blur-sm p-5 rounded-lg border border-white/10 w-full max-w-2xl mx-auto mb-4">
-          <h2 className="text-lg md:text-xl font-bold mb-3 text-center">How to Play</h2>
-          <ul className="space-y-1 text-sm md:text-base text-gray-300">
-            <li>• Select 1-4 cards from your hand to attack</li>
-            <li>• Build combos with genre synergies for bonus damage</li>
-            <li>• Defeat the boss before your HP reaches zero</li>
-            <li>• Discard weak cards once per turn to draw new ones</li>
-            <li>• Mobile play not currently supported</li>
-          </ul>
-        </div> */}
+      <div className="max-w-5xl w-full flex flex-col items-center justify-center space-y-6 grow px-4 pt-24 md:pt-0">
+        <Monitor className="w-24 h-24 text-orange-500" />
+        <h1 className="text-4xl font-bold text-center">Desktop Only</h1>
+        <p className="text-xl text-gray-300 text-center max-w-md">
+          Top 4 Arena is not supported on mobile devices yet. Please visit us on a desktop or laptop computer to play!
+        </p>
+        <button
+          onClick={() => navigate('/')}
+          className="bg-linear-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 text-white text-xl font-bold py-4 px-8 rounded-full shadow-2xl transform hover:scale-105 transition-all duration-200 flex items-center gap-2 cursor-pointer"
+        >
+          <ArrowLeft className="w-5 h-5" />
+          Back to Home
+        </button>
       </div>
 
-      {/* Movie Carousel - Reserve space to prevent layout shift */}
+      {/* Movie Carousel */}
       <div className="w-screen" style={{ minHeight: '320px' }}>
         <MovieCarousel />
       </div>
@@ -123,7 +73,7 @@ const LandingPage = () => {
               onClick={() => setIsPanelOpen(false)}
               className="text-gray-400 hover:text-white transition-colors cursor-pointer"
             >
-              <X className="w-6 h-6" />
+              ×
             </button>
           </div>
           <form onSubmit={handleSubmit} className="flex-1 flex flex-col space-y-4">
@@ -171,9 +121,6 @@ const LandingPage = () => {
       <footer className="w-full bg-[#2C3440] border-t border-white/10 py-2">
         <div className="max-w-5xl mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center justify-center gap-4">
-            {/* <div className="text-sm text-gray-400">
-              v{APP_VERSION} Early Access
-            </div> */}
             <div className="flex flex-col md:flex-row gap-3 items-center">
               <a
                 href="https://buymeacoffee.com/msmithfls"
@@ -208,4 +155,4 @@ const LandingPage = () => {
   );
 };
 
-export default LandingPage;
+export default MobileNotSupported;
