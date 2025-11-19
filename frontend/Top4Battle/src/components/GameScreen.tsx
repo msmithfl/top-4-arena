@@ -92,9 +92,9 @@ const GameScreen: React.FC = () => {
         setHand(initialHand);
         setDeckPosition(7);
 
-        // Set boss from prebuilt list, mapping poster_url to poster_path for compatibility
+        // Set boss from prebuilt list with TMDB data
         const rawBoss = getRandomBoss();
-        const bossCard = createPrebuiltBossCard(rawBoss);
+        const bossCard = await createPrebuiltBossCard(rawBoss, fetchMovieDetails);
         setBoss(bossCard);
         setBossHP(bossCard.maxHP);
 
@@ -347,9 +347,9 @@ const GameScreen: React.FC = () => {
     setIsLoading(true);
     setError(null);
     try {
-      // Set boss from prebuilt list
+      // Set boss from prebuilt list with TMDB data
       const rawBoss = getRandomBoss();
-      const bossCard = createPrebuiltBossCard(rawBoss);
+      const bossCard = await createPrebuiltBossCard(rawBoss, fetchMovieDetails);
       
       // Use the passed deck or current deck
       const deckToUse = newDeck || deck;
