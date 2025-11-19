@@ -13,6 +13,23 @@ import ShopScreen from './ShopScreen';
 import { PREBUILT_BOSSES } from '../data/prebuiltBosses';
 import { createPrebuiltBossCard } from '../utils/bossCard';
 
+let bossCycle: number[] = [];
+
+const getRandomBoss = () => {
+  // If we've cycled through all bosses, reset the cycle
+  if (bossCycle.length === 0) {
+    bossCycle = Array.from({ length: PREBUILT_BOSSES.length }, (_, i) => i);
+    // Shuffle the cycle
+    for (let i = bossCycle.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [bossCycle[i], bossCycle[j]] = [bossCycle[j], bossCycle[i]];
+    }
+  }
+  // Pop the next boss index from the cycle
+  const idx = bossCycle.pop()!;
+  return PREBUILT_BOSSES[idx];
+};
+
 const GameScreen: React.FC = () => {
   const [deck, setDeck] = useState<MovieCard[]>([]);
   const [hand, setHand] = useState<MovieCard[]>([]);
@@ -31,22 +48,6 @@ const GameScreen: React.FC = () => {
   const [usedCardIds, setUsedCardIds] = useState<number[]>([]);
   const [round, setRound] = useState(1);
 
-  let bossCycle: number[] = [];
-
-  const getRandomBoss = () => {
-    // If we've cycled through all bosses, reset the cycle
-    if (bossCycle.length === 0) {
-      bossCycle = Array.from({ length: PREBUILT_BOSSES.length }, (_, i) => i);
-      // Shuffle the cycle
-      for (let i = bossCycle.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [bossCycle[i], bossCycle[j]] = [bossCycle[j], bossCycle[i]];
-      }
-    }
-    // Pop the next boss index from the cycle
-    const idx = bossCycle.pop()!;
-    return PREBUILT_BOSSES[idx];
-  };
 
   useEffect(() => {
     // Don't initialize until we have picked movies
