@@ -45,7 +45,7 @@ const DeckPopup: React.FC<DeckPopupProps> = ({ deck, usedCardIds }) => {
             </style>
             <button
               onClick={() => setIsOpen(false)}
-              className="absolute top-4 right-4 text-gray-300 hover:text-white"
+              className="absolute top-4 right-4 text-gray-300 hover:text-white cursor-pointer"
             >
               <X className="w-7 h-7" />
             </button>
