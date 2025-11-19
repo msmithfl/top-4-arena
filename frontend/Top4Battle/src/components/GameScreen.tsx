@@ -4,13 +4,14 @@ import PlayerCard from './MovieCard';
 import BossCardDisplay from './BossCard';
 import GameSidebar from './GameSidebar';
 import type { MovieCard, BossCard } from '../types';
-import { fetchPopularMovies, fetchPopularBoss, fetchMovieDetails } from '../utils/tmdbApi';
+import { fetchPopularMovies, fetchMovieDetails } from '../utils/tmdbApi';
 import { enhanceMovie } from '../utils/enhanceMovie';
-import { createBossCard } from '../utils/bossCard';
 import { calculateBattle } from '../utils/battleCalc';
 import PickTopFilms from './PickTopFilms';
 import DeckPopup from './DeckPopup';
 import ShopScreen from './ShopScreen';
+import { PREBUILT_BOSSES } from '../data/prebuiltBosses';
+import { createPrebuiltBossCard } from '../utils/bossCard';
 
 const GameScreen: React.FC = () => {
   const [deck, setDeck] = useState<MovieCard[]>([]);
@@ -30,6 +31,23 @@ const GameScreen: React.FC = () => {
   const [usedCardIds, setUsedCardIds] = useState<number[]>([]);
   const [round, setRound] = useState(1);
 
+  let bossCycle: number[] = [];
+
+  const getRandomBoss = () => {
+    // If we've cycled through all bosses, reset the cycle
+    if (bossCycle.length === 0) {
+      bossCycle = Array.from({ length: PREBUILT_BOSSES.length }, (_, i) => i);
+      // Shuffle the cycle
+      for (let i = bossCycle.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [bossCycle[i], bossCycle[j]] = [bossCycle[j], bossCycle[i]];
+      }
+    }
+    // Pop the next boss index from the cycle
+    const idx = bossCycle.pop()!;
+    return PREBUILT_BOSSES[idx];
+  };
+
   useEffect(() => {
     // Don't initialize until we have picked movies
     if (!pickedMovies) return;
@@ -44,9 +62,6 @@ const GameScreen: React.FC = () => {
         // Fetch deck from random page (1-100) for variety
         const randomPage = Math.floor(Math.random() * 100) + 1;
         const deckMovies = await fetchPopularMovies(randomPage);
-
-        // Fetch boss separately from popular movies
-        const bossMovie = await fetchPopularBoss();
 
         if (!isMounted) return;
 
@@ -76,8 +91,9 @@ const GameScreen: React.FC = () => {
         setHand(initialHand);
         setDeckPosition(7);
 
-        // Set boss
-        const bossCard = createBossCard(bossMovie);
+        // Set boss from prebuilt list, mapping poster_url to poster_path for compatibility
+        const rawBoss = getRandomBoss();
+        const bossCard = createPrebuiltBossCard(rawBoss);
         setBoss(bossCard);
         setBossHP(bossCard.maxHP);
 
@@ -330,9 +346,17 @@ const GameScreen: React.FC = () => {
     setIsLoading(true);
     setError(null);
     try {
-      const bossMovie = await fetchPopularBoss();
-      const bossCard = createBossCard(bossMovie);
-
+      // Set boss from prebuilt list
+      const rawBoss = getRandomBoss();
+      const bossCard = createPrebuiltBossCard(rawBoss);
+      
+      // Use the passed deck or current deck
+      const deckToUse = newDeck || deck;
+      
+      // Shuffle deck and draw new hand
+      const shuffledDeck = [...deckToUse].sort(() => Math.random() - 0.5);
+      
+      // Set all boss/game state first
       setBoss(bossCard);
       setBossHP(bossCard.maxHP);
       setPlayerHP(3000);
@@ -341,19 +365,16 @@ const GameScreen: React.FC = () => {
       setHasDiscarded(false);
       setBattleLog([]);
       setUsedCardIds([]);
-      setGameState('playing');
       setRound(prev => prev + 1);
-      
-      // Use the passed deck or current deck
-      const deckToUse = newDeck || deck;
-      
-      // Shuffle deck and draw new hand
-      const shuffledDeck = [...deckToUse].sort(() => Math.random() - 0.5);
       setDeck(shuffledDeck);
       setHand(shuffledDeck.slice(0, 7));
       setDeckPosition(7);
-      
       setIsLoading(false);
+      
+      // Wait for all state updates to flush, then change game state
+      setTimeout(() => {
+        setGameState('playing');
+      }, 0);
     } catch (err) {
       setError('Failed to load new boss.');
       setIsLoading(false);
@@ -436,7 +457,7 @@ const GameScreen: React.FC = () => {
         )}
 
         {/* Boss Section */}
-        <BossCardDisplay boss={boss} bossHP={bossHP} />
+        <BossCardDisplay key={`${boss.id}-${round}`} boss={boss} bossHP={bossHP} />
 
         {/* Spacer to push content to bottom */}
         <div className="flex-1"></div>
