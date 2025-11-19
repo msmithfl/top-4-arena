@@ -13,7 +13,6 @@ const LandingPage = () => {
     message: `\n\n---\nFeedback for Top 4 Arena v${APP_VERSION}\n`
   })
   const [isPanelOpen, setIsPanelOpen] = useState(false)
-  const [isCarouselLoading, setIsCarouselLoading] = useState(true)
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -25,21 +24,6 @@ const LandingPage = () => {
   }
 
   return (
-    <>
-      {/* Hidden carousel that loads in background */}
-      <div style={{ display: 'none' }}>
-        <MovieCarousel onLoad={() => setIsCarouselLoading(false)} />
-      </div>
-
-      {isCarouselLoading ? (
-        <div className="min-h-screen bg-[#14181C] text-white flex items-center justify-center">
-          <div className="text-center">
-            <Film className="w-16 h-16 animate-spin mx-auto mb-4" />
-            <h2 className="text-2xl font-bold">Loading...</h2>
-            <p className="text-gray-400 mt-2">Preparing the arena</p>
-          </div>
-        </div>
-      ) : (
     <div className="min-h-screen bg-[#14181C] text-white flex flex-col items-center overflow-x-hidden">
       <div className="max-w-5xl w-full flex flex-col items-center justify-end space-y-6 grow">
         {/* Early Access Banner */}
@@ -107,8 +91,10 @@ const LandingPage = () => {
         </div> */}
       </div>
 
-      {/* Movie Carousel */}
-      <MovieCarousel />
+      {/* Movie Carousel - Reserve space to prevent layout shift */}
+      <div className="w-screen" style={{ minHeight: '320px' }}>
+        <MovieCarousel />
+      </div>
 
       {/* Sliding Feedback Panel */}
       <div
@@ -208,8 +194,6 @@ const LandingPage = () => {
         </div>
       </footer>
     </div>
-      )}
-    </>
   );
 };
 

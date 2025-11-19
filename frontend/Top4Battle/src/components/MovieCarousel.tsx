@@ -8,11 +8,7 @@ interface PosterData {
   defense: number;
 }
 
-interface MovieCarouselProps {
-  onLoad?: () => void;
-}
-
-const MovieCarousel: React.FC<MovieCarouselProps> = ({ onLoad }) => {
+const MovieCarousel: React.FC = () => {
   const [posters, setPosters] = useState<PosterData[]>([]);
 
   useEffect(() => {
@@ -29,14 +25,12 @@ const MovieCarousel: React.FC<MovieCarouselProps> = ({ onLoad }) => {
           }));
         // Duplicate the posters for seamless infinite scroll
         setPosters([...posterData, ...posterData]);
-        if (onLoad) onLoad();
       } catch (err) {
         console.error('Failed to load carousel posters:', err);
-        if (onLoad) onLoad();
       }
     };
     loadPosters();
-  }, [onLoad]);
+  }, []);
 
   if (posters.length === 0) {
     return null;
