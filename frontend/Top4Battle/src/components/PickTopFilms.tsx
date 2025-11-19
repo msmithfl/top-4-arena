@@ -107,8 +107,8 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
     {duplicateError && <div className="text-yellow-400 mb-2 text-center">{duplicateError}</div>}
 
     return (
-    <div className="min-h-screen bg-linear-to-br from-purple-900 via-blue-900 to-black text-white flex flex-col items-center justify-center p-4">
-        <div className="max-w-3xl w-full text-center space-y-8 bg-white/5 backdrop-blur-sm p-8 rounded-lg border border-white/10 shadow-2xl relative">
+      <div className="min-h-screen bg-[#14181C] text-white flex flex-col items-center justify-center p-4">
+        <div className="max-w-3xl w-full text-center space-y-8 bg-white/10 backdrop-blur-sm p-8 rounded-lg border border-white/10 shadow-2xl relative">
         {/* Back button moved to top left inside the film section */}
         <div className="absolute left-4 top-4 hover:scale-105 transition-all">
             <Link
@@ -119,7 +119,7 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
             </Link>
         </div>
         <div className="space-y-4">
-            <h2 className="text-4xl font-bold bg-linear-to-r from-red-500 via-yellow-500 to-purple-500 bg-clip-text text-transparent flex items-center justify-center gap-2">
+            <h2 className="text-4xl font-bold text-white bg-clip-text flex items-center justify-center gap-2">
             Pick Your Top 4 Films
             </h2>
             <p className="text-xl text-gray-300">Search for your top 4 and add them to your deck!</p>
@@ -131,7 +131,7 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Type a film title"
-            className="flex-1 p-3 rounded bg-gray-800 text-lg text-white"
+            className="flex-1 p-3 rounded bg-[#2C3440] border border-white/10 text-lg text-white"
             disabled={loading || picked.length >= 4}
             />
             <button
@@ -147,16 +147,15 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
             {[0, 1, 2, 3].map(idx => (
             <div
                 key={idx}
-                className="bg-gray-800 rounded-lg p-2 flex flex-col items-center justify-center"
-                style={{ minHeight: '210px', minWidth: '110px', height: '210px', width: '110px' }}
+                className="bg-[#2C3440] border border-white/10 rounded-lg flex flex-col items-center justify-center overflow-hidden relative"
+                style={{ minHeight: '210px', minWidth: '130px', height: '210px', width: '130px' }}
             >
                 {picked[idx] ? (
                 <>
-                    <div className="relative w-full h-44 mb-2 flex items-center justify-center">
                     <img
                         src={picked[idx].poster_path ? `https://image.tmdb.org/t/p/w200${picked[idx].poster_path}` : ''}
                         alt={picked[idx].title}
-                        className="w-full h-40 object-cover rounded shadow-lg"
+                        className="w-full h-full object-cover"
                     />
                     <button
                         onClick={() => handleRemove(idx)}
@@ -165,40 +164,47 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
                     >
                         <X className="w-5 h-5 text-red-400" />
                     </button>
-                    </div>
-                    <div className="text-center text-sm font-bold text-purple-200 truncate w-full mt-1">{picked[idx].title}</div>
+                    {/* <div className="text-center text-sm font-bold text-white truncate w-full mt-1">{picked[idx].title}</div> */}
                 </>
                 ) : (
                 <div className="flex flex-col items-center justify-center h-full w-full">
-                    <Film className="w-8 h-8 text-purple-700 mb-2" />
-                    <span className="text-gray-500">Empty</span>
+                    <Film className="w-8 h-8 text-gray-600 mb-2" />
+                    <span className="text-gray-600">Empty</span>
                 </div>
                 )}
             </div>
             ))}
         </div>
-        <div>
-            <button
-            onClick={handleStart}
-            disabled={picked.length !== 4}
-            className="bg-green-600 hover:bg-green-700 px-8 py-3 rounded-full font-bold text-xl w-full transition-all text-white shadow-lg cursor-pointer"
-            >
-            Start Game
-            </button>
-            <button
-                onClick={handleRandomPick}
-                disabled={loading || picked.length === 4}
-                className="bg-blue-700 hover:bg-blue-800 px-8 py-3 rounded-full font-bold text-xl w-full mt-2 flex items-center justify-center gap-2 transition-all text-white shadow-lg cursor-pointer disabled:bg-gray-600 disabled:cursor-not-allowed"
-                >
-                <Shuffle className="w-5 h-5" />
-                {picked.length === 0 
-                    ? 'Randomly Pick 4 Movies' 
-                    : `Fill ${4 - picked.length} Empty Slot${4 - picked.length !== 1 ? 's' : ''} Randomly`
-                }
-            </button>
+          <div>
+              <button
+              onClick={handleStart}
+              disabled={picked.length !== 4}
+              className={`px-8 py-3 rounded-full font-bold text-xl mb-2 w-full transition-all text-white shadow-lg ${
+                  picked.length === 4 
+                      ? 'bg-linear-to-r from-green-600 to-green-500 hover:from-green-700 hover:to-green-600 cursor-pointer' 
+                      : 'bg-gray-600 cursor-not-allowed'
+              }`}
+              >
+              Start Game
+              </button>
+              <button
+                  onClick={handleRandomPick}
+                  disabled={loading || picked.length === 4}
+                  className={`px-8 py-3 rounded-full font-bold text-xl w-full flex items-center justify-center gap-2 transition-all text-white shadow-lg ${
+                      picked.length === 4 
+                          ? 'bg-gray-600 cursor-not-allowed' 
+                          : 'bg-linear-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 cursor-pointer'
+                  }`}
+                  >
+                  <Shuffle className="w-5 h-5" />
+                  {picked.length === 0 
+                      ? 'Randomly Pick 4 Movies' 
+                      : `Fill ${4 - picked.length} Empty Slot${4 - picked.length !== 1 ? 's' : ''} Randomly`
+                  }
+              </button>
+          </div>
         </div>
-        </div>
-    </div>
+      </div>
     );
 };
 
