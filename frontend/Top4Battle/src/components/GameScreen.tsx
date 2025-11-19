@@ -489,7 +489,7 @@ const GameScreen: React.FC = () => {
             <button
               onClick={handleAttack}
               disabled={selectedCards.length === 0}
-              className={`flex-1 cursor-pointer px-6 py-4 rounded-lg font-bold text-xl flex items-center justify-center gap-2 shadow-lg transition-all
+              className={`flex-1 cursor-pointer px-6 py-4 rounded-full font-bold text-xl flex items-center justify-center gap-2 shadow-lg transition-all
                 bg-linear-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700
                 ${selectedCards.length === 0
                   ? 'disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed'

@@ -24,7 +24,14 @@ const LandingPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#14181C] text-white flex flex-col items-center overflow-x-hidden">
+    <div className="min-h-screen bg-[#14181C] text-white flex flex-col items-center overflow-x-hidden relative">
+      {/* Logo in top left corner */}
+      <img 
+        src="/favicon-top4.png" 
+        alt="Top 4 Arena Logo" 
+        className="absolute top-4 left-4 w-16 h-16 z-10"
+      />
+      
       <div className="max-w-5xl w-full flex flex-col items-center justify-end space-y-6 grow">
         {/* Early Access Banner */}
         {/* <div className="bg-yellow-500/20 border-2 border-yellow-500 rounded-lg p-3 flex items-center justify-center gap-3 w-full">
@@ -57,7 +64,7 @@ const LandingPage = () => {
           <div className="bg-white/10 backdrop-blur-sm p-5 rounded-lg border border-white/20">
             <Trophy className="w-10 h-10 mx-auto mb-3 text-blue-400" />
             <h3 className="text-lg font-bold mb-2">Defeat Bosses</h3>
-            <p className="text-sm text-gray-300">Slay blockbusters with specials abilities</p>
+            <p className="text-sm text-gray-300">Slay baddies with specials abilities</p>
           </div>
         </div>
 
