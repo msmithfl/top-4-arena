@@ -25,6 +25,21 @@ const LandingPage = () => {
   }
 
   return (
+    <>
+      {/* Hidden carousel that loads in background */}
+      <div style={{ display: 'none' }}>
+        <MovieCarousel onLoad={() => setIsCarouselLoading(false)} />
+      </div>
+
+      {isCarouselLoading ? (
+        <div className="min-h-screen bg-[#14181C] text-white flex items-center justify-center">
+          <div className="text-center">
+            <Film className="w-16 h-16 animate-spin mx-auto mb-4" />
+            <h2 className="text-2xl font-bold">Loading...</h2>
+            <p className="text-gray-400 mt-2">Preparing the arena</p>
+          </div>
+        </div>
+      ) : (
     <div className="min-h-screen bg-[#14181C] text-white flex flex-col items-center overflow-x-hidden">
       <div className="max-w-5xl w-full flex flex-col items-center justify-end space-y-6 grow">
         {/* Early Access Banner */}
@@ -93,15 +108,7 @@ const LandingPage = () => {
       </div>
 
       {/* Movie Carousel */}
-      {isCarouselLoading && (
-        <div className="w-full py-8 flex items-center justify-center">
-          <div className="text-center">
-            <Film className="w-12 h-12 animate-spin mx-auto mb-2 text-white" />
-            <p className="text-sm text-gray-400">Loading site...</p>
-          </div>
-        </div>
-      )}
-      <MovieCarousel onLoad={() => setIsCarouselLoading(false)} />
+      <MovieCarousel />
 
       {/* Sliding Feedback Panel */}
       <div
@@ -201,6 +208,8 @@ const LandingPage = () => {
         </div>
       </footer>
     </div>
+      )}
+    </>
   );
 };
 
