@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-//import { Sword, Shield } from 'lucide-react';
+import { Sword, Shield } from 'lucide-react';
 import { fetchPopularMovies } from '../utils/tmdbApi';
 
 interface PosterData {
@@ -20,8 +20,8 @@ const MovieCarousel: React.FC = () => {
           .filter(m => m.poster_path)
           .map(m => ({
             url: `https://image.tmdb.org/t/p/w300${m.poster_path}`,
-            attack: Math.floor(Math.random() * 50) + 10, // Random 10-59
-            defense: Math.floor(Math.random() * 50) + 10  // Random 10-59
+            attack: Math.round(m.vote_average * 10) / 10,
+            defense: Math.floor(Math.random() * 71) + 90
           }));
         // Duplicate the posters for seamless infinite scroll
         setPosters([...posterData, ...posterData]);
@@ -51,15 +51,15 @@ const MovieCarousel: React.FC = () => {
               className="w-full h-full object-cover rounded-lg shadow-lg"
             />
             {/* Attack - Top Left */}
-            {/* <div className="absolute top-1 left-1 bg-black bg-opacity-75 rounded px-2 py-1 flex items-center gap-1">
+            <div className="absolute top-1 left-1 bg-black bg-opacity-75 rounded px-2 py-1 flex items-center gap-1">
               <Sword className="w-3 h-3 text-red-400" />
               <p className="text-xs font-bold text-yellow-400">{poster.attack}</p>
-            </div> */}
+            </div>
             {/* Defense - Top Right */}
-            {/* <div className="absolute top-1 right-1 bg-black bg-opacity-75 rounded px-2 py-1 flex items-center gap-1">
+            <div className="absolute top-1 right-1 bg-black bg-opacity-75 rounded px-2 py-1 flex items-center gap-1">
               <Shield className="w-3 h-3 text-blue-400" />
               <p className="text-xs font-bold text-gray-300">{poster.defense}</p>
-            </div> */}
+            </div>
           </div>
         ))}
       </div>
