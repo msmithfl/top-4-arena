@@ -219,8 +219,8 @@ const GameScreen: React.FC = () => {
 
     setPlayerHP(newPlayerHP);
     
-    // Boss healing ability
-    if (abilityResult.heal > 0) {
+    // Boss healing ability (only if boss is still alive)
+    if (abilityResult.heal > 0 && newBossHP > 0) {
       const healAmount = Math.round(boss!.maxHP * abilityResult.heal);
       const afterHeal = Math.min(boss!.maxHP, newBossHP + healAmount);
       setBossHP(afterHeal);
