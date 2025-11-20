@@ -508,9 +508,7 @@ const GameScreen: React.FC = () => {
                 }`
               }
             >
-              {/* <Swords className="w-6 h-6" /> */}
               ATTACK
-              {/* ({selectedCards.length}/4) */}
             </button>
             <button
               onClick={handleDiscard}
@@ -523,7 +521,6 @@ const GameScreen: React.FC = () => {
                 }`
               }
             >
-              {/* <Trash2 className="w-5 h-5" /> */}
               DISCARD {hasDiscarded ? '(Used)' : ''}
             </button>
           </div>

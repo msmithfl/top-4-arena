@@ -55,7 +55,6 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
     setLoading(false);
   };
 
-  // Add this function to pick 4 random movies
   const handleRandomPick = async () => {
     setLoading(true);
     setError(null);
@@ -221,7 +220,6 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
                     >
                         <X className="w-5 h-5 text-red-400" />
                     </button>
-                    {/* <div className="text-center text-sm font-bold text-white truncate w-full mt-1">{picked[idx].title}</div> */}
                 </>
                 ) : (
                 <div className="flex flex-col items-center justify-center h-full w-full">
