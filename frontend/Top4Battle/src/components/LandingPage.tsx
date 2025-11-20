@@ -33,13 +33,6 @@ const LandingPage = () => {
       />
       
       <div className="max-w-5xl w-full flex flex-col items-center justify-end space-y-6 grow pt-16 md:pt-0">
-        {/* Early Access Banner */}
-        {/* <div className="bg-yellow-500/20 border-2 border-yellow-500 rounded-lg p-3 flex items-center justify-center gap-3 w-full">
-          <AlertCircle className="w-5 h-5 text-yellow-400" />
-          <p className="text-base font-bold text-yellow-300">
-            EARLY TESTING - We welcome your feedback!
-          </p>
-        </div> */}
 
         {/* Title */}
         <div className="mb-2 mt-8 md:mb-6 w-full text-center">
@@ -49,7 +42,7 @@ const LandingPage = () => {
           </h1>
         </div>
 
-        {/* Features */}
+        {/* Feature Cards */}
         <div className="px-3 grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 w-full text-center">
           <div className="bg-white/10 backdrop-blur-sm p-5 rounded-lg border border-white/20">
             <Film className="w-10 h-10 mx-auto mb-3 text-orange-500" />
@@ -68,7 +61,7 @@ const LandingPage = () => {
           </div>
         </div>
 
-        {/* Buttons */}
+        {/* Start Button */}
         <div className="flex flex-col md:flex-row gap-4 justify-center px-3 py-4 w-full">
           <button
             onClick={() => {
@@ -80,30 +73,11 @@ const LandingPage = () => {
           >
             Start Battle
           </button>
-          {/* <button
-            onClick={() => setIsPanelOpen(true)}
-            className="bg-yellow-600 hover:bg-yellow-700 text-black text-lg md:text-xl justify-center font-bold py-4 px-8 rounded-full shadow-2xl transform hover:scale-105 transition-all duration-200 flex items-center gap-2 w-full md:w-auto cursor-pointer"
-          >
-            <Mail className="w-5 h-5" />
-            Send Feedback
-          </button> */}
         </div>
-
-        {/* How to Play */}
-        {/* <div className="text-left bg-white/5 backdrop-blur-sm p-5 rounded-lg border border-white/10 w-full max-w-2xl mx-auto mb-4">
-          <h2 className="text-lg md:text-xl font-bold mb-3 text-center">How to Play</h2>
-          <ul className="space-y-1 text-sm md:text-base text-gray-300">
-            <li>• Select 1-4 cards from your hand to attack</li>
-            <li>• Build combos with genre synergies for bonus damage</li>
-            <li>• Defeat the boss before your HP reaches zero</li>
-            <li>• Discard weak cards once per turn to draw new ones</li>
-            <li>• Mobile play not currently supported</li>
-          </ul>
-        </div> */}
       </div>
 
       {/* Movie Carousel - Reserve space to prevent layout shift */}
-      <div className="w-screen" style={{ minHeight: '320px' }}>
+      <div className="w-screen" style={{ minHeight: '200px' }}>
         <MovieCarousel />
       </div>
 
@@ -171,9 +145,6 @@ const LandingPage = () => {
       <footer className="w-full bg-[#2C3440] border-t border-white/10 py-2">
         <div className="max-w-5xl mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center justify-center gap-4">
-            {/* <div className="text-sm text-gray-400">
-              v{APP_VERSION} Early Access
-            </div> */}
             <div className="flex flex-col md:flex-row gap-3 items-center">
               <a
                 href="https://buymeacoffee.com/msmithfls"
@@ -201,6 +172,9 @@ const LandingPage = () => {
                 <FaYoutube className="w-4 h-4" />
               </a>
             </div>
+          </div>
+          <div>
+            <p className='text-center text-xs text-gray-400'>This product uses the TMDb API but is not endorsed or certified by TMDb.</p>
           </div>
         </div>
       </footer>
