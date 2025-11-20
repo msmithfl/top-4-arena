@@ -18,7 +18,6 @@ const DeckPopup: React.FC<DeckPopupProps> = ({ deck, usedCardIds }) => {
         className=" px-4 py-2 rounded-lg font-bold flex items-center gap-2 shadow-lg transition-all cursor-pointer"
       >
         <Layers className="w-7 h-7 hover:scale-110 transition-all" />
-        {/* <img src={colorDeckIcon} alt="Deck" className='w-7 h-7' /> */}
       </button>
       {isOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4">
@@ -54,9 +53,6 @@ const DeckPopup: React.FC<DeckPopupProps> = ({ deck, usedCardIds }) => {
               <Layers className="w-8 h-8" />
               Your Deck ({deck.length - usedCardIds.length}/{deck.length})
             </h2>
-            {/* <div className="text-blue-300 text-xl font-mono mb-4 text-center">
-              {deck.length - usedCardIds.length}/{deck.length}
-            </div> */}
             <div className="deck-scroll grid grid-cols-2 md:grid-cols-8 gap-6 px-8 pb-8 pt-2 overflow-y-auto">
               {deck.map(card => (
                 <div key={card.id} className="relative">
