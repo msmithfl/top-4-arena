@@ -464,8 +464,15 @@ const GameScreen: React.FC = () => {
         {/* Boss Section */}
         <BossCardDisplay key={`${boss.id}-${round}`} boss={boss} bossHP={bossHP} />
 
-        {/* Spacer to push content to bottom */}
-        <div className="flex-1"></div>
+        {/* Spacer to push content to bottom - click to deselect */}
+        <div 
+          className="flex-1 cursor-pointer" 
+          onClick={() => {
+            if (selectedCards.length > 0) {
+              setSelectedCards([]);
+            }
+          }}
+        ></div>
 
           {/* Action Buttons and Hand - Fixed to Bottom */}
           <div className="mt-auto space-y-4 mx-auto max-w-[95%]">
