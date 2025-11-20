@@ -53,7 +53,7 @@ const LandingPage = () => {
         <div className="px-3 grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 w-full text-center">
           <div className="bg-white/10 backdrop-blur-sm p-5 rounded-lg border border-white/20">
             <Film className="w-10 h-10 mx-auto mb-3 text-orange-500" />
-            <h3 className="text-lg font-bold mb-2">Build Your Deck</h3>
+            <h3 className="text-lg font-bold mb-2">Collect Movie Cards</h3>
             <p className="text-sm text-gray-300">Take your Top 4 films into battle</p>
           </div>
           <div className="bg-white/10 backdrop-blur-sm p-5 rounded-lg border border-white/20">
