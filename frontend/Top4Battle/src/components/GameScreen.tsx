@@ -75,7 +75,7 @@ const GameScreen: React.FC = () => {
 
         // Fetch details for the 15 random movies
         const randomDetails = await Promise.all(
-          deckMovies.slice(0, 15).map(m => fetchMovieDetails(m.id))
+          deckMovies.slice(0, 10).map(m => fetchMovieDetails(m.id))
         );
         const enhancedRandom = randomDetails.map(enhanceMovie);
 

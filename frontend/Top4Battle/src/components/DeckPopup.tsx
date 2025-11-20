@@ -15,14 +15,15 @@ const DeckPopup: React.FC<DeckPopupProps> = ({ deck, usedCardIds }) => {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg font-bold flex items-center gap-2 shadow-lg transition-all cursor-pointer"
+        className=" px-4 py-2 rounded-lg font-bold flex items-center gap-2 shadow-lg transition-all cursor-pointer"
       >
-        <Layers className="w-5 h-5" />
+        <Layers className="w-7 h-7 hover:scale-110 transition-all" />
+        {/* <img src={colorDeckIcon} alt="Deck" className='w-7 h-7' /> */}
       </button>
       {isOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4">
           <div
-            className="bg-gray-900 rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto border-4 border-blue-500 shadow-2xl relative"
+            className="bg-gray-900 rounded-lg  w-full max-h-[90vh] overflow-y-auto border-4 border-blue-500 shadow-2xl relative"
             style={{
               scrollbarColor: "#3b82f6 #1e293b",
               scrollbarWidth: "auto"
@@ -56,7 +57,7 @@ const DeckPopup: React.FC<DeckPopupProps> = ({ deck, usedCardIds }) => {
             {/* <div className="text-blue-300 text-xl font-mono mb-4 text-center">
               {deck.length - usedCardIds.length}/{deck.length}
             </div> */}
-            <div className="deck-scroll grid grid-cols-2 md:grid-cols-4 gap-6 px-8 pb-8 pt-2 overflow-y-auto">
+            <div className="deck-scroll grid grid-cols-2 md:grid-cols-8 gap-6 px-8 pb-8 pt-2 overflow-y-auto">
               {deck.map(card => (
                 <div key={card.id} className="relative">
                   <MovieCardComponent

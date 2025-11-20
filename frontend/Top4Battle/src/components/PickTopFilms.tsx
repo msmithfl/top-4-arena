@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { fetchMovieDetails, fetchPopularMovies } from '../utils/tmdbApi';
-import { Film, Shuffle, X, ArrowLeft } from 'lucide-react';
+import { Film, Shuffle, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import spinnerImg from '../assets/imgs/top4-spinner.png';
 import { CELEBRITY_TOP4S, ARCHETYPE_TOP4S } from '../data/prebuiltTop4Presets';
@@ -133,16 +133,16 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
 
     return (
       <div className="min-h-screen bg-[#14181C] text-white flex items-center justify-center p-4">
+        {/* Logo in top left corner */}
+        <Link to="/">
+          <img 
+            src="/favicon-top4.png" 
+            alt="Top 4 Arena Logo" 
+            className="absolute top-4 left-4 w-16 h-16 z-10"
+          />
+        </Link>
+        
         <div className="max-w-3xl w-full text-center space-y-8 bg-white/10 backdrop-blur-sm p-8 rounded-lg border border-white/10 shadow-2xl relative">
-        {/* Back button - top left */}
-        <div className="absolute left-4 top-4 hover:scale-105 transition-all">
-            <Link
-            to='/'
-            className='flex items-center text-2xl gap-2'
-            >
-            <span><ArrowLeft /></span>Back
-            </Link>
-        </div>
         
         {/* Presets button - top right */}
         <div className="absolute right-4 top-4">
