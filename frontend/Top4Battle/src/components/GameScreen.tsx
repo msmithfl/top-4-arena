@@ -442,7 +442,7 @@ const GameScreen: React.FC = () => {
         
         {/* Shop Screen - shows after victory */}
         {gameState === 'shop' && (
-          <ShopScreen onPick={handleShopPick} deck={deck} usedCardIds={usedCardIds} />
+          <ShopScreen onPick={handleShopPick} deck={deck} usedCardIds={usedCardIds} round={round} />
         )}
 
         {/* Loss Screen */}
