@@ -4,11 +4,13 @@ import { fetchMovieDetails, fetchPopularMovies } from '../utils/tmdbApi';
 import { enhanceMovie } from '../utils/enhanceMovie';
 import PlayerCard from './MovieCard';
 import DeckPopup from './DeckPopup';
+import triviaData from '../data/triviaQuestions.json';
 
 interface ShopScreenProps {
   onPick: (card: MovieCard | null) => void; // null = skip to next round
   deck: MovieCard[];
   usedCardIds: number[];
+  round: number;
 }
 
 interface TriviaQuestion {
@@ -17,7 +19,7 @@ interface TriviaQuestion {
   incorrect_answers: string[];
 }
 
-const ShopScreen: React.FC<ShopScreenProps> = ({ onPick, deck, usedCardIds }) => {
+const ShopScreen: React.FC<ShopScreenProps> = ({ onPick, deck, usedCardIds, round }) => {
   const [shopCards, setShopCards] = useState<MovieCard[]>([]);
   const [loading, setLoading] = useState(true);
   const [rerolled, setRerolled] = useState(false);
@@ -28,38 +30,28 @@ const ShopScreen: React.FC<ShopScreenProps> = ({ onPick, deck, usedCardIds }) =>
   const [selectedCard, setSelectedCard] = useState<MovieCard | null>(null);
   const hasFetched = React.useRef(false);
 
-  const fetchTrivia = async () => {
-    try {
-      // Get or use existing session token
-      let token = sessionStorage.getItem('trivia_token');
-      
-      if (!token) {
-        // Request a new token
-        const tokenResponse = await fetch('https://opentdb.com/api_token.php?command=request');
-        const tokenData = await tokenResponse.json();
-        token = tokenData.token;
-        sessionStorage.setItem('trivia_token', token ?? '');
-      }
-      
-      const response = await fetch(`https://opentdb.com/api.php?amount=1&category=11&difficulty=easy&type=multiple&token=${token}`);
-      const data = await response.json();
-      
-      // If token expired, reset it
-      if (data.response_code === 4) {
-        sessionStorage.removeItem('trivia_token');
-        return fetchTrivia(); // Retry
-      }
-      
-      if (data.results && data.results.length > 0) {
-        const question = data.results[0];
-        setTriviaQuestion(question);
-        const allAnswers = [...question.incorrect_answers, question.correct_answer];
-        const shuffled = allAnswers.sort(() => Math.random() - 0.5);
-        setShuffledAnswers(shuffled);
-      }
-    } catch (err) {
-      console.error('Failed to fetch trivia:', err);
+  const fetchTrivia = () => {
+    // Filter questions by difficulty based on round (Easy 1-6, Medium 7-12, Hard 13+)
+    let difficulty: 'easy' | 'medium' | 'hard';
+    
+    if (round >= 13) {
+      difficulty = 'hard';
+    } else if (round >= 7) {
+      difficulty = 'medium';
+    } else {
+      difficulty = 'easy';
     }
+    
+    const filteredQuestions = triviaData.results.filter(q => q.difficulty === difficulty);
+    
+    // Get a random question from the filtered list
+    const randomIndex = Math.floor(Math.random() * filteredQuestions.length);
+    const question = filteredQuestions[randomIndex];
+    
+    setTriviaQuestion(question);
+    const allAnswers = [...question.incorrect_answers, question.correct_answer];
+    const shuffled = allAnswers.sort(() => Math.random() - 0.5);
+    setShuffledAnswers(shuffled);
   };
 
   const rerollShopCards = async () => {
@@ -94,7 +86,7 @@ useEffect(() => {
       })
     );
     setShopCards(cards);
-    await fetchTrivia();
+    fetchTrivia();
     setLoading(false);
   };
   getShopCards();

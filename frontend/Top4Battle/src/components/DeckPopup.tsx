@@ -49,7 +49,7 @@ const DeckPopup: React.FC<DeckPopupProps> = ({ deck, usedCardIds }) => {
             >
               <X className="w-7 h-7" />
             </button>
-            <h2 className="text-3xl font-bold text-blue-400 flex items-center gap-2 justify-start pl-9 mt-8 mb-3">
+            <h2 className="text-3xl font-bold text-white flex items-center gap-2 justify-start pl-9 mt-8 mb-3">
               <Layers className="w-8 h-8" />
               Your Deck ({deck.length - usedCardIds.length}/{deck.length})
             </h2>
