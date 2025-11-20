@@ -77,7 +77,7 @@ const LandingPage = () => {
       </div>
 
       {/* Movie Carousel */}
-      <div className="w-screen" style={{ minHeight: '200px' }}>
+      <div className="w-screen" style={{ minHeight: '320px' }}>
         <MovieCarousel />
       </div>
 
