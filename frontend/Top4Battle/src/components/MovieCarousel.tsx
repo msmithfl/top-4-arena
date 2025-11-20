@@ -53,7 +53,7 @@ const MovieCarousel: React.FC = () => {
             {/* Attack - Top Left */}
             <div className="absolute top-1 left-1 bg-black bg-opacity-75 rounded px-2 py-1 flex items-center gap-1">
               <Sword className="w-3 h-3 text-red-400" />
-              <p className="text-xs font-bold text-yellow-400">{poster.attack}</p>
+              <p className="text-xs font-bold text-yellow-400">{poster.attack.toFixed(1)}</p>
             </div>
             {/* Defense - Top Right */}
             <div className="absolute top-1 right-1 bg-black bg-opacity-75 rounded px-2 py-1 flex items-center gap-1">
