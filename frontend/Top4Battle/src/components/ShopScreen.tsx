@@ -152,12 +152,6 @@ useEffect(() => {
                         isSelected={false}
                         onSelect={() => handleCardSelect(card)}
                       />
-                      {/* <button
-                        onClick={() => handleCardSelect(card)}
-                        className="mt-2 bg-yellow-500 hover:bg-yellow-600 text-black font-bold px-6 py-2 rounded-lg"
-                      >
-                        Select
-                      </button> */}
                     </div>
                   ))}
                 </div>
@@ -166,7 +160,6 @@ useEffect(() => {
           </>
         ) : (
           <>
-            {/* <h2 className="text-3xl font-bold text-yellow-400 mb-4">Answer the Trivia!</h2> */}
             <div className="bg-gray-800 p-4 rounded-lg mb-4">
               <p className="text-xl text-white mb-4">{triviaQuestion ? decodeHTML(triviaQuestion.question) : 'Loading question...'}</p>
             </div>

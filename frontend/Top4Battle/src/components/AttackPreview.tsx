@@ -33,17 +33,7 @@ const AttackPreview: React.FC<AttackPreviewProps> = ({
 
   return (
     <div className="bg-linear-to-r from-orange-900 to-red-900 bg-opacity-50 p-4 rounded-lg border-2 border-orange-500 h-full flex flex-col">
-      {/* <div className="flex items-center gap-2 mb-3">
-        <Swords className="w-6 h-6 text-orange-400" />
-        <span className="text-lg font-bold">Attack Preview</span>
-      </div> */}
       <div className="space-y-2 flex items-start justify-between gap-4 px-8">
-        {/* <div className="flex justify-between items-center">
-          <span className="text-sm text-gray-300">Cards Selected:</span>
-          <span className="text-xl font-bold text-yellow-400">
-            {selectedCards.length > 0 ? selectedCards.length : '--'}
-          </span>
-        </div> */}
         <div className="flex flex-col justify-between items-center">
           <span className="text-xl text-gray-300">ATK</span>
           <span className="text-3xl font-bold text-red-400">

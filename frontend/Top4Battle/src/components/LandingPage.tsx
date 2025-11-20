@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { FaYoutube } from "react-icons/fa";
 import MovieCarousel from './MovieCarousel';
 
-const APP_VERSION = "0.1.0-early"; // Set your version here
+const APP_VERSION = "0.1.0-early";
 
 const LandingPage = () => {
   const navigate = useNavigate()
@@ -76,7 +76,7 @@ const LandingPage = () => {
         </div>
       </div>
 
-      {/* Movie Carousel - Reserve space to prevent layout shift */}
+      {/* Movie Carousel */}
       <div className="w-screen" style={{ minHeight: '200px' }}>
         <MovieCarousel />
       </div>
@@ -133,7 +133,7 @@ const LandingPage = () => {
         </div>
       </div>
 
-      {/* Overlay */}
+      {/* Feedback Panel Overlay */}
       {isPanelOpen && (
         <div
           onClick={() => setIsPanelOpen(false)}
