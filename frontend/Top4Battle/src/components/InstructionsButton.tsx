@@ -20,7 +20,7 @@ const InstructionsButton: React.FC = () => {
               <h2 className="text-2xl font-bold text-blue-400">How to Play</h2>
               <button
                 onClick={() => setIsOpen(false)}
-                className="text-gray-400 hover:text-white transition-colors"
+                className="text-gray-400 hover:text-white transition-colors cursor-pointer"
               >
                 <X className="w-6 h-6" />
               </button>
@@ -69,7 +69,7 @@ const InstructionsButton: React.FC = () => {
             <div className="sticky bottom-0 bg-gray-900 border-t border-gray-700 p-4">
               <button
                 onClick={() => setIsOpen(false)}
-                className="w-full bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-lg font-bold transition-all"
+                className="w-full bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-lg font-bold transition-all cursor-pointer"
               >
                 Got It!
               </button>
