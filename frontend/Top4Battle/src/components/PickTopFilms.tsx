@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { fetchMovieDetails, fetchPopularMovies } from '../utils/tmdbApi';
-import { Film, Shuffle, X } from 'lucide-react';
+import { Film, Shuffle, X, Layers } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import spinnerImg from '../assets/imgs/top4-spinner.png';
 import { CELEBRITY_TOP4S, ARCHETYPE_TOP4S } from '../data/prebuiltTop4Presets';
@@ -161,7 +161,7 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
             Pick Your Top 4
             </h2>
             <div className='flex items-center justify-center gap-2'>
-              <p className="text-xl text-gray-300">Search movie titles and add them to your deck</p>
+              <p className="text-xl text-gray-300">Search movie titles and add them to your deck</p><span><Layers /></span>
             </div>
         </div>
         
