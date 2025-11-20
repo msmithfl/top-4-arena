@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { fetchMovieDetails, fetchPopularMovies } from '../utils/tmdbApi';
-import { Film, Shuffle, X, ArrowLeft, Layers } from 'lucide-react';
+import { Film, Shuffle, X, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import spinnerImg from '../assets/imgs/top4-spinner.png';
+import { CELEBRITY_TOP4S, ARCHETYPE_TOP4S } from '../data/prebuiltTop4Presets';
 
 const TMDB_API_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmODZmYTE3MzcwNzRmMzY3NzkwNzc1Y2Q1NTQwNmExYyIsIm5iZiI6MTY4NzYyNzAzOC40MDEsInN1YiI6IjY0OTcyNTFlYjM0NDA5MDBhZDUyNTY4YSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.YA8K57yrPNiM_UwefPB6Bv2t8fZdY_v1GD9AS3rRrU0';
 
@@ -16,6 +17,9 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [duplicateError, setDuplicateError] = useState<string | null>(null);
+  const [presetCategory, setPresetCategory] = useState<'celebrity' | 'archetype'>('celebrity');
+  const [presetsOpen, setPresetsOpen] = useState(false);
+  const presetListRef = React.useRef<HTMLDivElement>(null);
 
   const handleFind = async () => {
     if (!search || picked.length >= 4) return;
@@ -96,6 +100,26 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
     setLoading(false);
   };
 
+  const handlePresetSelect = async (presetId: string) => {
+    const allPresets = [...CELEBRITY_TOP4S, ...ARCHETYPE_TOP4S];
+    const preset = allPresets.find(p => p.id === presetId);
+    if (!preset) return;
+
+    setLoading(true);
+    setError(null);
+    setDuplicateError(null);
+    try {
+      const details = await Promise.all(
+        preset.movieIds.map(id => fetchMovieDetails(id))
+      );
+      setPicked(details);
+      setSearch('');
+    } catch (err) {
+      setError('Failed to load preset.');
+    }
+    setLoading(false);
+  };
+
   const handleRemove = (idx: number) => {
     setPicked(picked.filter((_, i) => i !== idx));
   };
@@ -108,9 +132,9 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
     {duplicateError && <div className="text-yellow-400 mb-2 text-center">{duplicateError}</div>}
 
     return (
-      <div className="min-h-screen bg-[#14181C] text-white flex flex-col items-center justify-center p-4">
+      <div className="min-h-screen bg-[#14181C] text-white flex items-center justify-center p-4">
         <div className="max-w-3xl w-full text-center space-y-8 bg-white/10 backdrop-blur-sm p-8 rounded-lg border border-white/10 shadow-2xl relative">
-        {/* Back button moved to top left inside the film section */}
+        {/* Back button - top left */}
         <div className="absolute left-4 top-4 hover:scale-105 transition-all">
             <Link
             to='/'
@@ -119,16 +143,29 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
             <span><ArrowLeft /></span>Back
             </Link>
         </div>
+        
+        {/* Presets button - top right */}
+        <div className="absolute right-4 top-4">
+          <button
+            onClick={() => setPresetsOpen(!presetsOpen)}
+            className={`bg-yellow-600 hover:bg-yellow-700 text-black font-bold px-4 py-2 rounded-lg transition-all cursor-pointer flex items-center gap-2 ${
+              presetsOpen ? 'translate-x-84' : ''
+            }`}
+          >
+            Prebuilds
+          </button>
+        </div>
+
         <div className="space-y-4">
             <h2 className="text-4xl font-bold text-white bg-clip-text flex items-center justify-center gap-2">
             Pick Your Top 4
             </h2>
             <div className='flex items-center justify-center gap-2'>
               <p className="text-xl text-gray-300">Search movie titles and add them to your deck</p>
-              <Layers/>
             </div>
         </div>
-        {/* ...rest of your component unchanged... */}
+        
+        {/* Search Bar */}
         <div className="flex gap-2 max-w-lg mx-auto mb-6">
             <input
             type="text"
@@ -212,6 +249,55 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
               </button>
           </div>
         </div>
+
+        {/* Presets Side Panel */}
+        {presetsOpen && (
+          <div className="fixed left-1/2 ml-[calc(768px/2+1.5rem)] top-1/2 -translate-y-1/2 w-80 bg-white/10 backdrop-blur-sm p-6 rounded-lg border border-white/10 shadow-2xl flex flex-col z-50">
+          <div className="shrink-0">
+            {/* Category Toggle */}
+            <div className="flex gap-2 mb-3">
+              <button
+                onClick={() => {
+                  setPresetCategory('celebrity');
+                  if (presetListRef.current) presetListRef.current.scrollTop = 0;
+                }}
+                className={`flex-1 px-3 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                  presetCategory === 'celebrity'
+                    ? 'bg-yellow-600 text-black'
+                    : 'bg-[#2C3440] text-gray-300 hover:bg-[#3C4450]'
+                }`}
+              >
+                Celebrity
+              </button>
+              <button
+                onClick={() => {
+                  setPresetCategory('archetype');
+                  if (presetListRef.current) presetListRef.current.scrollTop = 0;
+                }}
+                className={`flex-1 px-3 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                  presetCategory === 'archetype'
+                    ? 'bg-yellow-600 text-black'
+                    : 'bg-[#2C3440] text-gray-300 hover:bg-[#3C4450]'
+                }`}
+              >
+                Archetype
+              </button>
+            </div>
+            <div ref={presetListRef} className="space-y-2 max-h-96 overflow-y-auto scrollbar-thin pr-2">
+              {(presetCategory === 'celebrity' ? CELEBRITY_TOP4S : ARCHETYPE_TOP4S).map(preset => (
+                <button
+                  key={preset.id}
+                  onClick={() => handlePresetSelect(preset.id)}
+                  disabled={loading}
+                  className="w-full text-left p-3 rounded-lg bg-[#2C3440] border border-white/10 hover:bg-[#3C4450] hover:border-yellow-500/50 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <div className="font-bold text-sm text-white">{preset.title}</div>
+                </button>
+              ))}
+            </div>
+          </div>
+          </div>
+        )}
       </div>
     );
 };
