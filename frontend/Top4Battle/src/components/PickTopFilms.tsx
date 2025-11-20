@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { fetchMovieDetails, fetchPopularMovies } from '../utils/tmdbApi';
 import { Film, Shuffle, X, ArrowLeft, Layers } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import spinnerImg from '../assets/imgs/top4-spinner.png';
 
 const TMDB_API_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmODZmYTE3MzcwNzRmMzY3NzkwNzc1Y2Q1NTQwNmExYyIsIm5iZiI6MTY4NzYyNzAzOC40MDEsInN1YiI6IjY0OTcyNTFlYjM0NDA5MDBhZDUyNTY4YSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.YA8K57yrPNiM_UwefPB6Bv2t8fZdY_v1GD9AS3rRrU0';
 
@@ -140,9 +141,13 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
             <button
             onClick={handleFind}
             disabled={loading || !search || picked.length >= 4}
-            className="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-lg font-bold text-lg text-white cursor-pointer"
+            className="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-lg font-bold text-lg text-white cursor-pointer flex items-center justify-center w-24"
             >
-            {loading ? 'Searching...' : 'Find'}
+            {loading ? (
+              <img src={spinnerImg} alt="Loading" className="w-5 h-5 animate-spin" />
+            ) : (
+              'Find'
+            )}
             </button>
         </div>
         {error && <div className="text-red-400 mb-4 text-center">{error}</div>}
