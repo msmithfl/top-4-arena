@@ -49,7 +49,7 @@ const GameSidebar: React.FC<GameSidebarProps> = ({
           className="w-10 h-10"
         />
         <div className="flex flex-col">
-          <span className="text-2xl font-bold text-white">Top 4 Arena</span>
+          <h3 className="text-xl font-bold text-white mt-1">TOP 4 ARENA</h3>
           {/* <span className="text-xs text-gray-400">Movie Battle Deckbuilder</span> */}
         </div>
         <div className='ml-3'>
