@@ -149,7 +149,7 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
           <button
             onClick={() => setPresetsOpen(!presetsOpen)}
             className={`bg-yellow-600 hover:bg-yellow-700 text-black font-bold px-4 py-2 rounded-lg transition-all cursor-pointer flex items-center gap-2 ${
-              presetsOpen ? 'translate-x-84' : ''
+              presetsOpen ? 'translate-x-8' : ''
             }`}
           >
             Prebuilds
@@ -185,6 +185,18 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
             ) : (
               'Find'
             )}
+            </button>
+            <button
+                onClick={handleRandomPick}
+                disabled={loading || picked.length === 4}
+                className={`py-3 rounded-lg font-bold text-lg text-white cursor-pointer flex items-center justify-center gap-2 w-24 ${
+                    picked.length === 4 
+                        ? 'bg-gray-600 cursor-not-allowed' 
+                        : 'bg-orange-600 hover:bg-orange-700'
+                }`}
+                >
+                <Shuffle className="w-5 h-5" />
+                {picked.length === 0 ? '4' : `${4 - picked.length}`}
             </button>
         </div>
         {error && <div className="text-red-400 mb-4 text-center">{error}</div>}
@@ -224,28 +236,13 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
               <button
               onClick={handleStart}
               disabled={picked.length !== 4}
-              className={`px-8 py-3 rounded-full font-bold text-xl mb-2 w-full transition-all text-white shadow-lg ${
+              className={`px-8 py-3 rounded-full font-bold text-xl w-full transition-all text-white shadow-lg ${
                   picked.length === 4 
                       ? 'bg-linear-to-r from-green-600 to-green-500 hover:from-green-700 hover:to-green-600 cursor-pointer' 
                       : 'bg-gray-600 cursor-not-allowed'
               }`}
               >
               Start Game
-              </button>
-              <button
-                  onClick={handleRandomPick}
-                  disabled={loading || picked.length === 4}
-                  className={`px-8 py-3 rounded-full font-bold text-xl w-full flex items-center justify-center gap-2 transition-all text-white shadow-lg ${
-                      picked.length === 4 
-                          ? 'bg-gray-600 cursor-not-allowed' 
-                          : 'bg-linear-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 cursor-pointer'
-                  }`}
-                  >
-                  <Shuffle className="w-5 h-5" />
-                  {picked.length === 0 
-                      ? 'Randomly Pick 4 Movies' 
-                      : `Fill ${4 - picked.length} Empty Slot${4 - picked.length !== 1 ? 's' : ''} Randomly`
-                  }
               </button>
           </div>
         </div>
