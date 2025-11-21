@@ -121,16 +121,16 @@ useEffect(() => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4">
+    <div className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-4">
       <div
-        className="bg-gray-900 rounded-lg max-w-3xl w-full border-4 border-yellow-500 shadow-2xl p-8 text-center flex flex-col"
+        className="bg-white/10 backdrop-blur-sm rounded-lg max-w-3xl w-full border border-white/10 shadow-2xl p-8 text-center flex flex-col"
         style={{ minHeight: '650px' }}
       >
         <div className='flex justify-between mb-5'>
           <button
             onClick={rerollShopCards}
             disabled={rerolled || loading || selectedCard !== null}
-            className={`bg-blue-700 hover:bg-blue-800 text-white font-bold px-6 py-2 rounded-lg shadow-lg transition-all ${rerolled || loading || selectedCard ? 'opacity-50 cursor-not-allowed' : ''}`}
+            className={`bg-orange-600 hover:bg-orange-700 text-white font-bold px-6 py-2 rounded-lg shadow-lg transition-all ${rerolled || loading || selectedCard ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
             Reroll Cards
           </button>
@@ -139,7 +139,7 @@ useEffect(() => {
 
         {!selectedCard ? (
           <>
-            <h2 className="text-3xl pt-5 font-bold text-yellow-400">Pick a New Card</h2>
+            <h2 className="text-3xl pt-5 font-bold text-white">Pick a New Card</h2>
             <div className="flex-1 flex items-center justify-center">
               {loading ? (
                 <div className="text-white text-xl w-full">Loading...</div>
@@ -160,7 +160,7 @@ useEffect(() => {
           </>
         ) : (
           <>
-            <div className="bg-gray-800 p-4 rounded-lg mb-4">
+            <div className="bg-white/10 backdrop-blur-sm p-4 rounded-lg mb-4 border border-white/10">
               <p className="text-xl text-white mb-4">{triviaQuestion ? decodeHTML(triviaQuestion.question) : 'Loading question...'}</p>
             </div>
             
@@ -200,7 +200,7 @@ useEffect(() => {
             <button
               onClick={handleConfirm}
               disabled={selectedAnswer === null}
-              className="bg-yellow-500 hover:bg-yellow-600 disabled:bg-gray-600 disabled:cursor-not-allowed text-black font-bold px-8 py-3 rounded-lg text-xl"
+              className="bg-orange-600 hover:bg-orange-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-bold px-8 py-3 rounded-full text-xl"
             >
               Continue
             </button>

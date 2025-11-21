@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { Swords, Film, Trophy, Mail, X, Smile } from 'lucide-react'
 import { useState } from 'react'
-import { FaYoutube } from "react-icons/fa";
+import { FaYoutube, FaDiscord } from "react-icons/fa";
 import MovieCarousel from './MovieCarousel';
 
 const APP_VERSION = "0.1.0-early";
@@ -163,13 +163,22 @@ const LandingPage = () => {
                 Send Feedback
               </button>
               <a
-                href="https://www.youtube.com/watch?v=dTzUGpEE9ls&t=112s"
+              href="https://discord.gg/N3TMnx5f7"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[#BBCCEE] hover:text-white font-semibold py-2 px-4 flex items-center gap-2 transition-all text-sm"
+              >
+                <FaDiscord className="w-4 h-4" />
+                Join Discord
+              </a>
+              <a
+                href="https://www.youtube.com/watch?v=dTzUGpEE9ls"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-[#BBCCEE] hover:text-white font-semibold py-2 px-4 flex items-center gap-2 transition-all text-sm"
               >
-                Inspired by JangoDisc
                 <FaYoutube className="w-4 h-4" />
+                Inspired by JangoDisc
               </a>
             </div>
           </div>
