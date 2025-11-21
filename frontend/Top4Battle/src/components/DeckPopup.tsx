@@ -27,9 +27,13 @@ const DeckPopup: React.FC<DeckPopupProps> = ({ deck, discardPile }) => {
   }, [deck]);
 
   const modalContent = isOpen ? (
-    <div className="fixed inset-0 bg-black/90 flex items-center justify-center z-100 p-4">
+    <div 
+      className="fixed inset-0 bg-black/90 flex items-center justify-center z-100 p-4"
+      onClick={() => setIsOpen(false)}
+    >
       <div
-        className="bg-white/10 backdrop-blur-sm rounded-lg max-w-4/5 min-h-10/12 max-h-[90vh] border border-white/10 shadow-2xl relative flex flex-col"
+        className="bg-[#2C3033] backdrop-blur-sm rounded-lg max-w-4/5 min-h-10/12 max-h-[90vh] border border-white/10 shadow-2xl relative flex flex-col"
+        onClick={(e) => e.stopPropagation()}
         style={{
           scrollbarColor: "#3b82f6 #1e293b",
           scrollbarWidth: "auto"
@@ -67,7 +71,7 @@ const DeckPopup: React.FC<DeckPopupProps> = ({ deck, discardPile }) => {
                 isDisabled={true}
               />
               {discardPile.some(discarded => discarded.id === card.id) && (
-                <div className="absolute inset-0 bg-gray-900/80 hover:scale-105 rounded-lg z-10 flex items-center justify-center">
+                <div className="absolute inset-0 bg-gray-900/80 rounded-lg z-10 flex items-center justify-center">
                     <span className="text-white text-xs font-bold"></span>
                 </div>
               )}
