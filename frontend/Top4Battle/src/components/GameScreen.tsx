@@ -213,53 +213,56 @@ const GameScreen: React.FC = () => {
       
       setPlayerHP(newPlayerHP);
       
-      // Remove played cards and refill hand to 7 cards
-      const remainingHand = hand.filter(card => !selectedCards.includes(card.id));
-      const cardsNeeded = 7 - remainingHand.length;
-      
-      let updatedHand = [...remainingHand];
-      let updatedPlayDeck = [...playDeck];
-      let updatedDiscardPile = [...discardPile, ...playedCards]; // Include the cards we just played
-      
-      // Draw cards one by one, reshuffling discard pile only when play deck is empty
-      for (let i = 0; i < cardsNeeded; i++) {
-        if (updatedPlayDeck.length > 0) {
-          // Draw from play deck
-          updatedHand.push(updatedPlayDeck[0]);
-          updatedPlayDeck = updatedPlayDeck.slice(1);
-        } else if (updatedDiscardPile.length > 0) {
-          // Play deck empty, reshuffle discard pile
-          const shuffledDiscard = [...updatedDiscardPile].sort(() => Math.random() - 0.5);
-          updatedPlayDeck = shuffledDiscard;
-          updatedDiscardPile = [];
-          setBattleLog(prev => [...prev, '♻️ Reshuffled discard pile back into play deck!']);
-          
-          // Draw from newly shuffled deck
+      // Short delay before refilling hand
+      setTimeout(() => {
+        // Remove played cards and refill hand to 7 cards
+        const remainingHand = hand.filter(card => !selectedCards.includes(card.id));
+        const cardsNeeded = 7 - remainingHand.length;
+        
+        let updatedHand = [...remainingHand];
+        let updatedPlayDeck = [...playDeck];
+        let updatedDiscardPile = [...discardPile, ...playedCards]; // Include the cards we just played
+        
+        // Draw cards one by one, reshuffling discard pile only when play deck is empty
+        for (let i = 0; i < cardsNeeded; i++) {
           if (updatedPlayDeck.length > 0) {
+            // Draw from play deck
             updatedHand.push(updatedPlayDeck[0]);
             updatedPlayDeck = updatedPlayDeck.slice(1);
+          } else if (updatedDiscardPile.length > 0) {
+            // Play deck empty, reshuffle discard pile
+            const shuffledDiscard = [...updatedDiscardPile].sort(() => Math.random() - 0.5);
+            updatedPlayDeck = shuffledDiscard;
+            updatedDiscardPile = [];
+            setBattleLog(prev => [...prev, '♻️ Reshuffled discard pile back into play deck!']);
+            
+            // Draw from newly shuffled deck
+            if (updatedPlayDeck.length > 0) {
+              updatedHand.push(updatedPlayDeck[0]);
+              updatedPlayDeck = updatedPlayDeck.slice(1);
+            }
+          } else {
+            // Both empty - shouldn't happen but break to avoid infinite loop
+            break;
           }
-        } else {
-          // Both empty - shouldn't happen but break to avoid infinite loop
-          break;
         }
-      }
-      
-      setDiscardPile(updatedDiscardPile);
+        
+        setDiscardPile(updatedDiscardPile);
 
-      setHand(updatedHand);
-      setPlayDeck(updatedPlayDeck);
-      setSelectedCards([]);
-      setHasDiscarded(false);
-      setTurn(turn + 1);
-      setIsAttacking(false);
-      
-      // Check loss with delay
-      if (newPlayerHP <= 0) {
-        setTimeout(() => {
-          setGameState('lost');
-        }, 1500);
-      }
+        setHand(updatedHand);
+        setPlayDeck(updatedPlayDeck);
+        setSelectedCards([]);
+        setHasDiscarded(false);
+        setTurn(turn + 1);
+        setIsAttacking(false);
+        
+        // Check loss with delay
+        if (newPlayerHP <= 0) {
+          setTimeout(() => {
+            setGameState('lost');
+          }, 1500);
+        }
+      }, 1000); // 500ms delay before refilling hand
     }, 1000); // 1 second delay between player attack and boss counter-attack
   };
 
