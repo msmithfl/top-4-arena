@@ -119,6 +119,8 @@ const GameScreen: React.FC = () => {
   }, [pickedMovies]);
 
   const toggleCardSelection = (cardId: number) => {
+    if (isAttacking) return; // Prevent selection during attack phase
+    
     setSelectedCards(prev => {
       if (prev.includes(cardId)) {
         return prev.filter(id => id !== cardId);
@@ -469,6 +471,7 @@ const GameScreen: React.FC = () => {
                   card={card}
                   isSelected={selectedCards.includes(card.id)}
                   onSelect={toggleCardSelection}
+                  isDisabled={isAttacking}
                 />
               ))}
             </div>

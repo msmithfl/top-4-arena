@@ -6,15 +6,18 @@ interface MovieCardProps {
   card: MovieCard;
   isSelected: boolean;
   onSelect: (cardId: number) => void;
+  isDisabled?: boolean;
 }
 
-const MovieCardComponent: React.FC<MovieCardProps> = ({ card, isSelected, onSelect }) => {
+const MovieCardComponent: React.FC<MovieCardProps> = ({ card, isSelected, onSelect, isDisabled = false }) => {
   const genres = Array.isArray(card.genres) ? card.genres.slice(0, 2) : [];
 
   return (
     <div
       onClick={() => onSelect(card.id)}
-      className={`cursor-pointer transition-all transform hover:scale-105 ${
+      className={`transition-all transform ${
+        isDisabled ? 'cursor-default' : 'cursor-pointer hover:scale-105'
+      } ${
         isSelected ? 'ring-4 ring-yellow-400 scale-105 -translate-y-2' : ''
       }`}
     >
