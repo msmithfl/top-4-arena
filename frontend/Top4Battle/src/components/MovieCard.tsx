@@ -47,7 +47,7 @@ const MovieCardComponent: React.FC<MovieCardProps> = ({ card, isSelected, onSele
             {genres.length > 0 ? (
               genres.map(g => (
                 <span key={g.id} className="text-xs px-2 py-1 bg-blue-600 bg-opacity-90 rounded font-semibold">
-                  {g.name}
+                  {g.name === 'Science Fiction' ? 'Sci-Fi' : g.name}
                 </span>
               ))
             ) : (

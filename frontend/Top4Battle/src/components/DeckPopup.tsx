@@ -50,7 +50,7 @@ const DeckPopup: React.FC<DeckPopupProps> = ({ deck, discardPile }) => {
               <div className="space-y-2 overflow-y-auto max-h-[70vh]">
                 {genreCounts.filter(([, count]) => count > 1).map(([genre, count]) => (
                   <div key={genre} className="flex justify-between items-center text-sm">
-                    <span className="text-gray-300">{genre}</span>
+                    <span className="text-gray-300">{genre === 'Science Fiction' ? 'Sci-Fi' : genre}</span>
                     <span className="bg-blue-600 text-white px-2 py-1 rounded font-bold">
                       {count}
                     </span>
