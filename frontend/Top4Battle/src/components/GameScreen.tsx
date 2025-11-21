@@ -215,6 +215,15 @@ const GameScreen: React.FC = () => {
       
       setPlayerHP(newPlayerHP);
       
+      // Check if player died - if so, skip hand refill and show loss screen
+      if (newPlayerHP <= 0) {
+        setTimeout(() => {
+          setIsAttacking(false);
+          setGameState('lost');
+        }, 1000);
+        return;
+      }
+      
       // Short delay before refilling hand
       setTimeout(() => {
         // Remove played cards and refill hand to 7 cards
@@ -257,14 +266,7 @@ const GameScreen: React.FC = () => {
         setHasDiscarded(false);
         setTurn(turn + 1);
         setIsAttacking(false);
-        
-        // Check loss with delay
-        if (newPlayerHP <= 0) {
-          setTimeout(() => {
-            setGameState('lost');
-          }, 1500);
-        }
-      }, 1000); // 500ms delay before refilling hand
+      }, 1000); // 1000ms delay before refilling hand
     }, 1000); // 1 second delay between player attack and boss counter-attack
   };
 
