@@ -9,7 +9,7 @@ import triviaData from '../data/triviaQuestions.json';
 interface ShopScreenProps {
   onPick: (card: MovieCard | null) => void; // null = skip to next round
   deck: MovieCard[];
-  usedCardIds: number[];
+  discardPile: MovieCard[];
   round: number;
 }
 
@@ -19,7 +19,7 @@ interface TriviaQuestion {
   incorrect_answers: string[];
 }
 
-const ShopScreen: React.FC<ShopScreenProps> = ({ onPick, deck, usedCardIds, round }) => {
+const ShopScreen: React.FC<ShopScreenProps> = ({ onPick, deck, discardPile, round }) => {
   const [shopCards, setShopCards] = useState<MovieCard[]>([]);
   const [loading, setLoading] = useState(true);
   const [rerolled, setRerolled] = useState(false);
@@ -134,7 +134,7 @@ useEffect(() => {
           >
             Reroll Cards
           </button>
-          <DeckPopup deck={deck} usedCardIds={usedCardIds} />
+          <DeckPopup deck={deck} discardPile={discardPile} />
         </div>
 
         {!selectedCard ? (
