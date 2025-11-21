@@ -66,14 +66,14 @@ const GameScreen: React.FC = () => {
 
         if (!isMounted) return;
 
-        if (deckMovies.length < 15) {
+        if (deckMovies.length < 10) {
           throw new Error('Not enough movies fetched');
         }
 
         // Enhance picked movies and add them to the deck first
         const enhancedPicked = pickedMovies.map(enhanceMovie);
 
-        // Fetch details for the 15 random movies
+        // Fetch details for the 10 random movies
         const randomDetails = await Promise.all(
           deckMovies.slice(0, 10).map(m => fetchMovieDetails(m.id))
         );
@@ -170,7 +170,144 @@ const GameScreen: React.FC = () => {
     setBattleLog(prev => [...prev, `🗑️ Discarded ${cardsToDiscard} cards`, '---']);
   };
 
-  const handleAttack = () => {
+  // const handleAttack = () => {
+  //   const playedCards = hand.filter(card => selectedCards.includes(card.id));
+  //   if (playedCards.length === 0 || isAttacking) return;
+
+  //   setIsAttacking(true);
+  //   setUsedCardIds(prev => [...prev, ...playedCards.map(c => c.id)]);
+
+  //   const result = calculateBattle(playedCards);
+  //   let playerDamage = result.damage;
+    
+  //   // Apply boss ability modifiers to player damage
+  //   if (boss!.ability.name === '😢 EMOTIONAL WEIGHT') {
+  //     playerDamage = Math.round(playerDamage * 0.7); // 30% reduction
+  //   }
+    
+  //   if (boss!.ability.name === '🛡️ TECH SHIELD') {
+  //     const shieldBlock = Math.min(1500, playerDamage);
+  //     playerDamage = Math.max(0, playerDamage - shieldBlock);
+  //     if (shieldBlock > 0) {
+  //       setBattleLog(prev => [...prev, `🛡️ Tech Shield absorbed ${shieldBlock} damage!`]);
+  //     }
+  //   }
+    
+  //   // PHASE 1: Player attacks boss
+  //   const newBossHP = Math.max(0, bossHP - playerDamage);
+  //   setBossHP(newBossHP);
+    
+  //   // Log player attack
+  //   const playerLog = [
+  //     `⚔️ TURN ${turn} ⚔️`,
+  //     `YOU: Played ${playedCards.map(c => c.title).join(', ')}`,
+  //     ...result.synergies,
+  //     `💥 Dealt ${playerDamage} damage to ${boss?.title}`,
+  //     '---'
+  //   ];
+  //   setBattleLog(prev => [...prev, ...playerLog]);
+    
+  //   // Check if boss is defeated - if so, skip counter-attack and go to shop
+  //   if (newBossHP === 0) {
+  //     setIsAttacking(false);
+  //     setTimeout(() => {
+  //       setGameState('shop');
+  //       setUsedCardIds([]);
+  //     }, 1500);
+  //     return;
+  //   }
+    
+  //   // PHASE 2: Boss counter-attacks (delayed)
+  //   setTimeout(() => {
+  //     // Boss counter-attacks with ability
+  //     const abilityResult = boss!.ability.effect(turn, boss!.baseDamage);
+  //     let bossDamage = abilityResult.damage;
+      
+  //     // Apply defense ignore
+  //     const effectiveDefense = Math.round(result.defense * (1 - boss!.defenseIgnore));
+  //     const damageTaken = Math.max(0, bossDamage - effectiveDefense);
+      
+  //     // Handle lifesteal/healing
+  //     //const genres = playedCards.flatMap(c => c.genres.map(g => g.name));
+  //     let lifestealAmount = 0;
+  //     let newPlayerHP = Math.round(Math.min(3000, Math.max(0, playerHP - damageTaken)));
+
+  //     // if (genres.includes('Horror')) {
+  //     //   lifestealAmount = Math.round(playerDamage * 0.1);
+  //     //   setBattleLog(prev => [...prev, `🩸 You lifesteal ${lifestealAmount} HP!`]);
+  //     //   newPlayerHP = Math.round(Math.min(3000, Math.max(0, newPlayerHP + lifestealAmount)));
+  //     // } else {
+  //     //   newPlayerHP = Math.round(Math.min(3000, Math.max(0, newPlayerHP)));
+  //     // }
+
+  //     const netHPChange = -damageTaken + lifestealAmount;
+      
+  //     setPlayerHP(newPlayerHP);
+      
+  //     // Boss healing ability (only if boss is still alive)
+  //     // if (abilityResult.heal > 0 && newBossHP > 0) {
+  //     //   const healAmount = Math.round(boss!.maxHP * abilityResult.heal);
+  //     //   const afterHeal = Math.min(boss!.maxHP, newBossHP + healAmount);
+  //     //   setBossHP(afterHeal);
+  //     //   setBattleLog(prev => [...prev, `🩸 ${boss!.title} heals ${healAmount} HP!`]);
+  //     // }
+      
+  //     // Log boss attack
+  //     const bossLog = [
+  //       `${boss?.title} counter-attacks!`,
+  //       abilityResult.message || '',
+  //       `${boss?.title} deals ${bossDamage} base damage`,
+  //       `🛡️ Your defense blocks ${effectiveDefense} damage (${Math.round(boss!.defenseIgnore * 100)}% ignored by boss)`,
+  //       `❤️ You take ${damageTaken} damage`,
+  //       `❤️ Net HP change: ${netHPChange > 0 ? '+' : ''}${netHPChange}`,
+  //       '---'
+  //     ];
+  //     setBattleLog(prev => [...prev, ...bossLog]);
+      
+  //     // Remove played cards and draw enough to refill hand to 7 cards
+  //     const remainingHand = hand.filter(card => !selectedCards.includes(card.id));
+  //     const cardsNeeded = 7 - remainingHand.length;
+  //     const newCards = deck.slice(deckPosition, deckPosition + cardsNeeded);
+      
+  //     let updatedHand = [...remainingHand, ...newCards];
+  //     let updatedDeckPosition = deckPosition + cardsNeeded;
+
+  //     // If we can't fill the hand to 7, reshuffle used cards back in
+  //     if (updatedHand.length < 7) {
+  //       // Find cards that have been used but are not in hand
+  //       const usedButNotInHand = deck.filter(card =>
+  //         usedCardIds.includes(card.id) && !updatedHand.some(h => h.id === card.id)
+  //       );
+  //       // Enable them (remove from usedCardIds)
+  //       setUsedCardIds(prev =>
+  //         prev.filter(id => !usedButNotInHand.some(card => card.id === id))
+  //       );
+  //       // Shuffle and fill hand to 7
+  //       const reshuffled = usedButNotInHand.sort(() => Math.random() - 0.5);
+  //       const fillCount = 7 - updatedHand.length;
+  //       updatedHand = [...updatedHand, ...reshuffled.slice(0, fillCount)];
+  //       updatedDeckPosition += fillCount;
+        
+  //       setBattleLog(prev => [...prev, '♻️ Reshuffled used cards back into deck!']);
+  //     }
+
+  //     setHand(updatedHand);
+  //     setDeckPosition(updatedDeckPosition);
+  //     setSelectedCards([]);
+  //     setHasDiscarded(false);
+  //     setTurn(turn + 1);
+  //     setIsAttacking(false);
+      
+  //     // Check loss with delay
+  //     if (newPlayerHP <= 0) {
+  //       setTimeout(() => {
+  //         setGameState('lost');
+  //       }, 1500);
+  //     }
+  //   }, 1000); // 1 second delay between player attack and boss counter-attack
+  // };
+
+  const handleAttackNew = () => {
     const playedCards = hand.filter(card => selectedCards.includes(card.id));
     if (playedCards.length === 0 || isAttacking) return;
 
@@ -180,32 +317,9 @@ const GameScreen: React.FC = () => {
     const result = calculateBattle(playedCards);
     let playerDamage = result.damage;
     
-    // Apply boss ability modifiers to player damage
-    if (boss!.ability.name === '😢 EMOTIONAL WEIGHT') {
-      playerDamage = Math.round(playerDamage * 0.7); // 30% reduction
-    }
-    
-    if (boss!.ability.name === '🛡️ TECH SHIELD') {
-      const shieldBlock = Math.min(1500, playerDamage);
-      playerDamage = Math.max(0, playerDamage - shieldBlock);
-      if (shieldBlock > 0) {
-        setBattleLog(prev => [...prev, `🛡️ Tech Shield absorbed ${shieldBlock} damage!`]);
-      }
-    }
-    
     // PHASE 1: Player attacks boss
     const newBossHP = Math.max(0, bossHP - playerDamage);
     setBossHP(newBossHP);
-    
-    // Log player attack
-    const playerLog = [
-      `⚔️ TURN ${turn} ⚔️`,
-      `YOU: Played ${playedCards.map(c => c.title).join(', ')}`,
-      ...result.synergies,
-      `💥 Dealt ${playerDamage} damage to ${boss?.title}`,
-      '---'
-    ];
-    setBattleLog(prev => [...prev, ...playerLog]);
     
     // Check if boss is defeated - if so, skip counter-attack and go to shop
     if (newBossHP === 0) {
@@ -227,42 +341,9 @@ const GameScreen: React.FC = () => {
       const effectiveDefense = Math.round(result.defense * (1 - boss!.defenseIgnore));
       const damageTaken = Math.max(0, bossDamage - effectiveDefense);
       
-      // Handle lifesteal/healing
-      //const genres = playedCards.flatMap(c => c.genres.map(g => g.name));
-      let lifestealAmount = 0;
       let newPlayerHP = Math.round(Math.min(3000, Math.max(0, playerHP - damageTaken)));
-
-      // if (genres.includes('Horror')) {
-      //   lifestealAmount = Math.round(playerDamage * 0.1);
-      //   setBattleLog(prev => [...prev, `🩸 You lifesteal ${lifestealAmount} HP!`]);
-      //   newPlayerHP = Math.round(Math.min(3000, Math.max(0, newPlayerHP + lifestealAmount)));
-      // } else {
-      //   newPlayerHP = Math.round(Math.min(3000, Math.max(0, newPlayerHP)));
-      // }
-
-      const netHPChange = -damageTaken + lifestealAmount;
       
       setPlayerHP(newPlayerHP);
-      
-      // Boss healing ability (only if boss is still alive)
-      // if (abilityResult.heal > 0 && newBossHP > 0) {
-      //   const healAmount = Math.round(boss!.maxHP * abilityResult.heal);
-      //   const afterHeal = Math.min(boss!.maxHP, newBossHP + healAmount);
-      //   setBossHP(afterHeal);
-      //   setBattleLog(prev => [...prev, `🩸 ${boss!.title} heals ${healAmount} HP!`]);
-      // }
-      
-      // Log boss attack
-      const bossLog = [
-        `${boss?.title} counter-attacks!`,
-        abilityResult.message || '',
-        `${boss?.title} deals ${bossDamage} base damage`,
-        `🛡️ Your defense blocks ${effectiveDefense} damage (${Math.round(boss!.defenseIgnore * 100)}% ignored by boss)`,
-        `❤️ You take ${damageTaken} damage`,
-        `❤️ Net HP change: ${netHPChange > 0 ? '+' : ''}${netHPChange}`,
-        '---'
-      ];
-      setBattleLog(prev => [...prev, ...bossLog]);
       
       // Remove played cards and draw enough to refill hand to 7 cards
       const remainingHand = hand.filter(card => !selectedCards.includes(card.id));
@@ -287,8 +368,6 @@ const GameScreen: React.FC = () => {
         const fillCount = 7 - updatedHand.length;
         updatedHand = [...updatedHand, ...reshuffled.slice(0, fillCount)];
         updatedDeckPosition += fillCount;
-        
-        setBattleLog(prev => [...prev, '♻️ Reshuffled used cards back into deck!']);
       }
 
       setHand(updatedHand);
@@ -515,7 +594,7 @@ const GameScreen: React.FC = () => {
           {/* Action Buttons */}
           <div className="flex gap-4">
             <button
-              onClick={handleAttack}
+              onClick={handleAttackNew}
               disabled={selectedCards.length === 0 || isAttacking}
               className={`flex-1 cursor-pointer px-6 py-4 rounded-full font-bold text-xl flex items-center justify-center gap-2 shadow-lg transition-all
                 bg-linear-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700
