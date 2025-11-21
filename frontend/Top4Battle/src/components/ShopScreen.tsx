@@ -123,8 +123,8 @@ useEffect(() => {
   return (
     <div className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-4">
       <div
-        className="bg-white/10 backdrop-blur-sm rounded-lg max-w-3xl w-full border border-white/10 shadow-2xl p-8 text-center flex flex-col"
-        style={{ minHeight: '650px' }}
+        className="bg-[#2C3033] rounded-lg max-w-3xl w-full border border-white/10 shadow-2xl p-8 text-center flex flex-col"
+        style={{ minHeight: '530px' }}
       >
         <div className='flex justify-between mb-5'>
           <button
@@ -139,7 +139,7 @@ useEffect(() => {
 
         {!selectedCard ? (
           <>
-            <h2 className="text-3xl pt-5 font-bold text-white">Pick a New Card</h2>
+            <h2 className="text-3xl py-5 font-bold text-white">Pick a New Card</h2>
             <div className="flex-1 flex items-center justify-center">
               {loading ? (
                 <div className="text-white text-xl w-full">Loading...</div>
@@ -159,12 +159,12 @@ useEffect(() => {
             </div>
           </>
         ) : (
-          <>
+          <div className="flex flex-col flex-1">
             <div className="bg-white/10 backdrop-blur-sm p-4 rounded-lg mb-4 border border-white/10">
-              <p className="text-xl text-white mb-4">{triviaQuestion ? decodeHTML(triviaQuestion.question) : 'Loading question...'}</p>
+              <p className="text-xl text-white text-center">{triviaQuestion ? decodeHTML(triviaQuestion.question) : 'Loading question...'}</p>
             </div>
             
-            <div className="grid grid-cols-1 gap-3 mb-6">
+            <div className="grid grid-cols-2 gap-3">
               {shuffledAnswers.map((answer, idx) => (
                 <button
                   key={idx}
@@ -187,24 +187,26 @@ useEffect(() => {
               ))}
             </div>
 
-            {selectedAnswer && (
-              <div className="mb-4">
-                {isCorrect ? (
-                  <p className="text-green-400 text-xl font-bold">✅ Correct! You can add the card to your deck.</p>
-                ) : (
-                  <p className="text-red-400 text-xl font-bold">❌ Wrong! You'll continue without a new card.</p>
-                )}
-              </div>
-            )}
+            <div className="flex-1 flex items-center justify-center my-6">
+              {selectedAnswer && (
+                <div>
+                  {isCorrect ? (
+                    <p className="text-green-400 text-xl font-bold">✅ Correct! You can add the card to your deck.</p>
+                  ) : (
+                    <p className="text-red-400 text-xl font-bold">❌ Wrong! You'll continue without a new card.</p>
+                  )}
+                </div>
+              )}
+            </div>
 
             <button
               onClick={handleConfirm}
               disabled={selectedAnswer === null}
-              className="bg-orange-600 hover:bg-orange-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-bold px-8 py-3 rounded-full text-xl"
+              className="bg-orange-600 hover:bg-orange-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-bold px-8 py-3 rounded-full text-xl mt-auto"
             >
               Continue
             </button>
-          </>
+          </div>
         )}
       </div>
     </div>
