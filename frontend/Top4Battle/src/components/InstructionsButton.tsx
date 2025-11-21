@@ -8,14 +8,21 @@ const InstructionsButton: React.FC = () => {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg font-bold flex items-center gap-2 shadow-lg transition-all cursor-pointer"
+        title="How to Play"
+        className="bg-blue-600 hover:bg-blue-700 w-10 h-10 p-0 rounded-lg font-bold flex items-center justify-center shadow-lg transition-all cursor-pointer"
       >
         <HelpCircle className="w-5 h-5" />
       </button>
 
       {isOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4">
-          <div className="bg-gray-900 rounded-lg text-left max-w-4xl max-h-[90vh] overflow-y-auto border-4 border-blue-500">
+        <div
+          className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4"
+          onClick={() => setIsOpen(false)}
+        >
+          <div
+            className="bg-gray-900 rounded-lg text-left max-w-4xl max-h-[90vh] overflow-y-auto border-4 border-blue-500"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="sticky top-0 bg-gray-900 border-b border-gray-700 p-4 flex items-center justify-between">
               <h2 className="text-2xl font-bold text-blue-400">How to Play</h2>
               <button
