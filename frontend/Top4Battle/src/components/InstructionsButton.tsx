@@ -8,7 +8,8 @@ const InstructionsButton: React.FC = () => {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg font-bold flex items-center gap-2 shadow-lg transition-all cursor-pointer"
+        title="How to Play"
+        className="bg-blue-600 hover:bg-blue-700 w-10 h-10 p-0 rounded-lg font-bold flex items-center justify-center shadow-lg transition-all cursor-pointer"
       >
         <HelpCircle className="w-5 h-5" />
       </button>
