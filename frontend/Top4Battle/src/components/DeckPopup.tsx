@@ -5,10 +5,10 @@ import MovieCardComponent from './MovieCard';
 
 interface DeckPopupProps {
   deck: MovieCard[];
-  usedCardIds: number[];
+  discardPile: MovieCard[];
 }
 
-const DeckPopup: React.FC<DeckPopupProps> = ({ deck, usedCardIds }) => {
+const DeckPopup: React.FC<DeckPopupProps> = ({ deck, discardPile }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -51,7 +51,7 @@ const DeckPopup: React.FC<DeckPopupProps> = ({ deck, usedCardIds }) => {
             </button>
             <h2 className="text-3xl font-bold text-white flex items-center gap-2 justify-start pl-9 mt-8 mb-3">
               <Layers className="w-8 h-8" />
-              Your Deck ({deck.length - usedCardIds.length}/{deck.length})
+              Your Deck ({deck.length - discardPile.length}/{deck.length})
             </h2>
             <div className="deck-scroll grid grid-cols-2 md:grid-cols-8 gap-6 px-8 pb-8 pt-2 overflow-y-auto">
               {deck.map(card => (
@@ -61,7 +61,7 @@ const DeckPopup: React.FC<DeckPopupProps> = ({ deck, usedCardIds }) => {
                     isSelected={false}
                     onSelect={() => {}}
                   />
-                  {usedCardIds.includes(card.id) && (
+                  {discardPile.some(discardedCard => discardedCard.id === card.id) && (
                     <div className="absolute inset-0 bg-gray-900/80 hover:scale-105 rounded-lg z-10 flex items-center justify-center">
                         <span className="text-white text-xs font-bold"></span>
                     </div>
