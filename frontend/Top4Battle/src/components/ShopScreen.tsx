@@ -121,7 +121,7 @@ useEffect(() => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4">
+    <div className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-4">
       <div
         className="bg-white/10 backdrop-blur-sm rounded-lg max-w-3xl w-full border border-white/10 shadow-2xl p-8 text-center flex flex-col"
         style={{ minHeight: '650px' }}
