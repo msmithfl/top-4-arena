@@ -20,10 +20,10 @@ const AttackPreview: React.FC<AttackPreviewProps> = ({
 
   let damage = result ? result.damage : 0;
   if (boss && result) {
-    if (boss.ability.name === '😢 EMOTIONAL WEIGHT') {
+    if (boss.ability.name === 'EMOTIONAL WEIGHT') {
       damage = Math.round(damage * 0.7);
     }
-    if (boss.ability.name === '🛡️ TECH SHIELD') {
+    if (boss.ability.name === 'TECH SHIELD') {
       damage = Math.max(0, damage - 1500);
     }
   }
