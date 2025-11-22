@@ -9,6 +9,7 @@ export interface Movie {
   release_date: string;
   popularity: number;
   genres: { id: number; name: string }[];
+  overview?: string;
 }
 
 export interface MovieCard extends Movie {
