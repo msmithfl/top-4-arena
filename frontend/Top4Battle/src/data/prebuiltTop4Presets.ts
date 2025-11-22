@@ -59,9 +59,9 @@ export const ARCHETYPE_TOP4S: Top4Preset[] = [
     movieIds: [28941, 15239, 27346, 16296]
   },
   {
-    id: 'nostalgic-millenial',
-    title: "Nostalgic Millenial",
-    movieIds: [8363, 808, 557, 4964]
+    id: 'nostalgic-millennial',
+    title: "Nostalgic Millennial",
+    movieIds: [8363, 808, 557, 11528]
   },
   {
     id: 'grindset-influencer',
