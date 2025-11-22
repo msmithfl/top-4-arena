@@ -121,7 +121,7 @@ const GameScreen: React.FC = () => {
   }, [pickedMovies]);
 
   const toggleCardSelection = (cardId: number) => {
-    if (isAttacking) return; // Prevent selection during attack phase
+    if (isAttacking) return;
     
     setSelectedCards(prev => {
       if (prev.includes(cardId)) {
@@ -213,12 +213,13 @@ const GameScreen: React.FC = () => {
     // PHASE 2: Boss counter-attacks (delayed)
     setTimeout(() => {
       // Boss counter-attacks with ability
-      const abilityResult = boss!.ability.effect(turn, boss!.baseDamage);
-      let bossDamage = abilityResult.damage;
+      // const abilityResult = boss!.ability.effect(turn, boss!.baseDamage);
+      // let bossDamage = abilityResult.damage;
+      let bossDamage = boss?.baseDamage ?? 0;
       
       // Apply defense ignore
-      const effectiveDefense = Math.round(result.defense * (1 - boss!.defenseIgnore));
-      const damageTaken = Math.max(0, bossDamage - effectiveDefense);
+      // const effectiveDefense = Math.round(result.defense * (1 - boss!.defenseIgnore));
+      const damageTaken = Math.max(0, bossDamage - result.defense);
       
       let newPlayerHP = Math.round(Math.min(maxPlayerHP, Math.max(0, playerHP - damageTaken)));
       
