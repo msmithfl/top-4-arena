@@ -5,6 +5,7 @@ import { enhanceMovie } from '../utils/enhanceMovie';
 import PlayerCard from './MovieCard';
 import DeckPopup from './DeckPopup';
 import triviaData from '../data/triviaQuestions.json';
+import spinnerImg from '../assets/imgs/top4-spinner.png';
 
 interface ShopScreenProps {
   onPick: (card: MovieCard | null) => void; // null = skip to next round
@@ -142,7 +143,14 @@ useEffect(() => {
             <h2 className="text-3xl py-5 font-bold text-white">Pick a New Card</h2>
             <div className="flex-1 flex items-center justify-center">
               {loading ? (
-                <div className="text-white text-xl w-full">Loading...</div>
+                <div className="text-center">
+                  <img 
+                    src={spinnerImg} 
+                    alt="Loading" 
+                    className="w-20 h-20 animate-spin mx-auto mb-4" 
+                  />
+                  <h2 className="text-2xl font-bold">Loading Cards...</h2>
+                </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
                   {shopCards.map(card => (
