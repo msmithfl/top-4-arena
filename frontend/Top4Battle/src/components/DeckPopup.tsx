@@ -34,7 +34,7 @@ const DeckPopup: React.FC<DeckPopupProps> = ({ deck, discardPile }) => {
       onClick={() => setIsOpen(false)}
     >
       <div
-        className="bg-[#2C3033] backdrop-blur-sm rounded-lg max-w-4/5 min-h-10/12 max-h-[90vh] border border-white/10 shadow-2xl relative flex flex-col"
+        className="bg-[#2C3033] backdrop-blur-sm rounded-lg max-w-4/5 min-h-11/12 max-h-[90vh] border border-white/10 shadow-2xl relative flex flex-col"
         onClick={(e) => e.stopPropagation()}
         style={{
           scrollbarColor: "#3b82f6 #1e293b",
@@ -63,7 +63,7 @@ const DeckPopup: React.FC<DeckPopupProps> = ({ deck, discardPile }) => {
           </div>
           
           {/* Card Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-6 gap-2 flex-1 overflow-y-auto content-start px-2 pb-2 pt-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 2xl:grid-cols-6 gap-2 flex-1 overflow-y-auto content-start px-2 pb-2 pt-4">
             {deck.map(card => (
             <div 
               key={card.id} 
@@ -91,11 +91,11 @@ const DeckPopup: React.FC<DeckPopupProps> = ({ deck, discardPile }) => {
           </div>
 
           {/* Card Detail Section */}
-          <div className="w-72 shrink-0">
+          <div className="w-72 shrink-0 overflow-y-auto max-h-[calc(90vh-8rem)]">
             {selectedCard ? (
               <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/10">
                 {/* Poster */}
-                <div className="mb-4 relative cursor-pointer" onClick={() => setShowDescription(!showDescription)}>
+                <div className="mb-4 relative cursor-pointer [@media(max-height:800px)]:max-w-42 [@media(max-height:800px)]:mx-auto" onClick={() => setShowDescription(!showDescription)}>
                   <img 
                     src={`https://image.tmdb.org/t/p/w300${selectedCard.poster_path}`}
                     alt={selectedCard.title}
