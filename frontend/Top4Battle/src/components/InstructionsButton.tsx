@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { HelpCircle, X } from 'lucide-react';
+import { HelpCircle, Shield, Sword, X } from 'lucide-react';
 
 const InstructionsButton: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -46,10 +46,10 @@ const InstructionsButton: React.FC = () => {
               <section>
                 <h3 className="text-xl font-bold text-yellow-400 mb-2">Synergies</h3>
                 <p className="text-gray-300 mb-2">
-                  Synergies boost your damage and are found when movies have certain qualities in common.
+                  Synergies multiply your damage and are found when movies have certain qualities in common.
                 </p>
                 <p className="text-gray-300">
-                  Synergies can be based on genre, era, popularity, cast and more. Some synergies do not require a pair.
+                  Currently, synergies are only based on genre, but era, popularity, and cast synergies are planned.
                 </p>
               </section>
 
@@ -57,10 +57,10 @@ const InstructionsButton: React.FC = () => {
               <section>
                 <h3 className="text-xl font-bold text-yellow-400 mb-2">About the Combat</h3>
                 <p className="text-gray-300 mb-2">
-                  In short, your ATTACK is based on the popularity of the film and the DEFENSE is based on the film's runtime. The details of the calculations are highly experimental at this stage.
+                  In short, your ATTACK <span className="inline-flex items-center"><Sword className="w-3 h-3 text-red-400" /></span> is based on the film's TMDB (The Movie Database) rating and your DEFENSE <span className="inline-flex items-center"><Shield className="w-3 h-3 text-blue-400" /></span> is based on the film's runtime. The details of the calculations are highly experimental at this stage.
                 </p>
                 <p className="text-gray-300">
-                  Each boss has a special ability you need to watch out for (Some not implemented). They also might have restrictions or negative affects towards certain card types.
+                  Each boss has a special ability you need to watch out for (some not yet implemented).
                 </p>
               </section>
 
@@ -68,7 +68,7 @@ const InstructionsButton: React.FC = () => {
               <section>
                 <h3 className="text-xl font-bold text-yellow-400 mb-2">The Shop</h3>
                 <p className="text-gray-300">
-                  In between rounds, you will have an opportunity to earn a new card by answering a movie trivia question (Card upgrades coming soon).
+                  In between rounds, you will have an opportunity to earn a new card by answering a movie trivia question (card upgrades and perks are planned).
                 </p>
               </section>
             </div>
