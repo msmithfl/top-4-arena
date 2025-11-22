@@ -11,6 +11,7 @@ interface GameSidebarProps {
   turn: number;
   round: number;
   playerHP: number;
+  maxPlayerHP: number;
   selectedCards: number[];
   hand: MovieCard[];
   boss: BossCard | null;
@@ -22,6 +23,7 @@ const GameSidebar: React.FC<GameSidebarProps> = ({
   turn,
   round,
   playerHP,
+  maxPlayerHP,
   selectedCards,
   hand,
   boss,
@@ -47,7 +49,7 @@ const GameSidebar: React.FC<GameSidebarProps> = ({
       </div>
       <div className="flex-1 flex flex-col justify-center gap-4">
         <TurnCounter turn={turn} round={round}/>
-        <LifePoints playerHP={playerHP} />
+        <LifePoints playerHP={playerHP} maxHP={maxPlayerHP} />
         <div className="h-1/2 flex flex-col">
           <AttackPreview
             selectedCards={selectedCards}

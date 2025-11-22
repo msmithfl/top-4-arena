@@ -33,7 +33,7 @@ const BossCardComponent: React.FC<BossCardProps> = ({ boss, bossHP }) => {
             <p className="text-sm text-gray-300 italic">{boss.ability.description}</p>
             <div className="flex items-center gap-2 text-red-300">
               <Swords className="w-5 h-5" />
-              <span>Base Power: {boss.basePower} | Damage: {boss.baseDamage} | Ignores {Math.round(boss.defenseIgnore * 100)}% Defense</span>
+              <span>Attack: {boss.baseDamage} | Ignores {Math.round(boss.defenseIgnore * 100)}% Defense</span>
             </div>
             <div className="flex gap-2">
               {boss.genres.map(g => (

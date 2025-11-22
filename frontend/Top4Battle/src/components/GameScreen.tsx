@@ -14,6 +14,7 @@ import { createPrebuiltBossCard } from '../utils/bossCard';
 import spinnerImg from '../assets/imgs/top4-spinner.png';
 
 let bossCycle: number[] = [];
+let startingPlayerHealth = 4000;
 
 const getRandomBoss = () => {
   // If we've cycled through all bosses, reset the cycle
@@ -38,7 +39,8 @@ const GameScreen: React.FC = () => {
   const [selectedCards, setSelectedCards] = useState<number[]>([]);
   const [boss, setBoss] = useState<BossCard | null>(null);
   const [bossHP, setBossHP] = useState(0);
-  const [playerHP, setPlayerHP] = useState(3000);
+  const [maxPlayerHP, _setMaxPlayerHP] = useState(startingPlayerHealth);
+  const [playerHP, setPlayerHP] = useState(maxPlayerHP);
   const [turn, setTurn] = useState(1);
   const [hasDiscarded, setHasDiscarded] = useState(false);
   const [battleLog, setBattleLog] = useState<string[]>([]);
@@ -139,11 +141,23 @@ const GameScreen: React.FC = () => {
     const remainingHand = hand.filter(card => !selectedCards.includes(card.id));
     const cardsNeeded = 7 - remainingHand.length;
     
-    let updatedHand = [...remainingHand];
-    let updatedPlayDeck = [...playDeck];
-    let updatedDiscardPile = [...discardPile, ...discardedCards]; // Include the cards we're discarding
+    const updatedDiscardPile = [...discardPile, ...discardedCards];
+    const result = drawCards(cardsNeeded, remainingHand, playDeck, updatedDiscardPile);
+
+    setHand(result.updatedHand);
+    setPlayDeck(result.updatedPlayDeck);
+    setDiscardPile(result.updatedDiscardPile);
+    setSelectedCards([]);
+    setHasDiscarded(true);
+    setBattleLog(prev => [...prev, `🗑️ Discarded ${cardsNeeded} cards`, '---']);
+  };
+
+  const drawCards = (cardsNeeded: number, currentHand: MovieCard[], currentPlayDeck: MovieCard[], currentDiscardPile: MovieCard[]) => {
+    let updatedHand = [...currentHand];
+    let updatedPlayDeck = [...currentPlayDeck];
+    let updatedDiscardPile = [...currentDiscardPile];
     
-    // Draw cards one by one
+    // Draw cards one by one, reshuffling discard pile only when play deck is empty
     for (let i = 0; i < cardsNeeded; i++) {
       if (updatedPlayDeck.length > 0) {
         // Draw from play deck
@@ -166,13 +180,8 @@ const GameScreen: React.FC = () => {
         break;
       }
     }
-
-    setHand(updatedHand);
-    setPlayDeck(updatedPlayDeck);
-    setDiscardPile(updatedDiscardPile);
-    setSelectedCards([]);
-    setHasDiscarded(true);
-    setBattleLog(prev => [...prev, `🗑️ Discarded ${cardsNeeded} cards`, '---']);
+    
+    return { updatedHand, updatedPlayDeck, updatedDiscardPile };
   };
 
   const handleAttack = () => {
@@ -211,7 +220,7 @@ const GameScreen: React.FC = () => {
       const effectiveDefense = Math.round(result.defense * (1 - boss!.defenseIgnore));
       const damageTaken = Math.max(0, bossDamage - effectiveDefense);
       
-      let newPlayerHP = Math.round(Math.min(3000, Math.max(0, playerHP - damageTaken)));
+      let newPlayerHP = Math.round(Math.min(maxPlayerHP, Math.max(0, playerHP - damageTaken)));
       
       setPlayerHP(newPlayerHP);
       
@@ -230,38 +239,12 @@ const GameScreen: React.FC = () => {
         const remainingHand = hand.filter(card => !selectedCards.includes(card.id));
         const cardsNeeded = 7 - remainingHand.length;
         
-        let updatedHand = [...remainingHand];
-        let updatedPlayDeck = [...playDeck];
-        let updatedDiscardPile = [...discardPile, ...playedCards]; // Include the cards we just played
+        const updatedDiscardPile = [...discardPile, ...playedCards];
+        const result = drawCards(cardsNeeded, remainingHand, playDeck, updatedDiscardPile);
         
-        // Draw cards one by one, reshuffling discard pile only when play deck is empty
-        for (let i = 0; i < cardsNeeded; i++) {
-          if (updatedPlayDeck.length > 0) {
-            // Draw from play deck
-            updatedHand.push(updatedPlayDeck[0]);
-            updatedPlayDeck = updatedPlayDeck.slice(1);
-          } else if (updatedDiscardPile.length > 0) {
-            // Play deck empty, reshuffle discard pile
-            const shuffledDiscard = [...updatedDiscardPile].sort(() => Math.random() - 0.5);
-            updatedPlayDeck = shuffledDiscard;
-            updatedDiscardPile = [];
-            setBattleLog(prev => [...prev, '♻️ Reshuffled discard pile back into play deck!']);
-            
-            // Draw from newly shuffled deck
-            if (updatedPlayDeck.length > 0) {
-              updatedHand.push(updatedPlayDeck[0]);
-              updatedPlayDeck = updatedPlayDeck.slice(1);
-            }
-          } else {
-            // Both empty - shouldn't happen but break to avoid infinite loop
-            break;
-          }
-        }
-        
-        setDiscardPile(updatedDiscardPile);
-
-        setHand(updatedHand);
-        setPlayDeck(updatedPlayDeck);
+        setHand(result.updatedHand);
+        setPlayDeck(result.updatedPlayDeck);
+        setDiscardPile(result.updatedDiscardPile);
         setSelectedCards([]);
         setHasDiscarded(false);
         setTurn(turn + 1);
@@ -281,47 +264,6 @@ const GameScreen: React.FC = () => {
       resetRound();
     }
   };
-
-  // const resetGame = async () => {
-  //   try {
-  //     setIsLoading(true);
-  //     setError(null);
-      
-  //     // Fetch deck from random page (1-100) for variety
-  //     const randomPage = Math.floor(Math.random() * 100) + 1;
-  //     const deckMovies = await fetchPopularMovies(randomPage);
-      
-  //     // Fetch boss separately from popular movies
-  //     const bossMovie = await fetchPopularBoss();
-      
-  //     if (deckMovies.length < 7) {
-  //       throw new Error('Not enough movies fetched');
-  //     }
-      
-  //     const enhancedDeck = deckMovies.slice(0, 19).map(enhanceMovie);
-  //     setDeck(enhancedDeck);
-  //     setHand(enhancedDeck.slice(0, 7));
-  //     setDeckPosition(7); // Reset deck position
-  //     const bossCard = createBossCard(bossMovie);
-  //     setBoss(bossCard);
-  //     setBossHP(bossCard.maxHP);
-  //     setPlayerHP(3000);
-  //     setTurn(1);
-  //     setSelectedCards([]);
-  //     setHasDiscarded(false);
-  //     setBattleLog([]);
-  //     setGameState('playing');
-  //     setIsLoading(false);
-  //   } catch (err) {
-  //     console.error('Failed to reset game:', err);
-  //     setError(err instanceof Error ? err.message : 'Failed to load movies');
-  //     setIsLoading(false);
-  //   }
-  // };
-
-  // Modify resetRound to set state back to playing
-  
-  // Modify resetRound to accept the updated deck
   
   const resetRound = async (newDeck?: MovieCard[]) => {
     setIsLoading(true);
@@ -342,7 +284,7 @@ const GameScreen: React.FC = () => {
       // Set all boss/game state first
       setBoss(bossCard);
       setBossHP(bossCard.maxHP);
-      setPlayerHP(3000);
+      setPlayerHP(maxPlayerHP);
       setTurn(1);
       setSelectedCards([]);
       setHasDiscarded(false);
@@ -412,6 +354,7 @@ const GameScreen: React.FC = () => {
           turn={turn}
           round={round}
           playerHP={playerHP}
+          maxPlayerHP={maxPlayerHP}
           selectedCards={selectedCards}
           hand={hand}
           boss={boss}

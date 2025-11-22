@@ -10,7 +10,7 @@ export const createBossCard = (movie: Movie): BossCard => {
   
   return {
     ...baseCard,
-    maxHP: baseCard.basePower * 50,
+    maxHP: baseCard.basePower,
     baseDamage: baseCard.basePower * 3,
     defenseIgnore: ability.name.includes('PRECISION') ? 0.75 : 0.5, // Ignores 50-75% defense
     ability
@@ -31,8 +31,8 @@ export async function createPrebuiltBossCard(rawBoss: PrebuiltBoss, fetchMovieDe
   });
   
   // Calculate boss stats from enhanced movie (like before)
-  const maxHP = enhancedMovie.basePower * 50;
-  const baseDamage = enhancedMovie.basePower * 3;
+  const maxHP = enhancedMovie.basePower * 25;
+  const baseDamage = enhancedMovie.basePower * 2;
   const defenseIgnore = rawBoss.ability.name.includes('PRECISION') ? 0.75 : 0.5;
   
   return {
