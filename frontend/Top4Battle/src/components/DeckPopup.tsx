@@ -95,6 +95,7 @@ const DeckPopup: React.FC<DeckPopupProps> = ({ deck, discardPile }) => {
             {selectedCard ? (
               <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/10">
                 {/* Poster */}
+                {/* Fix poster size by height to avoid size shifting on y */}
                 <div className="mb-4 relative cursor-pointer [@media(max-height:800px)]:max-w-42 [@media(max-height:800px)]:mx-auto" onClick={() => setShowDescription(!showDescription)}>
                   <img 
                     src={`https://image.tmdb.org/t/p/w300${selectedCard.poster_path}`}
