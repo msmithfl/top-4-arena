@@ -67,7 +67,9 @@ const DeckPopup: React.FC<DeckPopupProps> = ({ deck, discardPile }) => {
             {deck.map(card => (
             <div 
               key={card.id} 
-              className="relative text-white cursor-pointer flex items-center justify-center"
+              className={`relative text-white cursor-pointer flex items-center justify-center ${
+                selectedCard?.id === card.id ? 'z-20' : 'z-0'
+              }`}
               onClick={() => {
                 setSelectedCard(card);
                 setShowDescription(false);
