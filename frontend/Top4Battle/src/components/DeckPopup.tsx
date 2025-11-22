@@ -63,7 +63,7 @@ const DeckPopup: React.FC<DeckPopupProps> = ({ deck, discardPile }) => {
           </div>
           
           {/* Card Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 2xl:grid-cols-6 gap-2 flex-1 overflow-y-auto content-start px-2 pb-2 pt-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 [@media(min-width:1600px)]:grid-cols-6 gap-2 flex-1 overflow-y-auto content-start px-2 pb-2 pt-4">
             {deck.map(card => (
             <div 
               key={card.id} 
@@ -96,7 +96,7 @@ const DeckPopup: React.FC<DeckPopupProps> = ({ deck, discardPile }) => {
               <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/10">
                 {/* Poster */}
                 {/* Fix poster size by height to avoid size shifting on y */}
-                <div className="mb-4 relative cursor-pointer [@media(max-height:800px)]:max-w-42 [@media(max-height:800px)]:mx-auto" onClick={() => setShowDescription(!showDescription)}>
+                <div className="mb-4 relative cursor-pointer [@media(max-height:750px)]:max-w-40 [@media(max-height:800px)]:max-w-44 [@media(max-height:800px)]:mx-auto" onClick={() => setShowDescription(!showDescription)}>
                   <img 
                     src={`https://image.tmdb.org/t/p/w300${selectedCard.poster_path}`}
                     alt={selectedCard.title}
