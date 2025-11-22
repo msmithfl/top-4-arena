@@ -78,6 +78,7 @@ const DeckPopup: React.FC<DeckPopupProps> = ({ deck, discardPile }) => {
                 isSelected={selectedCard?.id === card.id}
                 onSelect={() => {}}
                 isDisabled={true}
+                small={true}
               />
               {discardPile.some(discarded => discarded.id === card.id) && (
                 <div className={`absolute inset-0 bg-gray-900/80 rounded-lg z-10 flex items-center justify-center pointer-events-none transition-all transform ${
