@@ -1,8 +1,7 @@
 import { useNavigate } from 'react-router-dom';
-import { Monitor, ArrowLeft } from 'lucide-react';
+import { Monitor, ArrowLeft, Mail, X } from 'lucide-react';
 import MovieCarousel from './MovieCarousel';
-import { Smile, Mail } from 'lucide-react';
-import { FaYoutube } from "react-icons/fa";
+import Footer from './Footer';
 import { useState, useEffect } from 'react';
 
 const APP_VERSION = "0.1.0-early";
@@ -73,7 +72,7 @@ const MobileNotSupported = () => {
               onClick={() => setIsPanelOpen(false)}
               className="text-gray-400 hover:text-white transition-colors cursor-pointer"
             >
-              ×
+              <X className="w-6 h-6" />
             </button>
           </div>
           <form onSubmit={handleSubmit} className="flex-1 flex flex-col space-y-4">
@@ -118,39 +117,7 @@ const MobileNotSupported = () => {
       )}
 
       {/* Footer */}
-      <footer className="w-full bg-[#2C3440] border-t border-white/10 py-2">
-        <div className="max-w-5xl mx-auto px-4">
-          <div className="flex flex-col md:flex-row items-center justify-center gap-4">
-            <div className="flex flex-col md:flex-row gap-3 items-center">
-              <a
-                href="https://buymeacoffee.com/msmithfls"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-[#BBCCEE] hover:text-white font-semibold py-2 px-4 flex items-center gap-2 transition-all text-sm"
-              >
-                <Smile className="w-4 h-4" />
-                Support This Project
-              </a>
-              <button
-                onClick={() => setIsPanelOpen(true)}
-                className="text-[#BBCCEE] hover:text-white font-semibold py-2 px-4 flex items-center gap-2 transition-all text-sm cursor-pointer"
-              >
-                <Mail className="w-4 h-4" />
-                Send Feedback
-              </button>
-              <a
-                href="https://www.youtube.com/watch?v=dTzUGpEE9ls&t=112s"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-[#BBCCEE] hover:text-white font-semibold py-2 px-4 flex items-center gap-2 transition-all text-sm"
-              >
-                Inspired by JangoDisc
-                <FaYoutube className="w-4 h-4" />
-              </a>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer onFeedbackClick={() => setIsPanelOpen(true)} />
     </div>
   );
 };
