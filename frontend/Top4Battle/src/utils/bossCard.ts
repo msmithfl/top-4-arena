@@ -32,7 +32,7 @@ export async function createPrebuiltBossCard(rawBoss: PrebuiltBoss, fetchMovieDe
   
   // Calculate boss stats from enhanced movie (like before)
   const maxHP = enhancedMovie.basePower * 25;
-  const baseDamage = enhancedMovie.basePower * 2;
+  const baseDamage = Math.round(enhancedMovie.basePower * 2.3);
   const defenseIgnore = rawBoss.ability.name.includes('PRECISION') ? 0.75 : 0.5;
   
   return {
