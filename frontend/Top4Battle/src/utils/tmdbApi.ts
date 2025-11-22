@@ -32,7 +32,8 @@ export const fetchMovieDetails = async (movieId: number): Promise<Movie> => {
     runtime: data.runtime,
     release_date: data.release_date,
     popularity: data.popularity,
-    genres: data.genres
+    genres: data.genres,
+    overview: data.overview
   };
 };
 

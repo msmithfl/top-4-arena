@@ -18,10 +18,12 @@ const MovieCardComponent: React.FC<MovieCardProps> = ({ card, isSelected, onSele
       className={`transition-all transform ${
         isDisabled ? 'cursor-default' : 'cursor-pointer hover:scale-105'
       } ${
-        isSelected ? 'ring-4 ring-yellow-400 scale-105 -translate-y-2' : ''
+        isSelected ? 'scale-105 -translate-y-2' : ''
       }`}
     >
-      <div className="relative bg-gray-800 rounded-lg overflow-hidden shadow-lg border-2 border-gray-700 aspect-2/3 w-full">
+      <div className={`relative bg-gray-800 rounded-lg overflow-hidden shadow-lg border-2 aspect-2/3 w-full ${
+        isSelected ? 'border-yellow-400' : 'border-gray-700'
+      }`}>
         {/* Poster as full background */}
         <img 
           src={`https://image.tmdb.org/t/p/w300${card.poster_path}`}
@@ -38,7 +40,7 @@ const MovieCardComponent: React.FC<MovieCardProps> = ({ card, isSelected, onSele
         {/* Runtime - Top Right */}
         <div className="absolute top-1 right-1 bg-black bg-opacity-75 rounded px-2 py-1 flex items-center gap-1">
           <Shield className="w-3 h-3 text-blue-400" />
-          <p className="text-xs font-bold text-gray-300">{card.runtime ? `${card.runtime}m` : '--'}</p>
+          <p className="text-xs font-bold text-gray-300">{card.runtime ? `${card.runtime}` : '--'}</p>
         </div>
         
         {/* Genres - Bottom */}
