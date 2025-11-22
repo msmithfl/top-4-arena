@@ -1,9 +1,9 @@
 import type { MovieCard, BattleResult } from '../types';
-import {
-  getStarPowerMultiplier,
-  getRevenueMultiplier,
-  getEraMultiplier
-} from './statHelpers';
+// import {
+//   getStarPowerMultiplier,
+//   getRevenueMultiplier,
+//   getEraMultiplier
+// } from './statHelpers';
 
 // Calculate battle damage with synergies
 export const calculateBattle = (cards: MovieCard[]): BattleResult => {
@@ -17,12 +17,12 @@ export const calculateBattle = (cards: MovieCard[]): BattleResult => {
   // Base damage from all cards
   cards.forEach(card => {
     const baseDmg = card.basePower;
-    const starMult = getStarPowerMultiplier(card.starPowerTier);
-    const revMult = getRevenueMultiplier(card.revenueTier);
-    const eraMult = getEraMultiplier(card.eraTier);
+    // const starMult = getStarPowerMultiplier(card.starPowerTier);
+    // const revMult = getRevenueMultiplier(card.revenueTier);
+    // const eraMult = getEraMultiplier(card.eraTier);
     
-    totalDamage += baseDmg * starMult * revMult * eraMult;
-    totalDefense += card.basePower * 0.6; // Defense is 60% of base power
+    totalDamage += baseDmg;// * starMult * revMult * eraMult
+    totalDefense += card.runtime;
   });
   
   // Genre synergies
@@ -46,31 +46,31 @@ export const calculateBattle = (cards: MovieCard[]): BattleResult => {
   });
   
   // Decade synergy
-  const decades = cards.map(c => c.decade);
-  if (new Set(decades).size === 1) {
-    multiplier *= 1.4;
-    synergies.push(`${decades[0]} Era Unity 1.4x damage`);
-  }
+  // const decades = cards.map(c => c.decade);
+  // if (new Set(decades).size === 1) {
+  //   multiplier *= 1.4;
+  //   synergies.push(`${decades[0]} Era Unity 1.4x damage`);
+  // }
   
-  // High rating synergy
-  const avgRating = cards.reduce((sum, c) => sum + c.vote_average, 0) / cards.length;
-  if (avgRating >= 8.5) {
-    totalDamage += 800;
-    synergies.push(`Masterpiece (avg 8.5+): +800 damage`);
-  } else if (avgRating >= 8.0) {
-    totalDamage += 500;
-    synergies.push(`Critical Darling (avg 8.0+): +500 damage`);
-  }
+  // // High rating synergy
+  // const avgRating = cards.reduce((sum, c) => sum + c.vote_average, 0) / cards.length;
+  // if (avgRating >= 8.5) {
+  //   totalDamage += 800;
+  //   synergies.push(`Masterpiece (avg 8.5+): +800 damage`);
+  // } else if (avgRating >= 8.0) {
+  //   totalDamage += 500;
+  //   synergies.push(`Critical Darling (avg 8.0+): +500 damage`);
+  // }
   
-  // Genre-specific bonuses
-  if (genres.includes('Action')) {
-    totalDamage += 300;
-    synergies.push(`Action Bonus +300 damage`);
-  }
-  if (genres.includes('Horror')) {
-    const lifesteal = Math.round(totalDamage * 0.1);
-    synergies.push(`Horror Lifesteal Heal ${lifesteal} HP`);
-  }
+  // // Genre-specific bonuses
+  // if (genres.includes('Action')) {
+  //   totalDamage += 300;
+  //   synergies.push(`Action Bonus +300 damage`);
+  // }
+  // if (genres.includes('Horror')) {
+  //   const lifesteal = Math.round(totalDamage * 0.1);
+  //   synergies.push(`Horror Lifesteal Heal ${lifesteal} HP`);
+  // }
   
   totalDamage *= multiplier;
   
