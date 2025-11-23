@@ -404,6 +404,14 @@ const GameScreen: React.FC = () => {
           <div className="mt-auto space-y-4 mx-auto max-w-[95%]">
           
           <div className="flex justify-end">
+            <div 
+              className="flex-1 cursor-pointer"
+              onClick={() => {
+                if (selectedCards.length > 0) {
+                  setSelectedCards([]);
+                }
+              }}
+            ></div>
             <DeckPopup deck={collectionDeck} discardPile={discardPile} />
           </div>
           
