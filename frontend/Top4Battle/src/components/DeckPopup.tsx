@@ -98,10 +98,10 @@ const DeckPopup: React.FC<DeckPopupProps> = ({ deck, discardPile }) => {
           <div className="w-72 shrink-0 flex flex-col gap-4">
             <div className="overflow-y-auto max-h-[calc(90vh-12rem)]">
               {selectedCard ? (
-                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/10">
+                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3 border border-white/10">
                   {/* Poster */}
                   {/* Fix poster size by height to avoid size shifting on y */}
-                  <div className="mb-4 relative cursor-pointer [@media(max-height:750px)]:max-w-40 [@media(max-height:800px)]:max-w-44 [@media(max-height:800px)]:mx-auto" onClick={() => setShowDescription(!showDescription)}>
+                  <div className="mb-3 relative cursor-pointer [@media(max-height:750px)]:max-w-40 [@media(max-height:800px)]:max-w-44 [@media(max-height:800px)]:mx-auto" onClick={() => setShowDescription(!showDescription)}>
                     <img 
                       src={`https://image.tmdb.org/t/p/w300${selectedCard.poster_path}`}
                       alt={selectedCard.title}
@@ -109,7 +109,7 @@ const DeckPopup: React.FC<DeckPopupProps> = ({ deck, discardPile }) => {
                     />
                     
                     {showDescription && (
-                      <div className="absolute inset-0 bg-black/80 rounded-lg p-3 flex items-center justify-center">
+                      <div className="absolute inset-0 bg-black/80 rounded-lg p-2 flex items-center justify-center">
                         <p className="text-white text-sm leading-relaxed overflow-y-auto max-h-full">
                           {selectedCard.overview || 'No description available.'}
                         </p>
@@ -118,21 +118,19 @@ const DeckPopup: React.FC<DeckPopupProps> = ({ deck, discardPile }) => {
                   </div>
                   
                   {/* Title */}
-                  <h4 className="text-lg font-bold text-white mb-2 text-center">
+                  <h4 className="text-lg font-bold text-white mb-1.5 text-center">
                     {selectedCard.title}
                   </h4>
                   
                   {/* Genres */}
-                  <div 
-                    className="mb-4 cursor-pointer"
-                    onMouseEnter={() => setHoveredStat('genres')}
-                    onMouseLeave={() => setHoveredStat(null)}
-                  >
+                  <div className="mb-3">
                     <div className="flex flex-wrap gap-1 justify-center">
                       {selectedCard.genres.slice(0, 2).map(genre => (
                         <span 
                           key={genre.id} 
-                          className="text-xs px-2 py-1 bg-blue-600 rounded font-semibold text-white"
+                          className="text-xs px-2 py-1 bg-blue-600 rounded font-semibold text-white cursor-pointer"
+                          onMouseEnter={() => setHoveredStat('genres')}
+                          onMouseLeave={() => setHoveredStat(null)}
                         >
                           {genre.name === 'Science Fiction' ? 'Sci-Fi' : genre.name}
                         </span>
@@ -141,7 +139,7 @@ const DeckPopup: React.FC<DeckPopupProps> = ({ deck, discardPile }) => {
                   </div>
                   
                   {/* Stats */}
-                  <div className="space-y-2">
+                  <div className="space-y-1.5">
                     <div 
                       className="flex justify-between items-center text-sm cursor-pointer"
                       onMouseEnter={() => setHoveredStat('rating')}
