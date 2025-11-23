@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
-import { Layers, Sword, Shield } from 'lucide-react';
+import { Layers, Sword, Shield, ArrowUp } from 'lucide-react';
 import type { MovieCard } from '../types';
 import MovieCardComponent from './MovieCard';
 
@@ -13,6 +13,7 @@ const DeckPopup: React.FC<DeckPopupProps> = ({ deck, discardPile }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState<MovieCard | null>(null);
   const [showDescription, setShowDescription] = useState(false);
+  const [hoveredStat, setHoveredStat] = useState<'rating' | 'runtime' | 'release' | 'genres' | null>(null);
 
   // Calculate genre counts (only first 2 genres per film)
   const genreCounts = React.useMemo(() => {
@@ -94,81 +95,118 @@ const DeckPopup: React.FC<DeckPopupProps> = ({ deck, discardPile }) => {
           </div>
 
           {/* Card Detail Section */}
-          <div className="w-72 shrink-0 overflow-y-auto max-h-[calc(90vh-8rem)]">
-            {selectedCard ? (
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/10">
-                {/* Poster */}
-                {/* Fix poster size by height to avoid size shifting on y */}
-                <div className="mb-4 relative cursor-pointer [@media(max-height:750px)]:max-w-40 [@media(max-height:800px)]:max-w-44 [@media(max-height:800px)]:mx-auto" onClick={() => setShowDescription(!showDescription)}>
-                  <img 
-                    src={`https://image.tmdb.org/t/p/w300${selectedCard.poster_path}`}
-                    alt={selectedCard.title}
-                    className="w-full rounded-lg"
-                  />
+          <div className="w-72 shrink-0 flex flex-col gap-4">
+            <div className="overflow-y-auto max-h-[calc(90vh-12rem)]">
+              {selectedCard ? (
+                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/10">
+                  {/* Poster */}
+                  {/* Fix poster size by height to avoid size shifting on y */}
+                  <div className="mb-4 relative cursor-pointer [@media(max-height:750px)]:max-w-40 [@media(max-height:800px)]:max-w-44 [@media(max-height:800px)]:mx-auto" onClick={() => setShowDescription(!showDescription)}>
+                    <img 
+                      src={`https://image.tmdb.org/t/p/w300${selectedCard.poster_path}`}
+                      alt={selectedCard.title}
+                      className="w-full rounded-lg"
+                    />
+                    
+                    {showDescription && (
+                      <div className="absolute inset-0 bg-black/80 rounded-lg p-3 flex items-center justify-center">
+                        <p className="text-white text-sm leading-relaxed overflow-y-auto max-h-full">
+                          {selectedCard.overview || 'No description available.'}
+                        </p>
+                      </div>
+                    )}
+                  </div>
                   
-                  {/* Rating - Top Left */}
-                  {!showDescription && (
-                    <div className="absolute top-1 left-1 bg-black bg-opacity-75 rounded px-2 py-1 flex items-center gap-1">
-                      <Sword className='w-5 h-5 text-red-400' />
-                      <span className="text-xs font-bold text-yellow-400">{selectedCard.vote_average?.toFixed(1) ?? '--'}</span>
-                    </div>
-                  )}
+                  {/* Title */}
+                  <h4 className="text-lg font-bold text-white mb-2 text-center">
+                    {selectedCard.title}
+                  </h4>
                   
-                  {/* Runtime - Top Right */}
-                  {!showDescription && (
-                    <div className="absolute top-1 right-1 bg-black bg-opacity-75 rounded px-2 py-1 flex items-center gap-1">
-                      <Shield className='w-5 h-5 text-blue-400' />
-                      <span className="text-xs font-bold text-gray-300">{selectedCard.runtime ? `${selectedCard.runtime}` : '--'}</span>
+                  {/* Genres */}
+                  <div 
+                    className="mb-4 cursor-pointer"
+                    onMouseEnter={() => setHoveredStat('genres')}
+                    onMouseLeave={() => setHoveredStat(null)}
+                  >
+                    <div className="flex flex-wrap gap-1 justify-center">
+                      {selectedCard.genres.slice(0, 2).map(genre => (
+                        <span 
+                          key={genre.id} 
+                          className="text-xs px-2 py-1 bg-blue-600 rounded font-semibold text-white"
+                        >
+                          {genre.name === 'Science Fiction' ? 'Sci-Fi' : genre.name}
+                        </span>
+                      ))}
                     </div>
-                  )}
+                  </div>
                   
-                  {showDescription && (
-                    <div className="absolute inset-0 bg-black/80 rounded-lg p-3 flex items-center justify-center">
-                      <p className="text-white text-sm leading-relaxed overflow-y-auto max-h-full">
-                        {selectedCard.overview || 'No description available.'}
-                      </p>
+                  {/* Stats */}
+                  <div className="space-y-2">
+                    <div 
+                      className="flex justify-between items-center text-sm cursor-pointer"
+                      onMouseEnter={() => setHoveredStat('rating')}
+                      onMouseLeave={() => setHoveredStat(null)}
+                    >
+                      <span className="text-gray-400">Rating:</span>
+                      <div className="flex items-center gap-1">
+                        <span className="text-red-400 font-bold">{selectedCard.vote_average.toFixed(1)}</span>
+                        <Sword className='w-4 h-4 text-red-400' />
+                      </div>
                     </div>
-                  )}
-                </div>
-                
-                {/* Title */}
-                <h4 className="text-lg font-bold text-white mb-2 text-center">
-                  {selectedCard.title}
-                </h4>
-                
-                {/* Genres */}
-                <div className="mb-4">
-                  <div className="flex flex-wrap gap-1 justify-center">
-                    {selectedCard.genres.slice(0, 2).map(genre => (
-                      <span 
-                        key={genre.id} 
-                        className="text-xs px-2 py-1 bg-blue-600 rounded font-semibold text-white"
-                      >
-                        {genre.name === 'Science Fiction' ? 'Sci-Fi' : genre.name}
-                      </span>
-                    ))}
+                    <div 
+                      className="flex justify-between items-center text-sm cursor-pointer"
+                      onMouseEnter={() => setHoveredStat('runtime')}
+                      onMouseLeave={() => setHoveredStat(null)}
+                    >
+                      <span className="text-gray-400">Runtime:</span>
+                      <div className="flex items-center gap-1">
+                        <span className="text-blue-400 font-bold">{selectedCard.runtime}m</span>
+                        <Shield className='w-4 h-4 text-blue-400' />
+                      </div>
+                    </div>
+                    <div 
+                      className="flex justify-between items-center text-sm cursor-pointer"
+                      onMouseEnter={() => setHoveredStat('release')}
+                      onMouseLeave={() => setHoveredStat(null)}
+                    >
+                      <span className="text-gray-400">Release:</span>
+                      <div className="flex items-center gap-1">
+                        <span className="text-green-400 font-bold">{selectedCard.release_date.split('-')[0]}</span>
+                        <ArrowUp className='w-4 h-4 text-green-400' />
+                      </div>
+                    </div>
                   </div>
                 </div>
-                
-                {/* Stats */}
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center text-sm">
-                    <span className="text-gray-400">Rating:</span>
-                    <span className="text-yellow-400 font-bold">{selectedCard.vote_average.toFixed(1)}</span>
-                  </div>
-                  <div className="flex justify-between items-center text-sm">
-                    <span className="text-gray-400">Runtime:</span>
-                    <span className="text-blue-400 font-bold">{selectedCard.runtime}m</span>
-                  </div>
-                  <div className="flex justify-between items-center text-sm">
-                    <span className="text-gray-400">Release:</span>
-                    <span className="text-gray-300 font-bold">{selectedCard.release_date.split('-')[0]}</span>
-                  </div>
+              ) : (
+                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/10 h-full flex items-center justify-center">
+                  <p className="text-gray-400 text-center">Click a card to view details</p>
                 </div>
-              </div>
-            ) : (
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/10 h-full flex items-center justify-center">
-                <p className="text-gray-400 text-center">Click a card to view details</p>
+              )}
+            </div>
+
+            {/* Info Text - Separate View */}
+            {selectedCard && (
+              <div className="p-2 bg-white/10 backdrop-blur-sm rounded-lg border border-white/10 min-h-[60px]">
+                {hoveredStat === 'rating' && (
+                  <p className="text-gray-300 text-xs leading-relaxed">
+                    Your <span className="text-red-400 font-bold">ATTACK</span> is based on the film's TMDB (The Movie Database) rating.
+                  </p>
+                )}
+                {hoveredStat === 'runtime' && (
+                  <p className="text-gray-300 text-xs leading-relaxed">
+                    Your <span className="text-blue-400 font-bold">DEFENSE</span> is based on the film's runtime in minutes.
+                  </p>
+                )}
+                {hoveredStat === 'release' && (
+                  <p className="text-gray-300 text-xs leading-relaxed">
+                      Release dates are used to create <span className="text-green-400 font-bold">SYNERGIES</span>, which multiply your damage.
+                  </p>
+                )}
+                {hoveredStat === 'genres' && (
+                  <p className="text-gray-300 text-xs leading-relaxed">
+                      Genres are used to create <span className="text-green-400 font-bold">SYNERGIES</span>, which multiply your damage.
+                  </p>
+                )}
               </div>
             )}
           </div>
