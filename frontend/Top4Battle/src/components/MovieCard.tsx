@@ -1,5 +1,9 @@
 import React from 'react';
-import { Sword, Shield } from 'lucide-react';
+import { Sword, Shield, Heart, Laugh, Ghost, Drama, Film, Globe, Music, Swords, Scale } from 'lucide-react';
+import { GiMountainRoad, GiMagnifyingGlass, GiAtom, GiTv, GiCowboyBoot, GiPistolGun, GiDrippingKnife } from "react-icons/gi";
+import { MdDraw } from "react-icons/md";
+import { MdFamilyRestroom } from "react-icons/md";
+import { FaHatWizard } from "react-icons/fa";
 import type { MovieCard } from '../types';
 
 interface MovieCardProps {
@@ -8,10 +12,43 @@ interface MovieCardProps {
   onSelect: (cardId: number) => void;
   isDisabled?: boolean;
   small?: boolean;
+  useGenreIcons?: boolean;
 }
 
-const MovieCardComponent: React.FC<MovieCardProps> = ({ card, isSelected, onSelect, isDisabled = false, small = false }) => {
+// Genre icon mapping
+const genreIconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+  'Action': GiPistolGun,
+  'Adventure': GiMountainRoad,
+  'Animation': MdDraw,
+  'Comedy': Laugh,
+  'Crime': Scale,
+  'Documentary': Film,
+  'Drama': Drama,
+  'Family': MdFamilyRestroom,
+  'Fantasy': FaHatWizard,
+  'History': Globe,
+  'Horror': Ghost,
+  'Music': Music,
+  'Mystery': GiMagnifyingGlass,
+  'Romance': Heart,
+  'Science Fiction': GiAtom,
+  'TV Movie': GiTv,
+  'Thriller': GiDrippingKnife,
+  'War': Swords,
+  'Western': GiCowboyBoot,
+};
+
+const MovieCardComponent: React.FC<MovieCardProps> = ({ card, isSelected, onSelect, isDisabled = false, small = false, useGenreIcons = false }) => {
   const genres = Array.isArray(card.genres) ? card.genres.slice(0, 2) : [];
+
+  const getGenreDisplay = (genreName: string) => {
+    const displayName = genreName === 'Science Fiction' ? 'Sci-Fi' : genreName;
+    if (useGenreIcons) {
+      const IconComponent = genreIconMap[genreName];
+      return IconComponent ? <IconComponent className="w-5 h-5" /> : displayName;
+    }
+    return displayName;
+  };
 
   return (
     <div
@@ -53,10 +90,10 @@ const MovieCardComponent: React.FC<MovieCardProps> = ({ card, isSelected, onSele
           <div className="flex gap-1 justify-center flex-nowrap">
             {genres.length > 0 ? (
               genres.map(g => (
-                <span key={g.id} className={`bg-blue-600 bg-opacity-90 rounded font-semibold whitespace-nowrap ${
+                <span key={g.id} className={`bg-blue-600 bg-opacity-90 rounded font-semibold whitespace-nowrap flex items-center justify-center ${
                   small ? 'px-1 py-0 text-[10px] [@media(min-width:1800px)]:text-xs' : 'px-2 py-1 text-xs'
                 }`}>
-                  {g.name === 'Science Fiction' ? 'Sci-Fi' : g.name}
+                  {getGenreDisplay(g.name)}
                 </span>
               ))
             ) : (
