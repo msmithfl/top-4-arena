@@ -8,7 +8,7 @@ import {
 
 // Adjust inflated TMDB ratings to a more drastic scale
 // Maps typical inflated 5.0-8.5 range to a realistic 3.0-9.5 range
-const adjustRating = (rating: number): number => {
+export const adjustRating = (rating: number): number => {
   // Simple linear mapping from inflated range to desired range
   // 5.0 -> 2.5, 6.5 -> 6.0, 8.0 -> 8.5, 8.5 -> 9.2
   const minInput = 5.0;   // Lowest rating you expect from TMDB
