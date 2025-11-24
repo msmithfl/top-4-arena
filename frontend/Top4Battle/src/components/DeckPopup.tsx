@@ -147,7 +147,7 @@ const DeckPopup: React.FC<DeckPopupProps> = ({ deck, discardPile }) => {
                     >
                       <span className="text-gray-400">Rating:</span>
                       <div className="flex items-center gap-1">
-                        <span className="text-red-400 font-bold">{selectedCard.vote_average.toFixed(1)}</span>
+                        <span className="text-red-400 font-bold">{(selectedCard.basePower / 100).toFixed(1)}</span>
                         <Sword className='w-4 h-4 text-red-400' />
                       </div>
                     </div>

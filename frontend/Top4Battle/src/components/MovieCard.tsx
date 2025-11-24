@@ -37,7 +37,7 @@ const MovieCardComponent: React.FC<MovieCardProps> = ({ card, isSelected, onSele
           small ? 'px-1 py-0' : 'px-2 py-1'
         }`}>
           <Sword className="w-3 h-3 text-red-400" />
-          <p className="text-xs font-bold text-yellow-400">{card.vote_average?.toFixed(1) ?? '--'}</p>
+          <p className="text-xs font-bold text-yellow-400">{(card.basePower / 100)?.toFixed(1) ?? '--'}</p>
         </div>
         
         {/* Runtime - Top Right */}
