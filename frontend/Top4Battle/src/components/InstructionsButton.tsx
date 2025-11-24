@@ -48,8 +48,11 @@ const InstructionsButton: React.FC = () => {
                 <p className="text-gray-300 mb-2">
                   Synergies multiply your damage and are found when movies have certain qualities in common.
                 </p>
+                <p className="text-gray-300 mb-2">
+                  Only cards with synergies will add to your attack.
+                </p>
                 <p className="text-gray-300">
-                  Currently, synergies are only based on genre, but era, popularity, and cast synergies are planned.
+                  Currently, genre synergies are the only ones available, but era, popularity, and cast synergies are planned.
                 </p>
               </section>
 
