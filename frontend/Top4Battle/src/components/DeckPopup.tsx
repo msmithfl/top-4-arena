@@ -96,9 +96,9 @@ const DeckPopup: React.FC<DeckPopupProps> = ({ deck, discardPile }) => {
 
           {/* Card Detail Section */}
           <div className="w-72 shrink-0 flex flex-col gap-4">
-            <div className="overflow-y-auto max-h-[calc(90vh-12rem)]">
+            <div className="overflow-y-auto overflow-x-visible max-h-[calc(90vh-12rem)]">
               {selectedCard ? (
-                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3 border border-white/10">
+                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3 border border-white/10 overflow-visible">
                   {/* Poster */}
                   {/* Fix poster size by height to avoid size shifting on y */}
                   <div className="mb-3 relative cursor-pointer [@media(max-height:750px)]:max-w-40 [@media(max-height:800px)]:max-w-44 [@media(max-height:800px)]:mx-auto" onClick={() => setShowDescription(!showDescription)}>
@@ -123,7 +123,7 @@ const DeckPopup: React.FC<DeckPopupProps> = ({ deck, discardPile }) => {
                   </h4>
                   
                   {/* Genres */}
-                  <div className="mb-3">
+                  <div className="mb-3 relative">
                     <div className="flex flex-wrap gap-1 justify-center">
                       {selectedCard.genres.slice(0, 2).map(genre => (
                         <span 
@@ -136,12 +136,19 @@ const DeckPopup: React.FC<DeckPopupProps> = ({ deck, discardPile }) => {
                         </span>
                       ))}
                     </div>
+                    {hoveredStat === 'genres' && (
+                      <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 z-50 w-64 p-2 bg-black/95 backdrop-blur-sm rounded-lg border border-white/20 shadow-xl pointer-events-none">
+                        <p className="text-gray-300 text-xs leading-relaxed">
+                          Genres are used to create <span className="text-green-400 font-bold">SYNERGIES</span>, which multiply your damage.
+                        </p>
+                      </div>
+                    )}
                   </div>
                   
                   {/* Stats */}
                   <div className="space-y-1.5">
                     <div 
-                      className="flex justify-between items-center text-sm cursor-pointer"
+                      className="flex justify-between items-center text-sm cursor-pointer relative"
                       onMouseEnter={() => setHoveredStat('rating')}
                       onMouseLeave={() => setHoveredStat(null)}
                     >
@@ -150,9 +157,17 @@ const DeckPopup: React.FC<DeckPopupProps> = ({ deck, discardPile }) => {
                         <span className="text-red-400 font-bold">{(selectedCard.basePower / 100).toFixed(1)}</span>
                         <Sword className='w-4 h-4 text-red-400' />
                       </div>
+                      {hoveredStat === 'rating' && (
+                        <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 z-50 w-64 p-2 bg-black/95 backdrop-blur-sm rounded-lg border border-white/20 shadow-xl pointer-events-none">
+                          <p className="text-gray-300 text-xs leading-relaxed">
+                            Your <span className="text-red-400 font-bold">ATTACK</span> is based on the film's TMDB (The Movie Database) rating.
+                          </p>
+                        </div>
+                      )}
                     </div>
+                    
                     <div 
-                      className="flex justify-between items-center text-sm cursor-pointer"
+                      className="flex justify-between items-center text-sm cursor-pointer relative"
                       onMouseEnter={() => setHoveredStat('runtime')}
                       onMouseLeave={() => setHoveredStat(null)}
                     >
@@ -161,9 +176,17 @@ const DeckPopup: React.FC<DeckPopupProps> = ({ deck, discardPile }) => {
                         <span className="text-blue-400 font-bold">{selectedCard.runtime}m</span>
                         <Shield className='w-4 h-4 text-blue-400' />
                       </div>
+                      {hoveredStat === 'runtime' && (
+                        <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 z-50 w-64 p-2 bg-black/95 backdrop-blur-sm rounded-lg border border-white/20 shadow-xl pointer-events-none">
+                          <p className="text-gray-300 text-xs leading-relaxed">
+                            Your <span className="text-blue-400 font-bold">DEFENSE</span> is based on the film's runtime in minutes.
+                          </p>
+                        </div>
+                      )}
                     </div>
+                    
                     <div 
-                      className="flex justify-between items-center text-sm cursor-pointer"
+                      className="flex justify-between items-center text-sm cursor-pointer relative"
                       onMouseEnter={() => setHoveredStat('release')}
                       onMouseLeave={() => setHoveredStat(null)}
                     >
@@ -172,6 +195,13 @@ const DeckPopup: React.FC<DeckPopupProps> = ({ deck, discardPile }) => {
                         <span className="text-green-400 font-bold">{selectedCard.release_date.split('-')[0]}</span>
                         <ArrowUp className='w-4 h-4 text-green-400' />
                       </div>
+                      {hoveredStat === 'release' && (
+                        <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 z-50 w-64 p-2 bg-black/95 backdrop-blur-sm rounded-lg border border-white/20 shadow-xl pointer-events-none">
+                          <p className="text-gray-300 text-xs leading-relaxed">
+                            Release dates are used to create <span className="text-green-400 font-bold">SYNERGIES</span>, which multiply your damage.
+                          </p>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -182,31 +212,6 @@ const DeckPopup: React.FC<DeckPopupProps> = ({ deck, discardPile }) => {
               )}
             </div>
 
-            {/* Info Text - Separate View */}
-            {selectedCard && (
-              <div className="p-2 bg-white/10 backdrop-blur-sm rounded-lg border border-white/10 min-h-[60px]">
-                {hoveredStat === 'rating' && (
-                  <p className="text-gray-300 text-xs leading-relaxed">
-                    Your <span className="text-red-400 font-bold">ATTACK</span> is based on the film's TMDB (The Movie Database) rating.
-                  </p>
-                )}
-                {hoveredStat === 'runtime' && (
-                  <p className="text-gray-300 text-xs leading-relaxed">
-                    Your <span className="text-blue-400 font-bold">DEFENSE</span> is based on the film's runtime in minutes.
-                  </p>
-                )}
-                {hoveredStat === 'release' && (
-                  <p className="text-gray-300 text-xs leading-relaxed">
-                      Release dates are used to create <span className="text-green-400 font-bold">SYNERGIES</span>, which multiply your damage.
-                  </p>
-                )}
-                {hoveredStat === 'genres' && (
-                  <p className="text-gray-300 text-xs leading-relaxed">
-                      Genres are used to create <span className="text-green-400 font-bold">SYNERGIES</span>, which multiply your damage.
-                  </p>
-                )}
-              </div>
-            )}
           </div>
         </div>
         <div className="px-5 pb-5">
