@@ -17,7 +17,7 @@ export const createBossCard = (movie: Movie): BossCard => {
   };
 };
 
-export async function createPrebuiltBossCard(rawBoss: PrebuiltBoss, fetchMovieDetails: (id: number) => Promise<Movie>): Promise<BossCard> {
+export async function createPrebuiltBossCard(rawBoss: PrebuiltBoss, fetchMovieDetails: (id: number) => Promise<Movie>, round: number = 1): Promise<BossCard> {
   // Fetch movie data from TMDB
   const movieData = await fetchMovieDetails(rawBoss.tmdbId);
   
@@ -30,9 +30,12 @@ export async function createPrebuiltBossCard(rawBoss: PrebuiltBoss, fetchMovieDe
     poster_path: posterPath
   });
   
-  // Calculate boss stats from enhanced movie (like before)
-  const maxHP = enhancedMovie.basePower * 25;
-  const baseDamage = Math.round(enhancedMovie.basePower * 2.3);
+  // Scale HP: +2000 per round (10000 base + 2000 * (round - 1))
+  const maxHP = 10000 + (round - 1) * 2000;
+  
+  // Scale damage: +100 per round (1000 base + 100 * (round - 1))
+  const baseDamage = 1200 + (round - 1) * 100;
+  
   const defenseIgnore = rawBoss.ability.name.includes('PRECISION') ? 0.75 : 0.5;
   
   return {

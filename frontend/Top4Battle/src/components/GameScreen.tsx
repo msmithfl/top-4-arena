@@ -100,7 +100,7 @@ const GameScreen: React.FC = () => {
 
         // Set boss from prebuilt list with TMDB data
         const rawBoss = getRandomBoss();
-        const bossCard = await createPrebuiltBossCard(rawBoss, fetchMovieDetails);
+        const bossCard = await createPrebuiltBossCard(rawBoss, fetchMovieDetails, 1);
         setBoss(bossCard);
         setBossHP(bossCard.maxHP);
 
@@ -272,7 +272,8 @@ const GameScreen: React.FC = () => {
     try {
       // Set boss from prebuilt list with TMDB data
       const rawBoss = getRandomBoss();
-      const bossCard = await createPrebuiltBossCard(rawBoss, fetchMovieDetails);
+      const nextRound = round + 1;
+      const bossCard = await createPrebuiltBossCard(rawBoss, fetchMovieDetails, nextRound);
       
       // Use the passed deck or current collection deck
       const deckToUse = newDeck || collectionDeck;
