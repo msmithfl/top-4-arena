@@ -12,6 +12,7 @@ interface ShopScreenProps {
   deck: MovieCard[];
   discardPile: MovieCard[];
   round: number;
+  existingCardIds?: Set<number>;
 }
 
 interface TriviaQuestion {
@@ -20,7 +21,7 @@ interface TriviaQuestion {
   incorrect_answers: string[];
 }
 
-const ShopScreen: React.FC<ShopScreenProps> = ({ onPick, deck, discardPile, round }) => {
+const ShopScreen: React.FC<ShopScreenProps> = ({ onPick, deck, discardPile, round, existingCardIds }) => {
   const [shopCards, setShopCards] = useState<MovieCard[]>([]);
   const [loading, setLoading] = useState(true);
   const [rerolled, setRerolled] = useState(false);
@@ -30,6 +31,15 @@ const ShopScreen: React.FC<ShopScreenProps> = ({ onPick, deck, discardPile, roun
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [selectedCard, setSelectedCard] = useState<MovieCard | null>(null);
   const hasFetched = React.useRef(false);
+  
+  // Build set of existing card IDs from deck and provided set
+  const excludeIds = React.useMemo(() => {
+    const ids = new Set(deck.map(card => card.id));
+    if (existingCardIds) {
+      existingCardIds.forEach(id => ids.add(id));
+    }
+    return ids;
+  }, [deck, existingCardIds]);
 
   const fetchTrivia = () => {
     // Filter questions by difficulty based on round (Easy 1-6, Medium 7-12, Hard 13+)
@@ -59,9 +69,10 @@ const ShopScreen: React.FC<ShopScreenProps> = ({ onPick, deck, discardPile, roun
   setLoading(true);
   const randomPage = Math.floor(Math.random() * 100) + 1;
   const movies = await fetchPopularMovies(randomPage);
-  // Fetch details for the 3 shop cards
+  // Filter out duplicates and fetch details for the 3 shop cards
+  const uniqueMovies = movies.filter(m => !excludeIds.has(m.id));
   const cards = await Promise.all(
-    movies.slice(0, 3).map(async m => {
+    uniqueMovies.slice(0, 3).map(async m => {
       const detail = await fetchMovieDetails(m.id);
       return enhanceMovie(detail);
     })
@@ -79,9 +90,10 @@ useEffect(() => {
     setLoading(true);
     const randomPage = Math.floor(Math.random() * 100) + 1;
     const movies = await fetchPopularMovies(randomPage);
-    // Fetch details for the 3 shop cards
+    // Filter out duplicates and fetch details for the 3 shop cards
+    const uniqueMovies = movies.filter(m => !excludeIds.has(m.id));
     const cards = await Promise.all(
-      movies.slice(0, 3).map(async m => {
+      uniqueMovies.slice(0, 3).map(async m => {
         const detail = await fetchMovieDetails(m.id);
         return enhanceMovie(detail);
       })
@@ -91,7 +103,7 @@ useEffect(() => {
     setLoading(false);
   };
   getShopCards();
-}, []);
+}, [excludeIds]);
 
   const handleCardSelect = (card: MovieCard) => {
     setSelectedCard(card);
