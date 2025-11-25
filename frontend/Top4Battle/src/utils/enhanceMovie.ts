@@ -33,6 +33,7 @@ export const enhanceMovie = (movie: Movie): MovieCard => {
   return {
     ...movie,
     basePower: Math.round(adjustedRating * 100),
+    baseDefense: movie.runtime,
     starPowerTier: calculateStarPowerTier(movie.vote_count, movie.revenue, movie.popularity),
     revenueTier: calculateRevenueTier(movie.revenue),
     eraTier: calculateEraTier(movie.release_date),

@@ -3,33 +3,26 @@ import type { MovieCard } from '../types';
 import { fetchMovieDetails, fetchPopularMovies } from '../utils/tmdbApi';
 import { enhanceMovie } from '../utils/enhanceMovie';
 import PlayerCard from './MovieCard';
-import DeckPopup from './DeckPopup';
-import triviaData from '../data/triviaQuestions.json';
+import { GiTicket } from "react-icons/gi";
 import spinnerImg from '../assets/imgs/top4-spinner.png';
 
 interface ShopScreenProps {
-  onPick: (card: MovieCard | null) => void; // null = skip to next round
   deck: MovieCard[];
   discardPile: MovieCard[];
   round: number;
   existingCardIds?: Set<number>;
+  tickets: number;
+  onShopAction: (updatedDeck: MovieCard[]) => void;
 }
 
-interface TriviaQuestion {
-  question: string;
-  correct_answer: string;
-  incorrect_answers: string[];
-}
+type ShopAction = 'new-card' | 'upgrade' | 'augment' | null;
 
-const ShopScreen: React.FC<ShopScreenProps> = ({ onPick, deck, discardPile, round, existingCardIds }) => {
+const ShopScreen: React.FC<ShopScreenProps> = ({ deck, round, existingCardIds, tickets, onShopAction }) => {
   const [shopCards, setShopCards] = useState<MovieCard[]>([]);
   const [loading, setLoading] = useState(true);
-  const [rerolled, setRerolled] = useState(false);
-  const [triviaQuestion, setTriviaQuestion] = useState<TriviaQuestion | null>(null);
-  const [shuffledAnswers, setShuffledAnswers] = useState<string[]>([]);
-  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
-  const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
+  const [selectedAction, setSelectedAction] = useState<ShopAction>(null);
   const [selectedCard, setSelectedCard] = useState<MovieCard | null>(null);
+  const [actionComplete, setActionComplete] = useState(false);
   const hasFetched = React.useRef(false);
   
   // Build set of existing card IDs from deck and provided set
@@ -40,47 +33,6 @@ const ShopScreen: React.FC<ShopScreenProps> = ({ onPick, deck, discardPile, roun
     }
     return ids;
   }, [deck, existingCardIds]);
-
-  const fetchTrivia = () => {
-    // Filter questions by difficulty based on round (Easy 1-6, Medium 7-12, Hard 13+)
-    let difficulty: 'easy' | 'medium' | 'hard';
-    
-    if (round >= 13) {
-      difficulty = 'hard';
-    } else if (round >= 7) {
-      difficulty = 'medium';
-    } else {
-      difficulty = 'easy';
-    }
-    
-    const filteredQuestions = triviaData.results.filter(q => q.difficulty === difficulty);
-    
-    // Get a random question from the filtered list
-    const randomIndex = Math.floor(Math.random() * filteredQuestions.length);
-    const question = filteredQuestions[randomIndex];
-    
-    setTriviaQuestion(question);
-    const allAnswers = [...question.incorrect_answers, question.correct_answer];
-    const shuffled = allAnswers.sort(() => Math.random() - 0.5);
-    setShuffledAnswers(shuffled);
-  };
-
-  const rerollShopCards = async () => {
-  setLoading(true);
-  const randomPage = Math.floor(Math.random() * 100) + 1;
-  const movies = await fetchPopularMovies(randomPage);
-  // Filter out duplicates and fetch details for the 3 shop cards
-  const uniqueMovies = movies.filter(m => !excludeIds.has(m.id));
-  const cards = await Promise.all(
-    uniqueMovies.slice(0, 3).map(async m => {
-      const detail = await fetchMovieDetails(m.id);
-      return enhanceMovie(detail);
-    })
-  );
-  setShopCards(cards);
-  setLoading(false);
-  setRerolled(true);
-};
 
 useEffect(() => {
   if (hasFetched.current) return;
@@ -99,135 +51,222 @@ useEffect(() => {
       })
     );
     setShopCards(cards);
-    fetchTrivia();
     setLoading(false);
   };
   getShopCards();
 }, [excludeIds]);
 
+  const handleActionSelect = (action: ShopAction) => {
+    setSelectedAction(action);
+    setSelectedCard(null);
+  };
+
+  const [updatedDeck, setUpdatedDeck] = useState<MovieCard[]>([]);
+
   const handleCardSelect = (card: MovieCard) => {
+    if (!selectedAction || actionComplete) return;
+    if (selectedAction !== 'new-card' && (selectedAction === 'upgrade' || selectedAction === 'augment')) {
+      // For upgrade/augment, only allow clicking deck cards
+    } else if (selectedAction === 'new-card') {
+      // For new-card, only allow clicking shop cards
+    }
+    
+    let newDeck = [...deck];
+    
+    if (selectedAction === 'new-card') {
+      // Add new card to deck
+      newDeck.push(card);
+    } else if (selectedAction === 'upgrade') {
+      // Upgrade card - increase basePower by 200 (2.0 rating) and baseDefense by 50
+      const cardIndex = newDeck.findIndex(c => c.id === card.id);
+      if (cardIndex !== -1) {
+        newDeck[cardIndex] = {
+          ...newDeck[cardIndex],
+          basePower: newDeck[cardIndex].basePower + 200,
+          baseDefense: newDeck[cardIndex].baseDefense + 50
+        };
+      }
+    } else if (selectedAction === 'augment') {
+      // For now, just mark as complete - will implement genre change UI later
+      // This would need a genre selection step
+      alert('Augment feature coming soon!');
+      return;
+    }
+    
+    setUpdatedDeck(newDeck);
     setSelectedCard(card);
-    setSelectedAnswer(null);
-    setIsCorrect(null);
+    setActionComplete(true);
   };
 
-  const handleAnswerSelect = (answer: string) => {
-    setSelectedAnswer(answer);
-    const correct = answer === triviaQuestion?.correct_answer;
-    setIsCorrect(correct);
-  };
-
-  const handleConfirm = () => {
-    if (isCorrect && selectedCard) {
-      onPick(selectedCard);
-    } else {
-      // Wrong answer - skip to next round with nothing
-      onPick(null);
+  const handleContinue = () => {
+    if (actionComplete && updatedDeck.length > 0) {
+      onShopAction(updatedDeck); // Pass updated deck
     }
   };
 
-  // Decode HTML entities (OpenTDB returns encoded strings)
-  const decodeHTML = (html: string) => {
-    const txt = document.createElement('textarea');
-    txt.innerHTML = html;
-    return txt.value;
-  };
+  // Display current ticket count (decremented if action is selected)
+  const displayTickets = selectedAction ? tickets - 1 : tickets;
 
   return (
     <div className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-4">
-      <div
-        className="bg-[#2C3033] rounded-lg max-w-3xl w-full border border-white/10 shadow-2xl p-8 text-center flex flex-col"
-        style={{ minHeight: '530px' }}
-      >
-        <div className='flex justify-between mb-5'>
-          <button
-            onClick={rerollShopCards}
-            disabled={rerolled || loading || selectedCard !== null}
-            className={`bg-orange-600 hover:bg-orange-700 text-white font-bold px-6 py-2 rounded-lg shadow-lg transition-all ${rerolled || loading || selectedCard ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
-          >
-            Reroll Cards
-          </button>
-          <DeckPopup deck={deck} discardPile={discardPile} />
+      <div className="bg-[#2C3033] rounded-lg max-w-3/4 w-full border border-white/10 shadow-2xl p-8 flex flex-col" style={{ maxHeight: '90vh' }}>
+        {/* Header */}
+        <div className='flex justify-between items-center mb-6'>
+          <div className="flex items-center gap-4">
+            <h2 className="text-3xl font-bold text-white">Ticket Booth</h2>
+            <div className="bg-yellow-600 px-4 py-2 rounded-lg flex items-center gap-2">
+              <GiTicket className='w-7 h-7' />
+              <span className="text-white font-bold text-xl"> {displayTickets}</span>
+            </div>
+          </div>
+          {/* <DeckPopup deck={deck} discardPile={discardPile} /> */}
         </div>
 
-        {!selectedCard ? (
-          <>
-            <h2 className="text-3xl py-5 font-bold text-white">Pick a New Card</h2>
-            <div className="flex-1 flex items-center justify-center">
-              {loading ? (
-                <div className="text-center">
-                  <img 
-                    src={spinnerImg} 
-                    alt="Loading" 
-                    className="w-20 h-20 animate-spin mx-auto mb-4" 
-                  />
-                  <h2 className="text-2xl font-bold">Loading Cards...</h2>
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
-                  {shopCards.map(card => (
-                    <div key={card.id} className="flex flex-col items-center">
-                      <PlayerCard
-                        card={card}
-                        isSelected={false}
-                        onSelect={() => handleCardSelect(card)}
-                      />
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </>
-        ) : (
-          <div className="flex flex-col flex-1">
-            <div className="bg-white/10 backdrop-blur-sm p-4 rounded-lg mb-4 border border-white/10">
-              <p className="text-xl text-white text-center">{triviaQuestion ? decodeHTML(triviaQuestion.question) : 'Loading question...'}</p>
-            </div>
-            
-            <div className="grid grid-cols-2 gap-3">
-              {shuffledAnswers.map((answer, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => handleAnswerSelect(answer)}
-                  disabled={selectedAnswer !== null}
-                  className={`p-4 rounded-lg font-bold text-lg transition-all cursor-pointer ${
-                    selectedAnswer === null
-                      ? 'bg-blue-600 hover:bg-blue-700 text-white'
-                      : selectedAnswer === answer
-                      ? answer === triviaQuestion?.correct_answer
-                        ? 'bg-green-600 text-white'
-                        : 'bg-red-600 text-white'
-                      : answer === triviaQuestion?.correct_answer
-                      ? 'bg-green-600 text-white'
-                      : 'bg-gray-600 text-gray-400'
-                  }`}
+        {/* Main Content */}
+        <div className="flex gap-6 flex-1 overflow-hidden">
+          {/* Left Side - Deck Cards */}
+          <div className="flex-1 overflow-y-auto p-5">
+            <div className="grid grid-cols-4 gap-4">
+              {(updatedDeck.length > 0 ? updatedDeck : deck).map(card => (
+                <div 
+                  key={card.id} 
+                  onClick={() => {
+                    // Only allow clicking deck cards for upgrade/augment actions
+                    if (selectedAction === 'upgrade' || selectedAction === 'augment') {
+                      handleCardSelect(card);
+                    }
+                  }} 
+                  className={(selectedAction === 'upgrade' || selectedAction === 'augment') && !actionComplete ? "cursor-pointer" : "cursor-default"}
                 >
-                  {decodeHTML(answer)}
-                </button>
+                  <PlayerCard
+                    card={card}
+                    isSelected={selectedCard?.id === card.id}
+                    onSelect={() => {}}
+                    small={true}
+                  />
+                </div>
               ))}
             </div>
+          </div>
 
-            <div className="flex-1 flex items-center justify-center my-6">
-              {selectedAnswer && (
-                <div>
-                  {isCorrect ? (
-                    <p className="text-green-400 text-xl font-bold">✅ Correct! You can add the card to your deck.</p>
-                  ) : (
-                    <p className="text-red-400 text-xl font-bold">❌ Wrong! You'll continue without a new card.</p>
+          {/* Right Side - Actions */}
+          <div className="flex-1 space-y-4 shrink-0 flex flex-col mx-4">
+            {/* Top Section - Upgrade and Augment */}
+            <div className="flex-1 flex flex-col bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/10">
+              <div className='flex gap-4 mb-4'>
+                <button
+                  onClick={() => handleActionSelect('upgrade')}
+                  disabled={tickets < 1 || selectedAction !== null}
+                  className={`w-full p-4 rounded-lg font-bold text-lg transition-all cursor-pointer ${
+                    selectedAction === 'upgrade'
+                      ? 'bg-green-600 text-white ring-4 ring-green-400'
+                      : tickets < 1 || selectedAction !== null
+                      ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                      : 'bg-green-500 hover:bg-green-600 text-white'
+                  }`}
+                >
+                  Level Up Movie
+                </button>
+
+                <button
+                  onClick={() => handleActionSelect('augment')}
+                  disabled={true}
+                  className={`w-full p-4 rounded-lg font-bold text-lg transition-all cursor-not-allowed bg-gray-600 text-gray-400`}
+                >
+                  Genre Shifter (Coming Soon)
+                </button>
+
+              </div>
+
+              {/* Feedback Section */}
+              {selectedAction === 'upgrade' && (
+                <div className="flex-1 bg-black/30 rounded-lg p-4 flex items-center justify-center">
+                  {!actionComplete ? (
+                    <p className="text-gray-300 text-center">
+                      Choose a card to upgrade <span className="text-red-400 font-bold">ATTACK</span> and <span className="text-blue-400 font-bold">DEFENSE</span>
+                    </p>
+                  ) : selectedCard && (
+                    <div className="text-center">
+                      <p className="text-white text-lg mb-2">
+                        <span className="font-bold text-green-400">{selectedCard.title}</span> was upgraded!
+                      </p>
+                      <p className="text-gray-300">
+                        Attack: <span className="text-red-400">{(selectedCard.basePower / 100).toFixed(1)}</span> → <span className="text-red-400 font-bold">{((selectedCard.basePower + 200) / 100).toFixed(1)}</span>
+                      </p>
+                      <p className="text-gray-300 mt-1">
+                        Defense: <span className="text-blue-400">{selectedCard.baseDefense}</span> → <span className="text-blue-400 font-bold">{selectedCard.baseDefense + 50}</span>
+                      </p>
+                      <p className="text-orange-400 font-bold mt-4">Continue to the next round</p>
+                    </div>
                   )}
                 </div>
               )}
             </div>
 
-            <button
-              onClick={handleConfirm}
-              disabled={selectedAnswer === null}
-              className="bg-orange-600 hover:bg-orange-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-bold px-8 py-3 rounded-full text-xl mt-auto cursor-pointer"
-            >
-              Continue
-            </button>
+            {/* Bottom Section - Add New Card */}
+            <div className="flex-1 flex flex-col bg-white/10 backdrop-blur-sm rounded-lg p-3 border border-white/10">
+              {selectedAction !== 'new-card' && (
+                <button
+                  onClick={() => handleActionSelect('new-card')}
+                  disabled={tickets < 1 || selectedAction !== null}
+                  className={`w-full p-4 rounded-lg font-bold text-lg transition-all cursor-pointer ${
+                    tickets < 1 || selectedAction !== null
+                      ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                      : 'bg-blue-500 hover:bg-blue-600 text-white'
+                  }`}
+                >
+                  Get New Movie
+                </button>
+              )}
+
+              {selectedAction === 'new-card' && (
+                <div className="flex-1 p-4 overflow-y-auto">
+                  {loading ? (
+                    <div className="h-full flex items-center justify-center">
+                      <div className="text-center">
+                        <img 
+                          src={spinnerImg} 
+                          alt="Loading" 
+                          className="w-16 h-16 animate-spin mx-auto mb-2" 
+                        />
+                        <p className="text-white text-sm">Loading...</p>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-3 gap-3">
+                      {shopCards.map(card => (
+                        <div key={card.id} onClick={() => handleCardSelect(card)} className="cursor-pointer">
+                          <PlayerCard
+                            card={card}
+                            isSelected={selectedCard?.id === card.id}
+                            onSelect={() => {}}
+                            small={true}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
-        )}
+        </div>
+
+        {/* Footer - Continue Button */}
+        <div className="mt-6">
+          <button
+            onClick={handleContinue}
+            disabled={!actionComplete}
+            className={`w-full font-bold px-8 py-4 rounded-full text-xl transition-all ${
+              actionComplete
+                ? 'bg-orange-600 hover:bg-orange-700 text-white cursor-pointer'
+                : 'bg-gray-600 text-gray-400 cursor-not-allowed'
+            }`}
+          >
+            Continue to Round {round + 1}
+          </button>
+        </div>
+
       </div>
     </div>
   );
