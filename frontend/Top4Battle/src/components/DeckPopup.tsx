@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
-import { Layers, Sword, Shield, ArrowUp } from 'lucide-react';
+import { Layers, Sword, Shield, ArrowUp, ChevronLeft, ChevronRight } from 'lucide-react';
 import type { MovieCard } from '../types';
 import MovieCardComponent from './MovieCard';
 
@@ -14,6 +14,23 @@ const DeckPopup: React.FC<DeckPopupProps> = ({ deck, discardPile }) => {
   const [selectedCard, setSelectedCard] = useState<MovieCard | null>(null);
   const [showDescription, setShowDescription] = useState(false);
   const [hoveredStat, setHoveredStat] = useState<'rating' | 'runtime' | 'release' | 'genres' | null>(null);
+
+  const handleNavigateCard = (direction: 'prev' | 'next') => {
+    if (!selectedCard) return;
+    
+    const currentIndex = deck.findIndex(card => card.id === selectedCard.id);
+    if (currentIndex === -1) return;
+    
+    let newIndex;
+    if (direction === 'next') {
+      newIndex = (currentIndex + 1) % deck.length;
+    } else {
+      newIndex = currentIndex === 0 ? deck.length - 1 : currentIndex - 1;
+    }
+    
+    setSelectedCard(deck[newIndex]);
+    setShowDescription(false);
+  };
 
   // Calculate genre counts (only first 2 genres per film)
   const genreCounts = React.useMemo(() => {
@@ -44,7 +61,7 @@ const DeckPopup: React.FC<DeckPopupProps> = ({ deck, discardPile }) => {
       >
         <div className="flex gap-6 px-8 pb-8 pt-8 flex-1 overflow-hidden">
           {/* Genre Overview Section */}
-          <div className="w-56 shrink-0">
+          <div className="w-56 shrink-0 min-w-0">
             <h3 className="text-2xl font-bold text-white mb-4 flex items-center justify-center gap-2">
               <Layers className="w-6 h-6" />
               Deck Overview
@@ -95,26 +112,50 @@ const DeckPopup: React.FC<DeckPopupProps> = ({ deck, discardPile }) => {
           </div>
 
           {/* Card Detail Section */}
-          <div className="w-72 shrink-0 flex flex-col gap-4">
-            <div className="overflow-y-auto overflow-x-visible max-h-[calc(90vh-12rem)]">
+          <div className="w-72 shrink-0 flex flex-col gap-4 min-w-0">
+            <div className="overflow-x-visible overflow-y-auto flex-1">
               {selectedCard ? (
                 <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3 border border-white/10 overflow-visible">
-                  {/* Poster */}
-                  {/* Fix poster size by height to avoid size shifting on y */}
-                  <div className="mb-3 relative cursor-pointer [@media(max-height:750px)]:max-w-40 [@media(max-height:800px)]:max-w-44 [@media(max-height:800px)]:mx-auto" onClick={() => setShowDescription(!showDescription)}>
-                    <img 
-                      src={`https://image.tmdb.org/t/p/w300${selectedCard.poster_path}`}
-                      alt={selectedCard.title}
-                      className="w-full rounded-lg"
-                    />
-                    
-                    {showDescription && (
-                      <div className="absolute inset-0 bg-black/80 rounded-lg p-2 flex items-center justify-center">
-                        <p className="text-white text-sm leading-relaxed overflow-y-auto max-h-full">
-                          {selectedCard.overview || 'No description available.'}
-                        </p>
-                      </div>
-                    )}
+                  {/* Poster with Navigation */}
+                  <div className="mb-3 relative flex items-stretch">
+                    {/* Previous Button */}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleNavigateCard('prev');
+                      }}
+                      className="w-8 bg-black/80 hover:bg-black/95 flex items-center justify-center transition-all cursor-pointer"
+                    >
+                      <ChevronLeft className="w-5 h-5 text-white" />
+                    </button>
+
+                    {/* Poster */}
+                    <div className="flex-1 relative cursor-pointer [@media(max-height:700px)]:max-w-44 [@media(max-height:700px)]:mx-auto" onClick={() => setShowDescription(!showDescription)}>
+                      <img 
+                        src={`https://image.tmdb.org/t/p/w300${selectedCard.poster_path}`}
+                        alt={selectedCard.title}
+                        className="w-full"
+                      />
+                      
+                      {showDescription && (
+                        <div className="absolute inset-0 bg-black/80 p-2 flex items-center justify-center">
+                          <p className="text-white text-sm leading-relaxed overflow-y-auto max-h-full">
+                            {selectedCard.overview || 'No description available.'}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Next Button */}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleNavigateCard('next');
+                      }}
+                      className="w-8 bg-black/80 hover:bg-black/95 flex items-center justify-center transition-all cursor-pointer"
+                    >
+                      <ChevronRight className="w-5 h-5 text-white" />
+                    </button>
                   </div>
                   
                   {/* Title */}
@@ -229,7 +270,7 @@ const DeckPopup: React.FC<DeckPopupProps> = ({ deck, discardPile }) => {
   return (
     <>
       <button
-        onClick={() => setIsOpen(true)}
+        onClick={() => {setIsOpen(true); setShowDescription(false);}}
         className="px-4 py-2 rounded-lg font-bold flex items-center gap-2 transition-all cursor-pointer"
       >
         <Layers className="w-7 h-7 hover:scale-110 transition-all" />
