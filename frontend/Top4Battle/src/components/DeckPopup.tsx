@@ -11,7 +11,7 @@ interface DeckPopupProps {
 
 const DeckPopup: React.FC<DeckPopupProps> = ({ deck, discardPile }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedCard, setSelectedCard] = useState<MovieCard | null>(null);
+  const [selectedCard, setSelectedCard] = useState<MovieCard | null>(deck.length > 0 ? deck[0] : null);
   const [showDescription, setShowDescription] = useState(false);
   const [hoveredStat, setHoveredStat] = useState<'rating' | 'runtime' | 'release' | 'genres' | null>(null);
 
