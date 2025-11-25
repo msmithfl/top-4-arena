@@ -54,7 +54,7 @@ const MovieCardComponent: React.FC<MovieCardProps> = ({ card, isSelected, onSele
     <div
       onClick={() => onSelect(card.id)}
       className={`transition-all transform ${
-        isDisabled ? 'cursor-default' : 'cursor-pointer hover:scale-105'
+        isDisabled ? '' : ' cursor-pointer hover:scale-105'
       } ${
         isSelected ? 'scale-105 -translate-y-2' : ''
       }`}
