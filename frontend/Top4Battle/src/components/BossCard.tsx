@@ -47,9 +47,9 @@ const BossCardComponent: React.FC<BossCardProps> = ({ boss, bossHP }) => {
           <div className="space-y-2">
             <div className="flex justify-between text-sm font-bold">
               <span></span>
-              <div className='flex gap-2 items-center'>
-                <Heart className="w-8 h-8 text-red-400" />
-                <span className="text-xl w-36 text-right">{bossHP} / {boss.maxHP}</span>
+              <div className='flex gap-2 items-center flex-nowrap whitespace-nowrap'>
+                <Heart className="w-8 h-8 text-red-400 shrink-0" />
+                <span className="text-xl">{bossHP} / {boss.maxHP}</span>
               </div>
             </div>
             <div className="w-full bg-gray-800 rounded-full h-6 border-2 border-red-400">
