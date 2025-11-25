@@ -110,7 +110,7 @@ useEffect(() => {
   return (
     <div className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-4">
       <div 
-        className="bg-[#2C3033] rounded-lg max-w-3/4 w-full border border-white/10 shadow-2xl p-8 flex flex-col" 
+        className="bg-[#2C3033] rounded-lg max-w-4/5 w-full border border-white/10 shadow-2xl p-8 flex flex-col" 
         style={{ 
           maxHeight: '90vh',
           scrollbarColor: "#3b82f6 #1e293b",
@@ -130,13 +130,13 @@ useEffect(() => {
         </div>
 
         {/* Main Content */}
-        <div className="flex gap-6 flex-1 overflow-hidden">
+        <div className="flex flex-1 overflow-hidden">
           {/* Genre Overview Section */}
           <div className="w-56 shrink-0 min-w-0">
             {/* <h3 className="text-2xl font-bold text-white mb-4 flex items-center justify-center gap-2">
               Deck Overview
             </h3> */}
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 mt-5 border border-white/10">
+            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/10">
               <div className="space-y-2 overflow-y-auto max-h-[70vh]">
                 {React.useMemo(() => {
                   const counts: { [key: string]: number } = {};
@@ -186,7 +186,7 @@ useEffect(() => {
           </div>
 
           {/* Right Side - Actions */}
-          <div className="flex-1 space-y-4 shrink-0 flex flex-col mx-4">
+          <div className="flex-1 space-y-4 shrink-0 flex flex-col ml-4">
             {/* Top Section - Upgrade and Augment */}
             <div className="flex-1 flex flex-col bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/10">
               <div className='flex gap-4 mb-4'>
