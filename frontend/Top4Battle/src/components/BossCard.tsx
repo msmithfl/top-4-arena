@@ -54,7 +54,7 @@ const BossCardComponent: React.FC<BossCardProps> = ({ boss, bossHP }) => {
             </div>
             <div className="w-full bg-gray-800 rounded-full h-6 border-2 border-red-400">
               <div 
-                className="bg-linear-to-r from-red-600 to-orange-500 h-full rounded-full transition-all shadow-lg"
+                className="bg-linear-to-r from-red-600 to-orange-500 h-full rounded-full transition-all shadow-lg flex-nowrap"
                 style={{ width: `${(bossHP / boss.maxHP) * 100}%` }}
               />
             </div>
