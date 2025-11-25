@@ -50,6 +50,7 @@ const GameScreen: React.FC = () => {
   const [pickedMovies, setPickedMovies] = useState<MovieCard[] | null>(null);
   const [round, setRound] = useState(1);
   const [isAttacking, setIsAttacking] = useState(false);
+  const [tickets, setTickets] = useState(0);
   
   useEffect(() => {
     // Don't initialize until we have picked movies
@@ -210,6 +211,7 @@ const GameScreen: React.FC = () => {
       setTimeout(() => {
         setGameState('shop');
         setDiscardPile([]);
+        setTickets(prev => prev + 1); // Award ticket for victory
       }, 1500);
       return;
     }
@@ -258,16 +260,10 @@ const GameScreen: React.FC = () => {
     }, 1000); // 1 second delay between player attack and boss counter-attack
   };
 
-  const handleShopPick = (card: MovieCard | null) => {
-    if (card) {
-      // Correct answer - add card to collection deck
-      const updatedDeck = [...collectionDeck, card];
-      setCollectionDeck(updatedDeck);
-      resetRound(updatedDeck);
-    } else {
-      // Wrong answer - continue without adding card
-      resetRound();
-    }
+  const handleShopAction = (updatedDeck: MovieCard[]) => {
+    // Spend ticket and advance to next round
+    setTickets(prev => prev - 1);
+    resetRound(updatedDeck);
   };
   
   // Build set of all card IDs (initial picks + current deck) to pass to shop
@@ -382,7 +378,14 @@ const GameScreen: React.FC = () => {
         
         {/* Shop Screen - shows after victory */}
         {gameState === 'shop' && (
-          <ShopScreen onPick={handleShopPick} deck={collectionDeck} discardPile={discardPile} round={round} existingCardIds={existingCardIds} />
+          <ShopScreen 
+            deck={collectionDeck} 
+            discardPile={discardPile} 
+            round={round} 
+            existingCardIds={existingCardIds}
+            tickets={tickets}
+            onShopAction={handleShopAction}
+          />
         )}
 
         {/* Loss Screen */}

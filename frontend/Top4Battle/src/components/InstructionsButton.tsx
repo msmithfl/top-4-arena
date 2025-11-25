@@ -69,9 +69,9 @@ const InstructionsButton: React.FC = () => {
 
               {/* The Shop */}
               <section>
-                <h3 className="text-xl font-bold text-yellow-400 mb-2">The Shop</h3>
+                <h3 className="text-xl font-bold text-yellow-400 mb-2">The Ticket Booth</h3>
                 <p className="text-gray-300">
-                  In between rounds, you will have an opportunity to earn a new card by answering a movie trivia question (card upgrades and perks are planned).
+                  Each defeated boss will earn you a movie ticket. In between rounds, you can use a ticket to either get a new movie card or level up a movie already in your deck.
                 </p>
               </section>
             </div>
