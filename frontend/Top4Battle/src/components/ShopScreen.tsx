@@ -143,7 +143,7 @@ useEffect(() => {
           <button
             onClick={rerollShopCards}
             disabled={rerolled || loading || selectedCard !== null}
-            className={`bg-orange-600 hover:bg-orange-700 text-white font-bold px-6 py-2 rounded-lg shadow-lg transition-all ${rerolled || loading || selectedCard ? 'opacity-50 cursor-not-allowed' : ''}`}
+            className={`bg-orange-600 hover:bg-orange-700 text-white font-bold px-6 py-2 rounded-lg shadow-lg transition-all ${rerolled || loading || selectedCard ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
           >
             Reroll Cards
           </button>
@@ -190,7 +190,7 @@ useEffect(() => {
                   key={idx}
                   onClick={() => handleAnswerSelect(answer)}
                   disabled={selectedAnswer !== null}
-                  className={`p-4 rounded-lg font-bold text-lg transition-all ${
+                  className={`p-4 rounded-lg font-bold text-lg transition-all cursor-pointer ${
                     selectedAnswer === null
                       ? 'bg-blue-600 hover:bg-blue-700 text-white'
                       : selectedAnswer === answer
@@ -222,7 +222,7 @@ useEffect(() => {
             <button
               onClick={handleConfirm}
               disabled={selectedAnswer === null}
-              className="bg-orange-600 hover:bg-orange-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-bold px-8 py-3 rounded-full text-xl mt-auto"
+              className="bg-orange-600 hover:bg-orange-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-bold px-8 py-3 rounded-full text-xl mt-auto cursor-pointer"
             >
               Continue
             </button>
