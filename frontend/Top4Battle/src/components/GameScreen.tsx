@@ -75,9 +75,13 @@ const GameScreen: React.FC = () => {
         // Enhance picked movies and add them to the deck first
         const enhancedPicked = pickedMovies.map(enhanceMovie);
 
-        // Fetch details for the 10 random movies
+        // Get IDs of picked movies to avoid duplicates
+        const pickedIds = new Set(enhancedPicked.map(card => card.id));
+
+        // Filter out any duplicates and fetch details for the 10 random movies
+        const uniqueDeckMovies = deckMovies.filter(m => !pickedIds.has(m.id));
         const randomDetails = await Promise.all(
-          deckMovies.slice(0, 10).map(m => fetchMovieDetails(m.id))
+          uniqueDeckMovies.slice(0, 10).map(m => fetchMovieDetails(m.id))
         );
         const enhancedRandom = randomDetails.map(enhanceMovie);
 
@@ -266,6 +270,15 @@ const GameScreen: React.FC = () => {
     }
   };
   
+  // Build set of all card IDs (initial picks + current deck) to pass to shop
+  const existingCardIds = React.useMemo(() => {
+    const ids = new Set(collectionDeck.map(card => card.id));
+    if (pickedMovies) {
+      pickedMovies.forEach(card => ids.add(card.id));
+    }
+    return ids;
+  }, [collectionDeck, pickedMovies]);
+  
   const resetRound = async (newDeck?: MovieCard[]) => {
     setIsLoading(true);
     setError(null);
@@ -369,7 +382,7 @@ const GameScreen: React.FC = () => {
         
         {/* Shop Screen - shows after victory */}
         {gameState === 'shop' && (
-          <ShopScreen onPick={handleShopPick} deck={collectionDeck} discardPile={discardPile} round={round} />
+          <ShopScreen onPick={handleShopPick} deck={collectionDeck} discardPile={discardPile} round={round} existingCardIds={existingCardIds} />
         )}
 
         {/* Loss Screen */}
