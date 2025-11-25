@@ -82,7 +82,7 @@ const MovieCardComponent: React.FC<MovieCardProps> = ({ card, isSelected, onSele
           small ? 'px-1 py-0' : 'px-2 py-1'
         }`}>
           <Shield className="w-3 h-3 text-blue-400" />
-          <p className="text-xs font-bold text-gray-300">{card.runtime ? `${card.runtime}` : '--'}</p>
+          <p className="text-xs font-bold text-gray-300">{card.baseDefense ? `${card.baseDefense}` : '--'}</p>
         </div>
         
         {/* Genres - Bottom */}

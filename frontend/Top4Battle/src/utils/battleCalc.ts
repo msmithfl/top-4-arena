@@ -41,9 +41,10 @@ export const calculateBattle = (cards: MovieCard[]): BattleResult => {
     
     if (hasGenreSynergy) {
       const baseDmg = card.basePower;
+      const baseDefense = card.baseDefense;
       
       totalDamage += baseDmg;
-      totalDefense += card.runtime;
+      totalDefense += baseDefense;
     }
   });
   

@@ -14,6 +14,7 @@ export interface Movie {
 
 export interface MovieCard extends Movie {
   basePower: number;
+  baseDefense: number;
   starPowerTier: string;
   revenueTier: string;
   eraTier: string;
