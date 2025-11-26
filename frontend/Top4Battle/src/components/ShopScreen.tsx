@@ -12,7 +12,7 @@ interface ShopScreenProps {
   round: number;
   existingCardIds?: Set<number>;
   tickets: number;
-  onShopAction: (updatedDeck: MovieCard[]) => void;
+  onShopAction: (updatedDeck: MovieCard[], actionType: 'new-card' | 'upgrade') => void;
 }
 
 type ShopAction = 'new-card' | 'upgrade' | 'augment' | null;
@@ -99,8 +99,8 @@ useEffect(() => {
   };
 
   const handleContinue = () => {
-    if (actionComplete && updatedDeck.length > 0) {
-      onShopAction(updatedDeck); // Pass updated deck
+    if (actionComplete && updatedDeck.length > 0 && (selectedAction === 'new-card' || selectedAction === 'upgrade')) {
+      onShopAction(updatedDeck, selectedAction); // Pass updated deck and action type
     }
   };
 

@@ -9,6 +9,7 @@ import { calculateBattle } from '../utils/battleCalc';
 import PickTopFilms from './PickTopFilms';
 import DeckPopup from './DeckPopup';
 import ShopScreen from './ShopScreen';
+import GameOverScreen from './GameOverScreen';
 import { PREBUILT_BOSSES } from '../data/prebuiltBosses';
 import { createPrebuiltBossCard } from '../utils/bossCard';
 import spinnerImg from '../assets/imgs/top4-spinner.png';
@@ -51,6 +52,17 @@ const GameScreen: React.FC = () => {
   const [round, setRound] = useState(1);
   const [isAttacking, setIsAttacking] = useState(false);
   const [tickets, setTickets] = useState(0);
+  
+  // Game stats tracking
+  const [gameStats, setGameStats] = useState({
+    cardPlayCount: {} as Record<number, number>, // cardId -> play count
+    totalCardsPlayed: 0,
+    cardsUpgraded: 0,
+    totalTicketsEarned: 0,
+    bestHand: { cards: [] as MovieCard[], score: 0 },
+    genrePlayCount: {} as Record<string, number>,
+    defeatedBy: null as string | null,
+  });
   
   useEffect(() => {
     // Don't initialize until we have picked movies
@@ -198,6 +210,31 @@ const GameScreen: React.FC = () => {
     const result = calculateBattle(playedCards);
     let playerDamage = result.damage;
     
+    // Track stats
+    setGameStats(prev => {
+      const newCardPlayCount = { ...prev.cardPlayCount };
+      const newGenrePlayCount = { ...prev.genrePlayCount };
+      
+      playedCards.forEach(card => {
+        newCardPlayCount[card.id] = (newCardPlayCount[card.id] || 0) + 1;
+        card.genres.slice(0, 2).forEach(genre => {
+          newGenrePlayCount[genre.name] = (newGenrePlayCount[genre.name] || 0) + 1;
+        });
+      });
+      
+      const newBestHand = playerDamage > prev.bestHand.score
+        ? { cards: playedCards, score: playerDamage }
+        : prev.bestHand;
+      
+      return {
+        ...prev,
+        cardPlayCount: newCardPlayCount,
+        totalCardsPlayed: prev.totalCardsPlayed + playedCards.length,
+        genrePlayCount: newGenrePlayCount,
+        bestHand: newBestHand,
+      };
+    });
+    
     // PHASE 1: Player attacks boss
     const newBossHP = Math.max(0, bossHP - playerDamage);
     setBossHP(newBossHP);
@@ -212,6 +249,7 @@ const GameScreen: React.FC = () => {
         setGameState('shop');
         setDiscardPile([]);
         setTickets(prev => prev + 1); // Award ticket for victory
+        setGameStats(prev => ({ ...prev, totalTicketsEarned: prev.totalTicketsEarned + 1 }));
       }, 1500);
       return;
     }
@@ -233,6 +271,7 @@ const GameScreen: React.FC = () => {
       
       // Check if player died - if so, skip hand refill and show loss screen
       if (newPlayerHP <= 0) {
+        setGameStats(prev => ({ ...prev, defeatedBy: boss!.title }));
         setTimeout(() => {
           setIsAttacking(false);
           setGameState('lost');
@@ -260,7 +299,12 @@ const GameScreen: React.FC = () => {
     }, 1000); // 1 second delay between player attack and boss counter-attack
   };
 
-  const handleShopAction = (updatedDeck: MovieCard[]) => {
+  const handleShopAction = (updatedDeck: MovieCard[], actionType: 'new-card' | 'upgrade') => {
+    // Track stats
+    if (actionType === 'upgrade') {
+      setGameStats(prev => ({ ...prev, cardsUpgraded: prev.cardsUpgraded + 1 }));
+    }
+    
     // Spend ticket and advance to next round
     setTickets(prev => prev - 1);
     resetRound(updatedDeck);
@@ -389,19 +433,13 @@ const GameScreen: React.FC = () => {
         )}
 
         {/* Loss Screen */}
-        {gameState === 'lost' && (
-          <div className="fixed inset-0 bg-black/90 flex items-center justify-center z-50">
-            <div className="bg-[#2C3440] p-8 rounded-lg text-center border-4 border-red-500">
-              <h2 className="text-4xl font-bold mb-4">💀 DEFEATED</h2>
-              <p className="text-xl mb-6">{boss.title} was too powerful...</p>
-              <button
-                onClick={() => window.location.href = '/'}
-                className="cursor-pointer hover:scale-105 transition-all bg-linear-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 px-8 py-3 rounded-lg font-bold text-xl"
-              >
-                Back to Home
-              </button>
-            </div>
-          </div>
+        {gameState === 'lost' && boss && (
+          <GameOverScreen 
+            round={round}
+            boss={boss}
+            collectionDeck={collectionDeck}
+            gameStats={gameStats}
+          />
         )}
 
         {/* Boss Section */}
