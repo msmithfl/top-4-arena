@@ -1,13 +1,22 @@
 import React, { useState } from 'react';
 import { HelpCircle, Shield, Sword, X } from 'lucide-react';
 
-const InstructionsButton: React.FC = () => {
+interface InstructionsButtonProps {
+  onClick?: () => void;
+}
+
+const InstructionsButton: React.FC<InstructionsButtonProps> = ({ onClick }) => {
   const [isOpen, setIsOpen] = useState(false);
+
+  const handleOpen = () => {
+    setIsOpen(true);
+    onClick?.(); // Call the analytics tracking
+  };
 
   return (
     <>
       <button
-        onClick={() => setIsOpen(true)}
+        onClick={handleOpen}
         title="How to Play"
         className="bg-blue-600 hover:bg-blue-700 w-10 h-10 p-0 rounded-lg font-bold flex items-center justify-center shadow-lg transition-all cursor-pointer"
       >

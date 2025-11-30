@@ -6,6 +6,7 @@ import AttackPreview from './AttackPreview';
 import type { MovieCard, BossCard, BattleResult } from '../types';
 import InstructionsButton from './InstructionsButton';
 import EndGameButton from './EndGameButton';
+import { track } from '@vercel/analytics';
 
 interface GameSidebarProps {
   turn: number;
@@ -43,7 +44,7 @@ const GameSidebar: React.FC<GameSidebarProps> = ({
           {/* <span className="text-xs text-gray-400">Movie Battle Deckbuilder</span> */}
         </div>
         <div className='ml-auto flex gap-2'>
-          <InstructionsButton />
+          <InstructionsButton onClick={() => track('opened_instructions')} />
           <EndGameButton />
         </div>
       </div>
