@@ -13,6 +13,7 @@ import GameOverScreen from './GameOverScreen';
 import { PREBUILT_BOSSES } from '../data/prebuiltBosses';
 import { createPrebuiltBossCard } from '../utils/bossCard';
 import spinnerImg from '../assets/imgs/top4-spinner.png';
+import { track } from '@vercel/analytics';
 
 let bossCycle: number[] = [];
 let startingPlayerHealth = 4000;
@@ -122,6 +123,8 @@ const GameScreen: React.FC = () => {
         setBossHP(bossCard.maxHP);
 
         setIsLoading(false);
+
+        track('game_started');
       } catch (err) {
         if (!isMounted) return;
         console.error('Failed to initialize game:', err);
@@ -246,6 +249,13 @@ const GameScreen: React.FC = () => {
     if (newBossHP === 0) {
       setIsAttacking(false);
       setTimeout(() => {
+        // Track round completion
+        if (round === 1) {
+          track('completed_round_1');
+        } else if (round === 10) {
+          track('completed_round_10');
+        }
+
         setGameState('shop');
         setDiscardPile([]);
         setTickets(prev => prev + 1); // Award ticket for victory
@@ -275,6 +285,8 @@ const GameScreen: React.FC = () => {
         setTimeout(() => {
           setIsAttacking(false);
           setGameState('lost');
+
+          track('game_completed', { round, defeatedBy: boss!.title });
         }, 1000);
         return;
       }
