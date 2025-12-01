@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { fetchMovieDetails, fetchPopularMovies } from '../utils/tmdbApi';
 import { Film, Shuffle, X, Layers } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import spinnerImg from '../assets/imgs/top4-spinner.png';
 import { CELEBRITY_TOP4S, ARCHETYPE_TOP4S } from '../data/prebuiltTop4Presets';
 
 const TMDB_API_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmODZmYTE3MzcwNzRmMzY3NzkwNzc1Y2Q1NTQwNmExYyIsIm5iZiI6MTY4NzYyNzAzOC40MDEsInN1YiI6IjY0OTcyNTFlYjM0NDA5MDBhZDUyNTY4YSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.YA8K57yrPNiM_UwefPB6Bv2t8fZdY_v1GD9AS3rRrU0';
@@ -19,38 +18,66 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
   const [duplicateError, setDuplicateError] = useState<string | null>(null);
   const [presetCategory, setPresetCategory] = useState<'celebrity' | 'archetype'>('celebrity');
   const [presetsOpen, setPresetsOpen] = useState(false);
+  const [suggestions, setSuggestions] = useState<any[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
   const presetListRef = React.useRef<HTMLDivElement>(null);
+  const searchTimeoutRef = React.useRef<number | null>(null);
 
-  const handleFind = async () => {
-    if (!search || picked.length >= 4) return;
+  const handleSearchChange = (value: string) => {
+    setSearch(value);
+    setError(null);
+    setDuplicateError(null);
+    
+    // Clear previous timeout
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+    
+    if (value.length < 2) {
+      setSuggestions([]);
+      setShowSuggestions(false);
+      return;
+    }
+    
+    // Wait 300ms after user stops typing
+    searchTimeoutRef.current = window.setTimeout(async () => {
+      try {
+        const res = await fetch(
+          `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(value)}&include_adult=false&language=en-US&page=1`,
+          {
+            headers: {
+              accept: 'application/json',
+              Authorization: `Bearer ${TMDB_API_TOKEN}`
+            }
+          }
+        );
+        const data = await res.json();
+        setSuggestions(data.results?.slice(0, 5) || []);
+        setShowSuggestions(true);
+      } catch (err) {
+        console.error('Search failed:', err);
+      }
+    }, 300);
+  };
+
+  const handleSelectSuggestion = async (movie: any) => {
+    if (picked.some(m => m.id === movie.id)) {
+      setDuplicateError('You already picked this movie!');
+      setShowSuggestions(false);
+      return;
+    }
+    
     setLoading(true);
     setError(null);
     setDuplicateError(null);
     try {
-      const res = await fetch(
-        `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(search)}&include_adult=false&language=en-US&page=1`,
-        {
-          headers: {
-            accept: 'application/json',
-            Authorization: `Bearer ${TMDB_API_TOKEN}`
-          }
-        }
-      );
-      const data = await res.json();
-      if (!data.results || data.results.length === 0) {
-        setError('No results found. Please check spelling.');
-      } else {
-        const movie = await fetchMovieDetails(data.results[0].id);
-        // Prevent duplicate selection by TMDB id
-        if (picked.some(m => m.id === movie.id)) {
-          setDuplicateError('You already picked this movie!');
-        } else {
-          setPicked([...picked, movie]);
-          setSearch('');
-        }
-      }
+      const details = await fetchMovieDetails(movie.id);
+      setPicked([...picked, details]);
+      setSearch('');
+      setSuggestions([]);
+      setShowSuggestions(false);
     } catch (err) {
-      setError('Failed to search. Try again.');
+      setError('Failed to load movie details.');
     }
     setLoading(false);
   };
@@ -165,26 +192,50 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
         </div>
         
         {/* Search Bar */}
-        <div className="flex gap-2 max-w-lg mx-auto mb-6">
-            <input
-            type="text"
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            placeholder="Type a film title"
-            className="flex-1 p-3 rounded bg-[#2C3440] border border-white/10 text-lg text-white"
-            disabled={loading || picked.length >= 4}
-            />
-            <button
-            onClick={handleFind}
-            disabled={loading || !search || picked.length >= 4}
-            className="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-lg font-bold text-lg text-white cursor-pointer flex items-center justify-center w-24"
-            >
-            {loading ? (
-              <img src={spinnerImg} alt="Loading" className="w-5 h-5 animate-spin" />
-            ) : (
-              'Find'
-            )}
-            </button>
+        <div className="flex gap-2 max-w-lg mx-auto mb-6 relative">
+            <div className="flex-1 relative">
+              <input
+              type="text"
+              value={search}
+              onChange={e => handleSearchChange(e.target.value)}
+              onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+              onFocus={() => search.length >= 2 && suggestions.length > 0 && setShowSuggestions(true)}
+              placeholder="Type a film title"
+              className="w-full p-3 rounded bg-[#2C3440] border border-white/10 text-lg text-white"
+              disabled={loading || picked.length >= 4}
+              />
+              
+              {/* Suggestions Dropdown */}
+              {showSuggestions && suggestions.length > 0 && (
+                <div className="absolute z-50 w-full mt-1 bg-[#2C3440] border border-white/10 rounded-lg shadow-xl max-h-80 overflow-y-auto">
+                  {suggestions.map(movie => (
+                    <button
+                      key={movie.id}
+                      onClick={() => handleSelectSuggestion(movie)}
+                      className="w-full p-3 hover:bg-[#3C4450] transition-colors cursor-pointer text-left flex items-center gap-3 border-b border-white/5 last:border-b-0"
+                    >
+                      {movie.poster_path ? (
+                        <img 
+                          src={`https://image.tmdb.org/t/p/w92${movie.poster_path}`}
+                          alt={movie.title}
+                          className="w-12 h-18 object-cover rounded"
+                        />
+                      ) : (
+                        <div className="w-12 h-18 bg-gray-700 rounded flex items-center justify-center">
+                          <Film className="w-6 h-6 text-gray-500" />
+                        </div>
+                      )}
+                      <div className="flex-1">
+                        <div className="font-bold text-white">{movie.title}</div>
+                        <div className="text-sm text-gray-400">
+                          {movie.release_date ? new Date(movie.release_date).getFullYear() : 'N/A'}
+                        </div>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
             <button
                 onClick={handleRandomPick}
                 disabled={loading || picked.length === 4}
