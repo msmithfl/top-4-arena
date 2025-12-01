@@ -16,6 +16,7 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [duplicateError, setDuplicateError] = useState<string | null>(null);
+  const [runtimeError, setRuntimeError] = useState<string | null>(null);
   const [presetCategory, setPresetCategory] = useState<'celebrity' | 'archetype'>('celebrity');
   const [presetsOpen, setPresetsOpen] = useState(false);
   const [suggestions, setSuggestions] = useState<any[]>([]);
@@ -27,6 +28,7 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
     setSearch(value);
     setError(null);
     setDuplicateError(null);
+    setRuntimeError(null);
     
     // Clear previous timeout
     if (searchTimeoutRef.current) {
@@ -70,8 +72,18 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
     setLoading(true);
     setError(null);
     setDuplicateError(null);
+    setRuntimeError(null);
     try {
       const details = await fetchMovieDetails(movie.id);
+      
+      // Check if runtime is over 240 minutes
+      if (details.runtime && details.runtime > 240) {
+        setRuntimeError(`"${details.title}" is too long (${details.runtime} min) for a starter. Please choose a film under 4 hours.`);
+        setShowSuggestions(false);
+        setLoading(false);
+        return;
+      }
+      
       setPicked([...picked, details]);
       setSearch('');
       setSuggestions([]);
@@ -233,6 +245,13 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
                       </div>
                     </button>
                   ))}
+                </div>
+              )}
+              
+              {/* Runtime Error Popup */}
+              {runtimeError && (
+                <div className="absolute z-50 w-full mt-1 bg-red-500 border border-red-700 rounded-lg shadow-xl p-3 text-sm text-white animate-in fade-in duration-200">
+                  {runtimeError}
                 </div>
               )}
             </div>
