@@ -89,7 +89,7 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({ round, boss, collection
                   Back to Home
                 </button>
                 <a
-                  href="https://discord.gg/QMW2bzSv"
+                  href="https://discord.gg/VnNZVdgFXu"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-full flex items-center cursor-pointer hover:scale-105 transition-all bg-[#5865F2] hover:bg-[#4752C4] justify-center py-4 rounded-lg font-bold text-xl text-center"
