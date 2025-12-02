@@ -13,6 +13,7 @@ interface MovieCardProps {
   isDisabled?: boolean;
   small?: boolean;
   useGenreIcons?: boolean;
+  disableScaling?: boolean;
 }
 
 // Genre icon mapping
@@ -38,7 +39,7 @@ const genreIconMap: Record<string, React.ComponentType<{ className?: string }>> 
   'Western': GiCowboyBoot,
 };
 
-const MovieCardComponent: React.FC<MovieCardProps> = ({ card, isSelected, onSelect, isDisabled = false, small = false, useGenreIcons = false }) => {
+const MovieCardComponent: React.FC<MovieCardProps> = ({ card, isSelected, onSelect, isDisabled = false, small = false, useGenreIcons = false, disableScaling = false }) => {
   const genres = Array.isArray(card.genres) ? card.genres.slice(0, 2) : [];
 
   const getGenreDisplay = (genreName: string) => {
@@ -56,7 +57,7 @@ const MovieCardComponent: React.FC<MovieCardProps> = ({ card, isSelected, onSele
       className={`transition-all transform ${
         isDisabled ? '' : ' cursor-pointer hover:scale-105'
       } ${
-        isSelected ? 'scale-105 -translate-y-2' : ''
+        !disableScaling && isSelected ? 'scale-105 -translate-y-2' : ''
       }`}
     >
       <div className={`relative bg-gray-800 rounded-lg overflow-hidden shadow-lg border-2 aspect-2/3 w-full ${
