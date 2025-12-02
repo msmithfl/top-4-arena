@@ -73,7 +73,7 @@ const MovieCardComponent: React.FC<MovieCardProps> = ({ card, isSelected, onSele
         <div className={`absolute top-1 left-1 bg-black bg-opacity-75 rounded flex items-center gap-1 ${
           small ? 'px-1 py-0' : 'px-2 py-1'
         }`}>
-          <Sword className="w-3 h-3 text-red-400" />
+          <Sword className="hidden lg:block w-3 h-3 text-red-400" />
           <p className="text-xs font-bold text-yellow-400">{(card.basePower / 100)?.toFixed(1) ?? '--'}</p>
         </div>
         
@@ -81,7 +81,7 @@ const MovieCardComponent: React.FC<MovieCardProps> = ({ card, isSelected, onSele
         <div className={`absolute top-1 right-1 bg-black bg-opacity-75 rounded flex items-center gap-1 ${
           small ? 'px-1 py-0' : 'px-2 py-1'
         }`}>
-          <Shield className="w-3 h-3 text-blue-400" />
+          <Shield className="hidden lg:block w-3 h-3 text-blue-400" />
           <p className="text-xs font-bold text-gray-300">{card.baseDefense ? `${card.baseDefense}` : '--'}</p>
         </div>
         
