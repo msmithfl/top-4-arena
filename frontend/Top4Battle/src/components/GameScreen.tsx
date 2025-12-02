@@ -439,7 +439,7 @@ const GameScreen: React.FC = () => {
         <div className="flex-1 overflow-y-auto mx-3 py-3 h-full flex flex-col">
         
         {/* Mobile Top Bar - Round/Turn and Buttons */}
-        <div className="lg:hidden flex gap-2 mb-3 items-center justify-around">
+        {/* <div className="lg:hidden flex gap-2 mb-3 items-center justify-around">
           <div className="w-3/5 px-2 py-1 bg-gray-800 bg-opacity-50 border-2 rounded-lg border-gray-600 flex gap-6 items-center justify-center">
             <div className="flex items-center gap-2">
               <p className="text-lg text-gray-400">Round</p>
@@ -453,7 +453,7 @@ const GameScreen: React.FC = () => {
           </div>
           <InstructionsButton onClick={() => track('opened_instructions')} />
           <EndGameButton />
-        </div>
+        </div> */}
         
         {/* Shop Screen - shows after victory */}
         {gameState === 'shop' && (
