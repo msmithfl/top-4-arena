@@ -3,6 +3,7 @@ import { fetchMovieDetails, fetchPopularMovies } from '../utils/tmdbApi';
 import { Film, Shuffle, X, Layers } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { CELEBRITY_TOP4S, ARCHETYPE_TOP4S } from '../data/prebuiltTop4Presets';
+import InstructionsButton from './InstructionsButton';
 
 const TMDB_API_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmODZmYTE3MzcwNzRmMzY3NzkwNzc1Y2Q1NTQwNmExYyIsIm5iZiI6MTY4NzYyNzAzOC40MDEsInN1YiI6IjY0OTcyNTFlYjM0NDA5MDBhZDUyNTY4YSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.YA8K57yrPNiM_UwefPB6Bv2t8fZdY_v1GD9AS3rRrU0';
 
@@ -180,6 +181,11 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
             className="absolute top-4 left-4 w-16 h-16 z-10"
           />
         </Link>
+
+        {/* Instructions button in top right - mobile only */}
+        <div className="lg:hidden absolute top-4 right-4 z-10">
+          <InstructionsButton />
+        </div>
         
         <div className="max-w-3xl w-full text-center space-y-8 bg-white/10 backdrop-blur-sm p-8 rounded-lg border border-white/10 shadow-2xl relative">
         

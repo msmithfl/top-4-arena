@@ -34,6 +34,15 @@ const MobileGameInfo: React.FC<MobileGameInfoProps> = ({
 
   const defense = result ? result.defense : 0;
   const synergies = result ? result.synergies : [];
+  
+  // Truncate synergy text for mobile display
+  const truncateSynergy = (synergy: string): string => {
+    // Extract genre name and multiplier from format like "Action Combo\n 1.2x damage"
+    const parts = synergy.split('\n');
+    const genreName = parts[0].replace(' Combo', '');
+    const multiplier = parts[1]?.trim().split(' ')[0] || ''; // Extract "3x", "2x", "1.2x"
+    return `${genreName} ${multiplier}`;
+  };
 
   return (
     <div className="space-y-2">
@@ -58,25 +67,19 @@ const MobileGameInfo: React.FC<MobileGameInfoProps> = ({
         
         {/* Right: Synergies 2x2 grid */}
         <div className="bg-linear-to-r from-orange-900 to-red-900 bg-opacity-50 p-2 rounded-lg border-2 border-orange-500">
-          {synergies.length > 0 ? (
-            <div className="grid grid-cols-2 gap-1 h-full">
-              {synergies.slice(0, 4).map((syn, i) => (
-                <div key={i} className="text-[10px] text-yellow-300 bg-yellow-900/30 border border-yellow-600/50 rounded px-1 py-1 text-center flex items-center justify-center">
-                  {syn}
-                </div>
-              ))}
-              {/* Fill empty slots if less than 4 synergies */}
-              {Array.from({ length: Math.max(0, 4 - synergies.length) }).map((_, i) => (
-                <div key={`empty-${i}`} className="text-[10px] text-gray-500 italic flex items-center justify-center">
-                  -
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-xs text-gray-500 italic flex items-center justify-center h-full">
-              NO SYNERGIES
-            </div>
-          )}
+          <div className="grid grid-cols-2 gap-1 h-full">
+            {synergies.slice(0, 4).map((syn, i) => (
+              <div key={i} className="text-[10px] text-yellow-300 bg-yellow-900/30 border border-yellow-600/50 rounded px-1 py-1 text-center flex items-center justify-center whitespace-nowrap overflow-hidden">
+                {truncateSynergy(syn)}
+              </div>
+            ))}
+            {/* Fill empty slots if less than 4 synergies */}
+            {Array.from({ length: Math.max(0, 4 - synergies.length) }).map((_, i) => (
+              <div key={`empty-${i}`} className="text-[10px] text-gray-500 italic flex items-center justify-center">
+                -
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
