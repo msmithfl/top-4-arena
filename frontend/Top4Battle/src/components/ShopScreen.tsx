@@ -117,27 +117,59 @@ useEffect(() => {
           scrollbarWidth: "auto"
         }}
       >
-        {/* Header */}
-        <div className='flex justify-center lg:justify-start items-center mb-4 lg:mb-6'>
+        {/* Header - Desktop */}
+        <div className='hidden lg:flex justify-start items-center mb-6'>
           <div className="flex items-center justify-center gap-4">
-            <h2 className="text-2xl lg:text-3xl font-bold text-white">Ticket Booth</h2>
+            <h2 className="text-3xl font-bold text-white">Ticket Booth</h2>
             <div className="bg-yellow-600 px-4 py-2 rounded-lg flex items-center gap-2">
-              <GiTicket className='w-5 lg:w-7 h-5 lg:h-7' />
+              <GiTicket className='w-7 h-7' />
               <span className="text-white font-bold text-xl"> {displayTickets}</span>
             </div>
           </div>
-          {/* <DeckPopup deck={deck} discardPile={discardPile} /> */}
+        </div>
+
+        {/* Mobile Header - Ticket Booth + Genre Overview */}
+        <div className="lg:hidden grid grid-cols-2 gap-4 mb-4">
+          {/* Left: Ticket Booth */}
+          <div className="flex flex-col gap-2">
+            <h2 className="text-2xl font-bold text-white text-center">Ticket Booth</h2>
+            <div className="bg-yellow-600 px-4 py-2 rounded-lg flex items-center justify-center gap-2">
+              <GiTicket className='w-7 h-7' />
+              <span className="text-white font-bold text-xl">{displayTickets}</span>
+            </div>
+          </div>
+
+          {/* Right: Genre Overview */}
+          <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3 border border-white/10">
+            <div className="space-y-2 overflow-y-auto max-h-[100px]">
+              {React.useMemo(() => {
+                const counts: { [key: string]: number } = {};
+                (updatedDeck.length > 0 ? updatedDeck : deck).forEach(card => {
+                  if (Array.isArray(card.genres)) {
+                    card.genres.slice(0, 2).forEach(genre => {
+                      counts[genre.name] = (counts[genre.name] || 0) + 1;
+                    });
+                  }
+                });
+                return Object.entries(counts).sort((a, b) => b[1] - a[1]);
+              }, [updatedDeck, deck]).filter(([, count]) => count > 1).map(([genre, count]) => (
+                <div key={genre} className="flex justify-between items-center text-xs">
+                  <span className="text-gray-300">{genre === 'Science Fiction' ? 'Sci-Fi' : genre}</span>
+                  <span className="bg-blue-600 text-white px-2 py-0.5 rounded font-bold text-xs">
+                    {count}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
 
         {/* Main Content */}
         <div className="flex flex-col lg:flex-row flex-1 overflow-hidden gap-6">
-          {/* Genre Overview Section */}
-          <div className="w-full lg:w-56 shrink-0 min-w-0">
-            {/* <h3 className="text-2xl font-bold text-white mb-4 flex items-center justify-center gap-2">
-              Deck Overview
-            </h3> */}
+          {/* Genre Overview Section - Desktop Only */}
+          <div className="hidden lg:block w-56 shrink-0 min-w-0">
             <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/10">
-              <div className="space-y-2 overflow-y-auto max-h-[100px] lg:max-h-[70vh]">
+              <div className="space-y-2 overflow-y-auto max-h-[70vh]">
                 {React.useMemo(() => {
                   const counts: { [key: string]: number } = {};
                   (updatedDeck.length > 0 ? updatedDeck : deck).forEach(card => {
