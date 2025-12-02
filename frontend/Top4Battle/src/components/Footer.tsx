@@ -28,7 +28,7 @@ const Footer = ({ onFeedbackClick }: FooterProps) => {
               Send Feedback
             </button>
             <a
-              href="https://discord.gg/QMW2bzSv"
+              href="https://discord.gg/VnNZVdgFXu"
               target="_blank"
               rel="noopener noreferrer"
               className="text-[#BBCCEE] hover:text-white font-semibold py-2 px-4 flex items-center gap-2 transition-all text-sm"
