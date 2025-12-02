@@ -39,7 +39,7 @@ const BossCardComponent: React.FC<BossCardProps> = ({ boss, bossHP }) => {
                 <span>Attack: {boss.baseDamage}</span>
               </div>
               <div className="flex gap-2">
-                {boss.genres.map(g => (
+                {boss.genres.slice(0, 2).map(g => (
                   <span key={g.id} className="px-3 py-1 bg-red-700 rounded-full text-sm font-bold">
                     {g.name === 'Science Fiction' ? 'Sci-Fi' : g.name}
                   </span>
