@@ -1,5 +1,5 @@
 import React from 'react';
-import { Skull, Zap, Swords, Heart } from 'lucide-react';
+import { Skull, Zap, Heart } from 'lucide-react';
 import type { BossCard } from '../types';
 
 interface BossCardProps {
