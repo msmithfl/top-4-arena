@@ -1,5 +1,6 @@
 import React from 'react';
 import type { MovieCard, BossCard } from '../types';
+import { FaDiscord } from "react-icons/fa";
 
 interface GameOverScreenProps {
   round: number;
@@ -63,29 +64,40 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({ round, boss, collection
             {/* Left Column - Stats */}
             <div className="flex flex-col gap-4 shrink-0">
               {/* Cards Played */}
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 px-4 border border-white/10 flex items-center justify-between">
+              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 px-4 gap-4 border border-white/10 flex items-center justify-between">
                 <h3 className="text-lg font-bold text-gray-300">Cards Played</h3>
                 <h3 className="text-lg font-bold text-white">{gameStats.totalCardsPlayed}</h3>
               </div>
 
               {/* Cards Upgraded */}
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 px-4 border border-white/10 flex items-center justify-between">
+              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 px-4 gap-4 border border-white/10 flex items-center justify-between">
                 <h3 className="text-lg font-bold text-gray-300">Cards Upgraded</h3>
                 <h3 className="text-lg font-bold text-white">{gameStats.cardsUpgraded}</h3>
               </div>
 
               {/* Tickets Earned */}
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 px-4 border border-white/10 flex items-center justify-between">
+              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 px-4 gap-4 border border-white/10 flex items-center justify-between">
                 <h3 className="text-lg font-bold text-gray-300">Tickets Earned</h3>
                 <h3 className="text-lg font-bold text-white">{gameStats.totalTicketsEarned}</h3>
               </div>
               
-              <button
-                onClick={() => window.location.href = '/'}
-                className="w-full flex-1 cursor-pointer hover:scale-105 transition-all bg-linear-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 px-8 py-4 rounded-lg font-bold text-xl"
-              >
-                Back to Home
-              </button>
+              <div className="flex-1 flex flex-col gap-4">
+                <button
+                  onClick={() => window.location.href = '/'}
+                  className="w-full cursor-pointer hover:scale-105 transition-all bg-linear-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 justify-center py-4 rounded-lg font-bold text-xl"
+                >
+                  Back to Home
+                </button>
+                <a
+                  href="https://discord.gg/QMW2bzSv"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full flex items-center cursor-pointer hover:scale-105 transition-all bg-[#5865F2] hover:bg-[#4752C4] justify-center py-4 rounded-lg font-bold text-xl text-center"
+                >
+                  Join Discord
+                  <FaDiscord className="w-6 h-6 ml-2" />
+                </a>
+              </div>
             </div>
 
             {/* Right Column - Most Played Card & Defeated By */}
