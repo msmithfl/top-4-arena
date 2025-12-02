@@ -205,7 +205,7 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
         </div>
         
         {/* Search Bar */}
-        <div className="flex gap-2 max-w-lg mx-auto mb-6 relative">
+        <div className="flex gap-2 w-full lg:max-w-lg mx-auto mb-6 relative">
             <div className="flex-1 relative">
               <input
               type="text"
@@ -220,7 +220,7 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
               
               {/* Suggestions Dropdown */}
               {showSuggestions && suggestions.length > 0 && (
-                <div className="absolute z-50 w-full mt-1 bg-[#2C3440] border border-white/10 rounded-lg shadow-xl max-h-80 overflow-y-auto">
+                <div className="absolute z-50 w-[calc(100vw-6rem)] lg:w-full left-0 mt-1 bg-[#2C3440] border border-white/10 rounded-lg shadow-xl max-h-80 overflow-y-auto">
                   {suggestions.map(movie => (
                     <button
                       key={movie.id}
@@ -273,7 +273,7 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
                 disabled={loading}
                 className="lg:hidden py-3 rounded-lg font-bold text-sm text-black cursor-pointer flex items-center justify-center w-20 bg-yellow-600 hover:bg-yellow-700 disabled:opacity-50"
                 >
-                Builds
+                Prebuilds
             </button>
         </div>
         {error && <div className="text-red-400 mb-4 text-center">{error}</div>}
