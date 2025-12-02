@@ -482,7 +482,7 @@ const GameScreen: React.FC = () => {
 
         {/* Spacer to push content to bottom - click to deselect */}
         <div 
-          className="flex-1 cursor-pointer" 
+          className="hidden lg:flex-1 cursor-pointer" 
           onClick={() => {
             if (selectedCards.length > 0) {
               setSelectedCards([]);
@@ -491,7 +491,7 @@ const GameScreen: React.FC = () => {
         ></div>
 
           {/* Action Buttons and Hand - Fixed to Bottom */}
-          <div className="mt-auto space-y-3 mx-auto max-w-[95%]">
+          <div className="mt-2 lg:mt-auto space-y-3 mx-auto max-w-[95%]">
           
           {/* Desktop: Deck popup in top right */}
           <div className="hidden lg:flex justify-end">
@@ -583,7 +583,7 @@ const GameScreen: React.FC = () => {
               }
             >
               <span className="hidden lg:inline">DISCARD {hasDiscarded ? '(Used)' : ''}</span>
-              <span className="lg:hidden"><FaTrashAlt className='w-5 h-5' /></span>
+              <span className="lg:hidden"><FaTrashAlt className='w-4 h-4' /></span>
             </button>
             <div className="w-1/5 lg:hidden flex items-center justify-center">
               <DeckPopup deck={collectionDeck} discardPile={discardPile} />
