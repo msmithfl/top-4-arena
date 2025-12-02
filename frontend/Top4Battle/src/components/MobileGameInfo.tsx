@@ -39,16 +39,20 @@ const MobileGameInfo: React.FC<MobileGameInfoProps> = ({
   const truncateSynergy = (synergy: string): string => {
     // Extract genre name and multiplier from format like "Action Combo\n 1.2x damage"
     const parts = synergy.split('\n');
-    const genreName = parts[0].replace(' Combo', '');
+    let genreName = parts[0].replace(' Combo', '');
+    // Map Science Fiction to Sci-Fi
+    if (genreName === 'Science Fiction') {
+      genreName = 'Sci-Fi';
+    }
     const multiplier = parts[1]?.trim().split(' ')[0] || ''; // Extract "3x", "2x", "1.2x"
     return `${genreName} ${multiplier}`;
   };
 
   return (
     <div className="space-y-2">
-      <div className="grid grid-cols-2 gap-2">
+      <div className="grid grid-cols-2 gap-2 items-stretch">
         {/* Left: ATK and DEF side by side */}
-        <div className="bg-linear-to-r from-orange-900 to-red-900 bg-opacity-50 p-1 rounded-lg border-2 border-orange-500">
+        <div className="bg-linear-to-r from-orange-900 to-red-900 bg-opacity-50 p-1 rounded-lg border-2 border-orange-500 h-[68px]">
           <div className="flex items-center justify-around h-full">
             <div className="flex flex-col items-center">
               <span className="text-sm text-gray-300">ATK</span>
@@ -65,18 +69,18 @@ const MobileGameInfo: React.FC<MobileGameInfoProps> = ({
           </div>
         </div>
         
-        {/* Right: Synergies 2x2 grid */}
-        <div className="bg-linear-to-r from-orange-900 to-red-900 bg-opacity-50 p-2 rounded-lg border-2 border-orange-500">
+        {/* Right: Synergies 2x2 grid - Fixed size container */}
+        <div className="bg-linear-to-r from-orange-900 to-red-900 bg-opacity-50 p-2 rounded-lg border-2 border-orange-500 h-[68px]">
           <div className="grid grid-cols-2 gap-1 h-full">
-            {synergies.slice(0, 4).map((syn, i) => (
-              <div key={i} className="text-[10px] text-yellow-300 bg-yellow-900/30 border border-yellow-600/50 rounded px-1 py-1 text-center flex items-center justify-center whitespace-nowrap overflow-hidden">
-                {truncateSynergy(syn)}
-              </div>
-            ))}
-            {/* Fill empty slots if less than 4 synergies */}
-            {Array.from({ length: Math.max(0, 4 - synergies.length) }).map((_, i) => (
-              <div key={`empty-${i}`} className="text-[10px] text-gray-500 italic flex items-center justify-center">
-                -
+            {[0, 1, 2, 3].map((index) => (
+              <div key={index} className="text-[10px] text-center flex items-center justify-center whitespace-nowrap overflow-hidden">
+                {synergies[index] ? (
+                  <span className="text-yellow-300 bg-yellow-900/30 border border-yellow-600/50 rounded px-1 w-full block">
+                    {truncateSynergy(synergies[index])}
+                  </span>
+                ) : (
+                  <span className="text-gray-500 italic">-</span>
+                )}
               </div>
             ))}
           </div>
