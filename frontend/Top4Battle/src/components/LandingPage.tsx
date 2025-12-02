@@ -24,7 +24,7 @@ const LandingPage = () => {
   }
 
   return (
-    <div className="min-h-[100dvh] bg-[#14181C] text-white flex flex-col items-center overflow-x-hidden relative">
+    <div className="min-h-dvh bg-[#14181C] text-white flex flex-col items-center overflow-x-hidden relative">
       {/* Logo in top left corner on desktop, centered on mobile */}
       <img 
         src="/favicon-top4.png" 
@@ -43,7 +43,7 @@ const LandingPage = () => {
         </div>
 
         {/* Feature Cards */}
-        <div className="px-3 grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 w-full text-center">
+        <div className="px-4 grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 w-full text-center">
           <div className="bg-white/10 backdrop-blur-sm p-5 rounded-lg border border-white/20">
             <Film className="w-10 h-10 mx-auto mb-3 text-orange-500" />
             <h3 className="text-lg font-bold mb-2">Collect Movie Cards</h3>
@@ -62,12 +62,12 @@ const LandingPage = () => {
         </div>
 
         {/* Start Button */}
-        <div className="flex flex-col md:flex-row gap-4 justify-center px-3 py-4 w-full">
+        <div className="flex flex-col md:flex-row gap-4 justify-center px-4 py-4 w-full">
           <button
             onClick={() => {
-              const isMobile = window.innerWidth < 768;
+              // const isMobile = window.innerWidth < 768;
               window.scrollTo(0, 0);
-              navigate(isMobile ? '/game' : '/game');
+              navigate('/game');
             }}
             className="bg-linear-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 text-white text-xl md:text-2xl font-bold py-4 px-8 md:px-12 rounded-full shadow-2xl transform hover:scale-105 transition-all duration-200 w-full md:w-auto cursor-pointer"
           >
