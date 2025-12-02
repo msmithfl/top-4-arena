@@ -3,6 +3,7 @@ import { fetchMovieDetails, fetchPopularMovies } from '../utils/tmdbApi';
 import { Film, Shuffle, X, Layers } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { CELEBRITY_TOP4S, ARCHETYPE_TOP4S } from '../data/prebuiltTop4Presets';
+import InstructionsButton from './InstructionsButton';
 
 const TMDB_API_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmODZmYTE3MzcwNzRmMzY3NzkwNzc1Y2Q1NTQwNmExYyIsIm5iZiI6MTY4NzYyNzAzOC40MDEsInN1YiI6IjY0OTcyNTFlYjM0NDA5MDBhZDUyNTY4YSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.YA8K57yrPNiM_UwefPB6Bv2t8fZdY_v1GD9AS3rRrU0';
 
@@ -152,6 +153,7 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
       );
       setPicked(details);
       setSearch('');
+      setPresetsOpen(false); // Close modal on mobile after selection
     } catch (err) {
       setError('Failed to load preset.');
     }
@@ -170,7 +172,7 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
     {duplicateError && <div className="text-yellow-400 mb-2 text-center">{duplicateError}</div>}
 
     return (
-      <div className="min-h-screen bg-[#14181C] text-white flex items-center justify-center p-4">
+      <div className="min-h-dvh bg-[#14181C] text-white flex items-center justify-center p-4">
         {/* Logo in top left corner */}
         <Link to="/">
           <img 
@@ -179,11 +181,16 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
             className="absolute top-4 left-4 w-16 h-16 z-10"
           />
         </Link>
+
+        {/* Instructions button in top right - mobile only */}
+        <div className="lg:hidden absolute top-4 right-4 z-10">
+          <InstructionsButton />
+        </div>
         
         <div className="max-w-3xl w-full text-center space-y-8 bg-white/10 backdrop-blur-sm p-8 rounded-lg border border-white/10 shadow-2xl relative">
         
-        {/* Presets button - top right */}
-        <div className="absolute right-4 top-4">
+        {/* Presets button - top right (desktop only) */}
+        <div className="hidden lg:block absolute right-4 top-4">
           <button
             onClick={() => setPresetsOpen(!presetsOpen)}
             className={`bg-yellow-600 hover:bg-yellow-700 text-black font-bold px-4 py-2 rounded-lg transition-all cursor-pointer flex items-center gap-2 ${
@@ -195,16 +202,16 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
         </div>
 
         <div className="space-y-4">
-            <h2 className="text-4xl font-bold text-white bg-clip-text flex items-center justify-center gap-2">
+            <h2 className="text-3xl lg:text-4xl font-bold text-white bg-clip-text flex items-center justify-center gap-2">
             Pick Your Top 4
             </h2>
             <div className='flex items-center justify-center gap-2'>
-              <p className="text-xl text-gray-300">Search movie titles and add them to your deck</p><span><Layers /></span>
+              <p className="lg:text-xl lg:text-center text-gray-300">Search movie titles and add them to your deck</p><span><Layers className='hidden lg:block w-7 h-7' /></span>
             </div>
         </div>
         
         {/* Search Bar */}
-        <div className="flex gap-2 max-w-lg mx-auto mb-6 relative">
+        <div className="flex gap-2 w-full lg:max-w-lg mx-auto mb-6 relative">
             <div className="flex-1 relative">
               <input
               type="text"
@@ -219,7 +226,7 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
               
               {/* Suggestions Dropdown */}
               {showSuggestions && suggestions.length > 0 && (
-                <div className="absolute z-50 w-full mt-1 bg-[#2C3440] border border-white/10 rounded-lg shadow-xl max-h-80 overflow-y-auto">
+                <div className="absolute z-50 w-[calc(100vw-6rem)] lg:w-full left-0 mt-1 bg-[#2C3440] border border-white/10 rounded-lg shadow-xl max-h-80 overflow-y-auto">
                   {suggestions.map(movie => (
                     <button
                       key={movie.id}
@@ -258,7 +265,7 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
             <button
                 onClick={handleRandomPick}
                 disabled={loading || picked.length === 4}
-                className={`py-3 rounded-lg font-bold text-lg text-white cursor-pointer flex items-center justify-center gap-2 w-24 ${
+                className={`py-3 rounded-lg font-bold text-lg text-white cursor-pointer flex items-center justify-center gap-2 w-20 lg:w-24 ${
                     picked.length === 4 
                         ? 'bg-gray-600 cursor-not-allowed' 
                         : 'bg-orange-600 hover:bg-orange-700'
@@ -267,14 +274,20 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
                 <Shuffle className="w-5 h-5" />
                 {picked.length === 0 ? '4' : `${4 - picked.length}`}
             </button>
+            <button
+                onClick={() => setPresetsOpen(true)}
+                disabled={loading}
+                className="lg:hidden py-3 rounded-lg font-bold text-sm text-black cursor-pointer flex items-center justify-center w-20 bg-yellow-600 hover:bg-yellow-700 disabled:opacity-50"
+                >
+                Prebuilds
+            </button>
         </div>
         {error && <div className="text-red-400 mb-4 text-center">{error}</div>}
-        <div className="grid grid-cols-4 gap-4 mb-6 justify-items-center items-center">
+        <div className="grid grid-cols-4 gap-2 lg:gap-4 mb-6 justify-items-center items-center">
             {[0, 1, 2, 3].map(idx => (
             <div
                 key={idx}
-                className="bg-[#2C3440] border border-white/10 rounded-lg flex flex-col items-center justify-center overflow-hidden relative"
-                style={{ minHeight: '210px', minWidth: '130px', height: '210px', width: '130px' }}
+                className="bg-[#2C3440] border border-white/10 rounded-lg flex flex-col items-center justify-center overflow-hidden relative w-[70px] h-[105px] lg:w-[130px] lg:h-[210px]"
             >
                 {picked[idx] ? (
                 <>
@@ -315,9 +328,9 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
           </div>
         </div>
 
-        {/* Presets Side Panel */}
+        {/* Presets Side Panel - Desktop */}
         {presetsOpen && (
-          <div className="fixed left-1/2 ml-[calc(768px/2+1.5rem)] top-1/2 -translate-y-1/2 w-80 bg-white/10 backdrop-blur-sm p-6 rounded-lg border border-white/10 shadow-2xl flex flex-col z-50">
+          <div className="hidden lg:flex fixed left-1/2 ml-[calc(768px/2+1.5rem)] top-1/2 -translate-y-1/2 w-80 bg-white/10 backdrop-blur-sm p-6 rounded-lg border border-white/10 shadow-2xl flex-col z-50">
           <div className="shrink-0">
             {/* Category Toggle */}
             <div className="flex gap-2 mb-3">
@@ -361,6 +374,68 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
               ))}
             </div>
           </div>
+          </div>
+        )}
+
+        {/* Presets Modal - Mobile */}
+        {presetsOpen && (
+          <div className="lg:hidden fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4">
+            <div className="bg-[#2C3440] rounded-lg w-full max-w-md max-h-[80vh] flex flex-col">
+              {/* Header */}
+              <div className="flex items-center justify-between p-4 border-b border-white/10">
+                <h3 className="text-xl font-bold text-white">Prebuilds</h3>
+                <button
+                  onClick={() => setPresetsOpen(false)}
+                  className="text-gray-400 hover:text-white transition cursor-pointer"
+                >
+                  <X className="w-6 h-6" />
+                </button>
+              </div>
+
+              {/* Category Toggle */}
+              <div className="flex gap-2 p-4 border-b border-white/10">
+                <button
+                  onClick={() => {
+                    setPresetCategory('celebrity');
+                    if (presetListRef.current) presetListRef.current.scrollTop = 0;
+                  }}
+                  className={`flex-1 px-4 py-2 rounded-lg font-bold transition-all cursor-pointer ${
+                    presetCategory === 'celebrity'
+                      ? 'bg-yellow-600 text-black'
+                      : 'bg-[#14181C] text-gray-300'
+                  }`}
+                >
+                  Celebrity
+                </button>
+                <button
+                  onClick={() => {
+                    setPresetCategory('archetype');
+                    if (presetListRef.current) presetListRef.current.scrollTop = 0;
+                  }}
+                  className={`flex-1 px-4 py-2 rounded-lg font-bold transition-all cursor-pointer ${
+                    presetCategory === 'archetype'
+                      ? 'bg-yellow-600 text-black'
+                      : 'bg-[#14181C] text-gray-300'
+                  }`}
+                >
+                  Archetype
+                </button>
+              </div>
+
+              {/* Preset List */}
+              <div ref={presetListRef} className="flex-1 overflow-y-auto p-4 space-y-2">
+                {(presetCategory === 'celebrity' ? CELEBRITY_TOP4S : ARCHETYPE_TOP4S).map(preset => (
+                  <button
+                    key={preset.id}
+                    onClick={() => handlePresetSelect(preset.id)}
+                    disabled={loading}
+                    className="w-full text-left p-4 rounded-lg bg-[#14181C] border border-white/10 hover:bg-[#1C2228] hover:border-yellow-500/50 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <div className="font-bold text-white">{preset.title}</div>
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
         )}
       </div>

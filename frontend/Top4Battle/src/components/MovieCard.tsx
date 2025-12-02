@@ -13,6 +13,7 @@ interface MovieCardProps {
   isDisabled?: boolean;
   small?: boolean;
   useGenreIcons?: boolean;
+  disableScaling?: boolean;
 }
 
 // Genre icon mapping
@@ -38,7 +39,7 @@ const genreIconMap: Record<string, React.ComponentType<{ className?: string }>> 
   'Western': GiCowboyBoot,
 };
 
-const MovieCardComponent: React.FC<MovieCardProps> = ({ card, isSelected, onSelect, isDisabled = false, small = false, useGenreIcons = false }) => {
+const MovieCardComponent: React.FC<MovieCardProps> = ({ card, isSelected, onSelect, isDisabled = false, small = false, useGenreIcons = false, disableScaling = false }) => {
   const genres = Array.isArray(card.genres) ? card.genres.slice(0, 2) : [];
 
   const getGenreDisplay = (genreName: string) => {
@@ -56,7 +57,7 @@ const MovieCardComponent: React.FC<MovieCardProps> = ({ card, isSelected, onSele
       className={`transition-all transform ${
         isDisabled ? '' : ' cursor-pointer hover:scale-105'
       } ${
-        isSelected ? 'scale-105 -translate-y-2' : ''
+        !disableScaling && isSelected ? 'scale-105 -translate-y-2' : ''
       }`}
     >
       <div className={`relative bg-gray-800 rounded-lg overflow-hidden shadow-lg border-2 aspect-2/3 w-full ${
@@ -73,7 +74,7 @@ const MovieCardComponent: React.FC<MovieCardProps> = ({ card, isSelected, onSele
         <div className={`absolute top-1 left-1 bg-black bg-opacity-75 rounded flex items-center gap-1 ${
           small ? 'px-1 py-0' : 'px-2 py-1'
         }`}>
-          <Sword className="w-3 h-3 text-red-400" />
+          <Sword className="hidden lg:block w-3 h-3 text-red-400" />
           <p className="text-xs font-bold text-yellow-400">{(card.basePower / 100)?.toFixed(1) ?? '--'}</p>
         </div>
         
@@ -81,7 +82,7 @@ const MovieCardComponent: React.FC<MovieCardProps> = ({ card, isSelected, onSele
         <div className={`absolute top-1 right-1 bg-black bg-opacity-75 rounded flex items-center gap-1 ${
           small ? 'px-1 py-0' : 'px-2 py-1'
         }`}>
-          <Shield className="w-3 h-3 text-blue-400" />
+          <Shield className="hidden lg:block w-3 h-3 text-blue-400" />
           <p className="text-xs font-bold text-gray-300">{card.baseDefense ? `${card.baseDefense}` : '--'}</p>
         </div>
         
