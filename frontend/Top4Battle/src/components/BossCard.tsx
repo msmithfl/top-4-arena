@@ -17,7 +17,7 @@ const BossCardComponent: React.FC<BossCardProps> = ({ boss, bossHP }) => {
             <img 
               src={`https://image.tmdb.org/t/p/w200${boss.poster_path}`}
               alt={boss.title}
-              className="w-full lg:w-40 h-40 lg:h-60 object-cover rounded-lg shadow-lg border-2 border-red-400"
+              className="w-24 lg:w-40 lg:h-60 object-cover rounded-lg shadow-lg border-2 border-red-400"
             />
             <div className="absolute -top-2 -right-2 bg-red-600 rounded-full p-2">
               <Skull className="w-6 h-6" />
