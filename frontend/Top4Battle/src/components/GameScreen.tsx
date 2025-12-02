@@ -561,7 +561,7 @@ const GameScreen: React.FC = () => {
             <button
               onClick={handleAttack}
               disabled={selectedCards.length === 0 || isAttacking}
-              className={`lg:flex-1 w-3/5 lg:w-auto cursor-pointer lg:px-6 lg:py-4 rounded-full font-bold text-xl flex items-center justify-center gap-2 shadow-lg transition-all
+              className={`lg:flex-1 w-3/5 lg:w-auto cursor-pointer lg:px-6 lg:py-4 rounded-full font-bold lg:text-xl flex items-center justify-center gap-2 shadow-lg transition-all
                 bg-linear-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700
                 ${(selectedCards.length === 0 || isAttacking)
                   ? 'disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed'
@@ -574,7 +574,7 @@ const GameScreen: React.FC = () => {
             <button
               onClick={handleDiscard}
               disabled={hasDiscarded || selectedCards.length === 0}
-              className={`lg:px-8 w-1/5 lg:w-auto cursor-pointer py-3 rounded-lg font-bold text-xl flex items-center justify-center gap-2 shadow-lg transition-all
+              className={`lg:px-8 w-1/5 lg:w-auto cursor-pointer rounded-lg font-bold text-xl flex items-center justify-center gap-2 shadow-lg transition-all
                 bg-linear-to-r from-yellow-600 to-orange-600 hover:from-yellow-700 hover:to-orange-700
                 ${(hasDiscarded || selectedCards.length === 0)
                   ? 'disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed'
@@ -583,7 +583,7 @@ const GameScreen: React.FC = () => {
               }
             >
               <span className="hidden lg:inline">DISCARD {hasDiscarded ? '(Used)' : ''}</span>
-              <span className="lg:hidden"><FaTrashAlt className='w-6 h-6' /></span>
+              <span className="lg:hidden"><FaTrashAlt className='w-5 h-5' /></span>
             </button>
             <div className="w-1/5 lg:hidden flex items-center justify-center">
               <DeckPopup deck={collectionDeck} discardPile={discardPile} />

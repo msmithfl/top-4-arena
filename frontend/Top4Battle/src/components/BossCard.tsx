@@ -24,7 +24,7 @@ const BossCardComponent: React.FC<BossCardProps> = ({ boss, bossHP }) => {
             </div>
           </div>
           <div className="flex-1 lg:flex-initial">
-            <div className="flex items-center gap-3 mb-3">
+            <div className="flex items-center gap-3 lg:mb-3">
               <h2 className="text-2xl lg:text-4xl font-bold text-red-300">{boss.title}</h2>
             </div>
             <div className="space-y-2 mb-4">

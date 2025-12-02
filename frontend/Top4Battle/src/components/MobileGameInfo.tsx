@@ -39,7 +39,7 @@ const MobileGameInfo: React.FC<MobileGameInfoProps> = ({
     <div className="space-y-2">
       <div className="grid grid-cols-2 gap-2">
         {/* Left: ATK and DEF side by side */}
-        <div className="bg-linear-to-r from-orange-900 to-red-900 bg-opacity-50 p-3 rounded-lg border-2 border-orange-500">
+        <div className="bg-linear-to-r from-orange-900 to-red-900 bg-opacity-50 p-1 rounded-lg border-2 border-orange-500">
           <div className="flex items-center justify-around h-full">
             <div className="flex flex-col items-center">
               <span className="text-sm text-gray-300">ATK</span>

@@ -271,9 +271,9 @@ const DeckPopup: React.FC<DeckPopupProps> = ({ deck, discardPile }) => {
     <>
       <button
         onClick={() => {setIsOpen(true); setShowDescription(false);}}
-        className="px-4 py-2 rounded-lg font-bold flex items-center gap-2 transition-all cursor-pointer"
+        className="lg:px-4 lg:py-2 rounded-lg font-bold flex items-center gap-2 transition-all cursor-pointer"
       >
-        <Layers className="w-7 h-7 hover:scale-110 transition-all" />
+        <Layers className="lg:w-7 lg:h-7 hover:scale-110 transition-all" />
       </button>
       {modalContent && createPortal(modalContent, document.body)}
     </>
