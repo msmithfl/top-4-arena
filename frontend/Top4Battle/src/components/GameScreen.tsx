@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PlayerCard from './MovieCard';
 import BossCardDisplay from './BossCard';
 import GameSidebar from './GameSidebar';
+import MobileGameInfo from './MobileGameInfo';
 import type { MovieCard, BossCard } from '../types';
 import { fetchPopularMovies, fetchMovieDetails } from '../utils/tmdbApi';
 import { enhanceMovie } from '../utils/enhanceMovie';
@@ -14,6 +15,7 @@ import { PREBUILT_BOSSES } from '../data/prebuiltBosses';
 import { createPrebuiltBossCard } from '../utils/bossCard';
 import spinnerImg from '../assets/imgs/top4-spinner.png';
 import { track } from '@vercel/analytics';
+import { FaTrashAlt } from "react-icons/fa";
 
 let bossCycle: number[] = [];
 let startingPlayerHealth = 4000;
@@ -415,19 +417,21 @@ const GameScreen: React.FC = () => {
 
   return (
     <div className="h-screen bg-[#14181C] text-white overflow-hidden">
-      <div className="max-w-full mx-auto flex h-full">
+      <div className="flex max-w-full mx-auto h-full">
         {/* Left Sidebar - Player Stats */}
-        <GameSidebar
-          turn={turn}
-          round={round}
-          playerHP={playerHP}
-          maxPlayerHP={maxPlayerHP}
-          selectedCards={selectedCards}
-          hand={hand}
-          boss={boss}
-          battleLog={battleLog}
-          calculateBattle={calculateBattle}
-        />
+        <div className="hidden lg:block">
+          <GameSidebar
+            turn={turn}
+            round={round}
+            playerHP={playerHP}
+            maxPlayerHP={maxPlayerHP}
+            selectedCards={selectedCards}
+            hand={hand}
+            boss={boss}
+            battleLog={battleLog}
+            calculateBattle={calculateBattle}
+          />
+        </div>
 
         {/* Main Content */}
         <div className="flex-1 overflow-y-auto mx-3 py-3 h-full flex flex-col">
@@ -470,7 +474,8 @@ const GameScreen: React.FC = () => {
           {/* Action Buttons and Hand - Fixed to Bottom */}
           <div className="mt-auto space-y-4 mx-auto max-w-[95%]">
           
-          <div className="flex justify-end">
+          {/* Desktop: Deck popup in top right */}
+          <div className="hidden lg:flex justify-end">
             <div 
               className="flex-1 cursor-pointer"
               onClick={() => {
@@ -485,16 +490,51 @@ const GameScreen: React.FC = () => {
 
           {/* Hand */}
           <div className="mb-4">
-            <div className="grid grid-cols-7 gap-2">
-              {hand.map(card => (
-                <PlayerCard
-                  key={card.id}
-                  card={card}
-                  isSelected={selectedCards.includes(card.id)}
-                  onSelect={toggleCardSelection}
-                  isDisabled={isAttacking}
-                />
-              ))}
+            {/* Mobile: 3 cards on top row centered, 4 cards on bottom row */}
+            <div className="lg:hidden space-y-2">
+              <div className="grid grid-cols-8 gap-1">
+                <div></div>
+                {hand.slice(0, 3).map(card => (
+                  <div key={card.id} className="col-span-2">
+                    <PlayerCard
+                      card={card}
+                      isSelected={selectedCards.includes(card.id)}
+                      onSelect={toggleCardSelection}
+                      isDisabled={isAttacking}
+                      small={true}
+                    />
+                  </div>
+                ))}
+                <div></div>
+              </div>
+              <div className="grid grid-cols-8 gap-1">
+                {hand.slice(3, 7).map(card => (
+                  <div key={card.id} className="col-span-2">
+                    <PlayerCard
+                      card={card}
+                      isSelected={selectedCards.includes(card.id)}
+                      onSelect={toggleCardSelection}
+                      isDisabled={isAttacking}
+                      small={true}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+            
+            {/* Desktop: all 7 cards in one row */}
+            <div className="hidden lg:block">
+              <div className="grid grid-cols-7 gap-2">
+                {hand.map(card => (
+                  <PlayerCard
+                    key={card.id}
+                    card={card}
+                    isSelected={selectedCards.includes(card.id)}
+                    onSelect={toggleCardSelection}
+                    isDisabled={isAttacking}
+                  />
+                ))}
+              </div>
             </div>
           </div>
           {/* Action Buttons */}
@@ -502,7 +542,7 @@ const GameScreen: React.FC = () => {
             <button
               onClick={handleAttack}
               disabled={selectedCards.length === 0 || isAttacking}
-              className={`flex-1 cursor-pointer px-6 py-4 rounded-full font-bold text-xl flex items-center justify-center gap-2 shadow-lg transition-all
+              className={`lg:flex-1 w-3/5 lg:w-auto cursor-pointer lg:px-6 lg:py-4 rounded-full font-bold text-xl flex items-center justify-center gap-2 shadow-lg transition-all
                 bg-linear-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700
                 ${(selectedCards.length === 0 || isAttacking)
                   ? 'disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed'
@@ -515,7 +555,7 @@ const GameScreen: React.FC = () => {
             <button
               onClick={handleDiscard}
               disabled={hasDiscarded || selectedCards.length === 0}
-              className={`cursor-pointer px-8 py-4 rounded-lg font-bold text-xl flex items-center justify-center gap-2 shadow-lg transition-all
+              className={`lg:px-8 w-1/5 lg:w-auto cursor-pointer py-4 rounded-lg font-bold text-xl flex items-center justify-center gap-2 shadow-lg transition-all
                 bg-linear-to-r from-yellow-600 to-orange-600 hover:from-yellow-700 hover:to-orange-700
                 ${(hasDiscarded || selectedCards.length === 0)
                   ? 'disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed'
@@ -523,8 +563,26 @@ const GameScreen: React.FC = () => {
                 }`
               }
             >
-              DISCARD {hasDiscarded ? '(Used)' : ''}
+              <span className="hidden lg:inline">DISCARD {hasDiscarded ? '(Used)' : ''}</span>
+              <span className="lg:hidden"><FaTrashAlt className='w-6 h-6' /></span>
             </button>
+            <div className="w-1/5 lg:hidden flex items-center justify-center">
+              <DeckPopup deck={collectionDeck} discardPile={discardPile} />
+            </div>
+          </div>
+
+          {/* Mobile Game Info - ATK/DEF and Health */}
+          <div className="lg:hidden">
+            <MobileGameInfo
+              selectedCards={selectedCards}
+              hand={hand}
+              boss={boss}
+              calculateBattle={calculateBattle}
+              playerHP={playerHP}
+              maxPlayerHP={maxPlayerHP}
+              round={round}
+              turn={turn}
+            />
           </div>
         </div>
       </div>

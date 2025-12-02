@@ -33,7 +33,7 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({ round, boss, collection
           scrollbarWidth: "auto"
         }}
       >
-        <div className="flex items-center gap-2 justify-center text-center mb-3">
+        <div className="flex flex-col lg:flex-row items-center gap-2 justify-center text-center mb-3">
           <h2 className="text-5xl font-bold text-red-500">DEFEATED!</h2>
           <p className="text-xl text-gray-300">You made it to <span className="font-bold text-blue-400">Round {round}</span></p>
         </div>
@@ -60,9 +60,9 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({ round, boss, collection
           </div>
 
           {/* Two Column Layout */}
-          <div className="flex gap-4">
+          <div className="flex flex-col lg:flex-row gap-4">
             {/* Left Column - Stats */}
-            <div className="flex flex-col gap-4 shrink-0">
+            <div className="flex flex-col gap-4 lg:shrink-0">
               {/* Cards Played */}
               <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 px-4 gap-4 border border-white/10 flex items-center justify-between">
                 <h3 className="text-lg font-bold text-gray-300">Cards Played</h3>
@@ -81,7 +81,7 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({ round, boss, collection
                 <h3 className="text-lg font-bold text-white">{gameStats.totalTicketsEarned}</h3>
               </div>
               
-              <div className="flex-1 flex flex-col gap-4">
+              <div className="hidden lg:flex flex-1 flex-col gap-4">
                 <button
                   onClick={() => window.location.href = '/'}
                   className="w-full cursor-pointer hover:scale-105 transition-all bg-linear-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 justify-center py-4 rounded-lg font-bold text-xl"
@@ -101,7 +101,7 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({ round, boss, collection
             </div>
 
             {/* Right Column - Most Played Card & Defeated By */}
-            <div className="space-y-4 flex-1 max-w-96">
+            <div className="space-y-4 flex-1 lg:max-w-96">
               {/* Most Played Card */}
               {mostPlayedCard && (
                 <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 px-4 border border-white/10">
@@ -137,6 +137,25 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({ round, boss, collection
                 </div>
               </div>
             </div>
+          </div>
+
+          {/* Mobile Buttons - At Bottom */}
+          <div className="flex lg:hidden flex-col gap-4">
+            <button
+              onClick={() => window.location.href = '/'}
+              className="w-full cursor-pointer hover:scale-105 transition-all bg-linear-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 justify-center py-4 rounded-lg font-bold text-xl"
+            >
+              Back to Home
+            </button>
+            <a
+              href="https://discord.gg/VnNZVdgFXu"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full flex items-center cursor-pointer hover:scale-105 transition-all bg-[#5865F2] hover:bg-[#4752C4] justify-center py-4 rounded-lg font-bold text-xl text-center"
+            >
+              Join Discord
+              <FaDiscord className="w-6 h-6 ml-2" />
+            </a>
           </div>
         </div>
       </div>

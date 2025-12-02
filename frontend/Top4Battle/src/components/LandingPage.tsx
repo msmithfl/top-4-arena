@@ -67,7 +67,7 @@ const LandingPage = () => {
             onClick={() => {
               const isMobile = window.innerWidth < 768;
               window.scrollTo(0, 0);
-              navigate(isMobile ? '/mobile-not-supported' : '/game');
+              navigate(isMobile ? '/game' : '/game');
             }}
             className="bg-linear-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 text-white text-xl md:text-2xl font-bold py-4 px-8 md:px-12 rounded-full shadow-2xl transform hover:scale-105 transition-all duration-200 w-full md:w-auto cursor-pointer"
           >
