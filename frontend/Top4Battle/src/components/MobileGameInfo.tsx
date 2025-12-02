@@ -9,8 +9,6 @@ interface MobileGameInfoProps {
   calculateBattle: (cards: MovieCard[]) => BattleResult;
   playerHP: number;
   maxPlayerHP: number;
-  round: number;
-  turn: number;
 }
 
 const MobileGameInfo: React.FC<MobileGameInfoProps> = ({
@@ -19,9 +17,7 @@ const MobileGameInfo: React.FC<MobileGameInfoProps> = ({
   boss,
   calculateBattle,
   playerHP,
-  maxPlayerHP,
-  round,
-  turn
+  maxPlayerHP
 }) => {
   const playedCards = hand.filter(card => selectedCards.includes(card.id));
   const result = selectedCards.length > 0 ? calculateBattle(playedCards) : null;
@@ -41,7 +37,6 @@ const MobileGameInfo: React.FC<MobileGameInfoProps> = ({
 
   return (
     <div className="space-y-2">
-      {/* ATK/DEF and Synergies row */}
       <div className="grid grid-cols-2 gap-2">
         {/* Left: ATK and DEF side by side */}
         <div className="bg-linear-to-r from-orange-900 to-red-900 bg-opacity-50 p-3 rounded-lg border-2 border-orange-500">
@@ -87,18 +82,21 @@ const MobileGameInfo: React.FC<MobileGameInfoProps> = ({
 
       {/* Health bar */}
       <div className="bg-linear-to-r from-green-900 to-blue-900 bg-opacity-50 p-3 rounded-lg border-2 border-green-500">
-        <div className='flex items-center justify-between mb-2'>
-          <div className="flex items-center gap-2">
-            <Heart className="w-6 h-6 text-red-400" />
-            <span className="text-sm text-gray-300">Round {round} • Turn {turn}</span>
+        <div className="flex items-center gap-2">
+          <Heart className="w-6 h-6 text-red-400 shrink-0" />
+          <div className="flex-1 relative">
+            <div className="w-full bg-gray-800 rounded-full h-6 border-2 border-green-400">
+              <div 
+                className="bg-linear-to-r from-green-500 to-blue-500 h-full rounded-full transition-all"
+                style={{ width: `${(playerHP / maxPlayerHP) * 100}%` }}
+              />
+            </div>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span className="text-sm font-bold text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
+                {playerHP} / {maxPlayerHP}
+              </span>
+            </div>
           </div>
-          <div className="text-xl font-bold">{playerHP} / {maxPlayerHP}</div>
-        </div>
-        <div className="w-full bg-gray-800 rounded-full h-3 border-2 border-green-400">
-          <div 
-            className="bg-linear-to-r from-green-500 to-blue-500 h-full rounded-full transition-all"
-            style={{ width: `${(playerHP / maxPlayerHP) * 100}%` }}
-          />
         </div>
       </div>
     </div>

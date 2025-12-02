@@ -11,6 +11,8 @@ import PickTopFilms from './PickTopFilms';
 import DeckPopup from './DeckPopup';
 import ShopScreen from './ShopScreen';
 import GameOverScreen from './GameOverScreen';
+import InstructionsButton from './InstructionsButton';
+import EndGameButton from './EndGameButton';
 import { PREBUILT_BOSSES } from '../data/prebuiltBosses';
 import { createPrebuiltBossCard } from '../utils/bossCard';
 import spinnerImg from '../assets/imgs/top4-spinner.png';
@@ -436,6 +438,23 @@ const GameScreen: React.FC = () => {
         {/* Main Content */}
         <div className="flex-1 overflow-y-auto mx-3 py-3 h-full flex flex-col">
         
+        {/* Mobile Top Bar - Round/Turn and Buttons */}
+        <div className="lg:hidden flex gap-2 mb-3 items-center justify-around">
+          <div className="w-3/5 px-2 py-1 bg-gray-800 bg-opacity-50 border-2 rounded-lg border-gray-600 flex gap-6 items-center justify-center">
+            <div className="flex items-center gap-2">
+              <p className="text-lg text-gray-400">Round</p>
+              <p className="text-xl font-bold text-blue-400">{round}</p>
+            </div>
+            <div className="w-px h-6 bg-gray-600"></div>
+            <div className="flex items-center gap-2">
+              <p className="text-lg text-gray-400">Turn</p>
+              <p className="text-xl font-bold text-yellow-400">{turn}</p>
+            </div>
+          </div>
+          <InstructionsButton onClick={() => track('opened_instructions')} />
+          <EndGameButton />
+        </div>
+        
         {/* Shop Screen - shows after victory */}
         {gameState === 'shop' && (
           <ShopScreen 
@@ -472,7 +491,7 @@ const GameScreen: React.FC = () => {
         ></div>
 
           {/* Action Buttons and Hand - Fixed to Bottom */}
-          <div className="mt-auto space-y-4 mx-auto max-w-[95%]">
+          <div className="mt-auto space-y-3 mx-auto max-w-[95%]">
           
           {/* Desktop: Deck popup in top right */}
           <div className="hidden lg:flex justify-end">
@@ -489,7 +508,7 @@ const GameScreen: React.FC = () => {
           
 
           {/* Hand */}
-          <div className="mb-4">
+          <div className="mb-3 lg:mb-4">
             {/* Mobile: 3 cards on top row centered, 4 cards on bottom row */}
             <div className="lg:hidden space-y-2">
               <div className="grid grid-cols-8 gap-1">
@@ -555,7 +574,7 @@ const GameScreen: React.FC = () => {
             <button
               onClick={handleDiscard}
               disabled={hasDiscarded || selectedCards.length === 0}
-              className={`lg:px-8 w-1/5 lg:w-auto cursor-pointer py-4 rounded-lg font-bold text-xl flex items-center justify-center gap-2 shadow-lg transition-all
+              className={`lg:px-8 w-1/5 lg:w-auto cursor-pointer py-3 rounded-lg font-bold text-xl flex items-center justify-center gap-2 shadow-lg transition-all
                 bg-linear-to-r from-yellow-600 to-orange-600 hover:from-yellow-700 hover:to-orange-700
                 ${(hasDiscarded || selectedCards.length === 0)
                   ? 'disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed'
@@ -580,8 +599,6 @@ const GameScreen: React.FC = () => {
               calculateBattle={calculateBattle}
               playerHP={playerHP}
               maxPlayerHP={maxPlayerHP}
-              round={round}
-              turn={turn}
             />
           </div>
         </div>
