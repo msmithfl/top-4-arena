@@ -436,7 +436,7 @@ const GameScreen: React.FC = () => {
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 overflow-y-auto mx-3 py-3 h-full flex flex-col">
+        <div className="flex-1 overflow-y-auto mx-3 py-3 h-full flex flex-col justify-between lg:justify-start">
         
         {/* Mobile Top Bar - Round/Turn and Buttons */}
         {/* <div className="lg:hidden flex gap-2 mb-3 items-center justify-around">
