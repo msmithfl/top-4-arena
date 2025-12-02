@@ -170,7 +170,7 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
     {duplicateError && <div className="text-yellow-400 mb-2 text-center">{duplicateError}</div>}
 
     return (
-      <div className="min-h-[100dvh] bg-[#14181C] text-white flex items-center justify-center p-4">
+      <div className="min-h-dvh bg-[#14181C] text-white flex items-center justify-center p-4">
         {/* Logo in top left corner */}
         <Link to="/">
           <img 
@@ -183,7 +183,7 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
         <div className="max-w-3xl w-full text-center space-y-8 bg-white/10 backdrop-blur-sm p-8 rounded-lg border border-white/10 shadow-2xl relative">
         
         {/* Presets button - top right */}
-        <div className="absolute right-4 top-4">
+        <div className="hidden lg:block absolute right-4 top-4">
           <button
             onClick={() => setPresetsOpen(!presetsOpen)}
             className={`bg-yellow-600 hover:bg-yellow-700 text-black font-bold px-4 py-2 rounded-lg transition-all cursor-pointer flex items-center gap-2 ${
@@ -195,11 +195,11 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
         </div>
 
         <div className="space-y-4">
-            <h2 className="text-4xl font-bold text-white bg-clip-text flex items-center justify-center gap-2">
+            <h2 className="text-3xl lg:text-4xl font-bold text-white bg-clip-text flex items-center justify-center gap-2">
             Pick Your Top 4
             </h2>
             <div className='flex items-center justify-center gap-2'>
-              <p className="text-xl text-gray-300">Search movie titles and add them to your deck</p><span><Layers /></span>
+              <p className="lg:text-xl lg:text-center text-gray-300">Search movie titles and add them to your deck</p><span><Layers className='hidden lg:block w-7 h-7' /></span>
             </div>
         </div>
         
@@ -269,12 +269,11 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
             </button>
         </div>
         {error && <div className="text-red-400 mb-4 text-center">{error}</div>}
-        <div className="grid grid-cols-4 gap-4 mb-6 justify-items-center items-center">
+        <div className="grid grid-cols-4 gap-2 lg:gap-4 mb-6 justify-items-center items-center">
             {[0, 1, 2, 3].map(idx => (
             <div
                 key={idx}
-                className="bg-[#2C3440] border border-white/10 rounded-lg flex flex-col items-center justify-center overflow-hidden relative"
-                style={{ minHeight: '210px', minWidth: '130px', height: '210px', width: '130px' }}
+                className="bg-[#2C3440] border border-white/10 rounded-lg flex flex-col items-center justify-center overflow-hidden relative w-[70px] h-[105px] lg:w-[130px] lg:h-[210px]"
             >
                 {picked[idx] ? (
                 <>
