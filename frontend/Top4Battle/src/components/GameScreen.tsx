@@ -482,7 +482,7 @@ const GameScreen: React.FC = () => {
 
         {/* Spacer to push content to bottom - click to deselect */}
         <div 
-          className="hidden lg:flex-1 cursor-pointer" 
+          className="hidden lg:flex lg:flex-1 cursor-pointer" 
           onClick={() => {
             if (selectedCards.length > 0) {
               setSelectedCards([]);
