@@ -211,6 +211,7 @@ useEffect(() => {
                     isSelected={selectedCard?.id === card.id}
                     onSelect={() => {}}
                     small={true}
+                    disableScaling={true}
                   />
                 </div>
               ))}
@@ -284,7 +285,7 @@ useEffect(() => {
                       <p className="text-white text-sm">Loading...</p>
                     </div>
                   ) : (
-                    <div className="grid grid-cols-3 gap-2 w-full">
+                    <div className="grid grid-cols-3 gap-2 w-11/12">
                       {shopCards.map(card => (
                         <div key={card.id} onClick={() => handleCardSelect(card)} className="cursor-pointer">
                           <PlayerCard
@@ -292,6 +293,7 @@ useEffect(() => {
                             isSelected={selectedCard?.id === card.id}
                             onSelect={() => {}}
                             small={true}
+                            disableScaling={true}
                           />
                         </div>
                       ))}
