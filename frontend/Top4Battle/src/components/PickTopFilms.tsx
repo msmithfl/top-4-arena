@@ -170,7 +170,7 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
     {duplicateError && <div className="text-yellow-400 mb-2 text-center">{duplicateError}</div>}
 
     return (
-      <div className="min-h-screen bg-[#14181C] text-white flex items-center justify-center p-4">
+      <div className="min-h-[100dvh] bg-[#14181C] text-white flex items-center justify-center p-4">
         {/* Logo in top left corner */}
         <Link to="/">
           <img 

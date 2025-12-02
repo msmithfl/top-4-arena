@@ -383,7 +383,7 @@ const GameScreen: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#14181C] text-white flex items-center justify-center">
+      <div className="min-h-[100dvh] bg-[#14181C] text-white flex items-center justify-center">
         <div className="text-center">
           <img 
             src={spinnerImg} 
@@ -399,7 +399,7 @@ const GameScreen: React.FC = () => {
   
   if (error) {
     return (
-      <div className="min-h-screen bg-[#14181C] text-white flex items-center justify-center">
+      <div className="min-h-[100dvh] bg-[#14181C] text-white flex items-center justify-center">
         <div className="text-center">
           <div className="text-red-500 text-6xl mb-4">❌</div>
           <h2 className="text-2xl font-bold mb-2">Error Loading Game</h2>
@@ -418,7 +418,7 @@ const GameScreen: React.FC = () => {
   if (!boss) return <div className="p-8">Loading...</div>;
 
   return (
-    <div className="h-screen bg-[#14181C] text-white overflow-hidden">
+    <div className="h-[100dvh] bg-[#14181C] text-white overflow-hidden">
       <div className="flex max-w-full mx-auto h-full">
         {/* Left Sidebar - Player Stats */}
         <div className="hidden lg:block">
@@ -491,7 +491,7 @@ const GameScreen: React.FC = () => {
         ></div>
 
           {/* Action Buttons and Hand - Fixed to Bottom */}
-          <div className="mt-2 lg:mt-auto space-y-3 mx-auto max-w-[95%]">
+          <div className="mt-2 lg:mt-auto space-y-3 mx-auto max-w-[95%] pb-[env(safe-area-inset-bottom)]">
           
           {/* Desktop: Deck popup in top right */}
           <div className="hidden lg:flex justify-end">
