@@ -27,7 +27,7 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({ round, boss, collection
 
   return (
     <div className="fixed inset-0 bg-black/95 flex items-center justify-center z-50">
-      <div className="bg-[#2C3033] rounded-lg border border-red-500/50 shadow-2xl p-4 max-h-[90vh] overflow-y-auto w-auto max-w-[90vw]"
+      <div className="bg-[#2C3033] rounded-lg border border-red-500/50 shadow-2xl p-4 max-h-[90dvh] overflow-y-auto w-auto max-w-[90vw]"
         style={{
           scrollbarColor: "#3b82f6 #1e293b",
           scrollbarWidth: "auto"

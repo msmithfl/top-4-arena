@@ -377,7 +377,7 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
             <div className="bg-[#2C3440] rounded-lg w-full max-w-md max-h-[80vh] flex flex-col">
               {/* Header */}
               <div className="flex items-center justify-between p-4 border-b border-white/10">
-                <h3 className="text-xl font-bold text-white">Prebuilt Decks</h3>
+                <h3 className="text-xl font-bold text-white">Prebuilds</h3>
                 <button
                   onClick={() => setPresetsOpen(false)}
                   className="text-gray-400 hover:text-white transition cursor-pointer"
