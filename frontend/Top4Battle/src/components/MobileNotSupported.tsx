@@ -28,7 +28,7 @@ const MobileNotSupported = () => {
   };
 
   return (
-    <div className="min-h-[100dvh] bg-[#14181C] text-white flex flex-col items-center overflow-x-hidden relative">
+    <div className="min-h-dvh bg-[#14181C] text-white flex flex-col items-center overflow-x-hidden relative">
       {/* Logo in top left corner on desktop, centered on mobile */}
       <img 
         src="/favicon-top4.png" 

@@ -52,22 +52,22 @@ const DeckPopup: React.FC<DeckPopupProps> = ({ deck, discardPile }) => {
       onClick={() => setIsOpen(false)}
     >
       <div
-        className="bg-[#2C3033] backdrop-blur-sm rounded-lg max-w-4/5 min-h-11/12 max-h-[90vh] border border-white/10 shadow-2xl relative flex flex-col"
+        className="bg-[#2C3033] backdrop-blur-sm rounded-lg w-full lg:max-w-4/5 lg:min-h-11/12 h-full lg:max-h-[90vh] border border-white/10 shadow-2xl relative flex flex-col"
         onClick={(e) => e.stopPropagation()}
         style={{
           scrollbarColor: "#3b82f6 #1e293b",
           scrollbarWidth: "auto"
         }}
       >
-        <div className="flex gap-6 px-8 pb-8 pt-8 flex-1 overflow-hidden">
+        <div className="flex flex-col lg:flex-row gap-6 px-8 pb-8 pt-4 lg:pt-8 flex-1 overflow-hidden">
           {/* Genre Overview Section */}
-          <div className="w-56 shrink-0 min-w-0">
-            <h3 className="text-2xl font-bold text-white mb-4 flex items-center justify-center gap-2">
+          <div className="w-full lg:w-56 shrink-0 min-w-0">
+            <h3 className="lg:text-2xl font-bold text-white mb-4 flex items-center justify-center gap-2">
               <Layers className="w-6 h-6" />
               Deck Overview
             </h3>
             <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/10">
-              <div className="space-y-2 overflow-y-auto max-h-[70vh]">
+              <div className="space-y-2 overflow-y-auto max-h-[150px] lg:max-h-[70vh]">
                 {genreCounts.filter(([, count]) => count > 1).map(([genre, count]) => (
                   <div key={genre} className="flex justify-between items-center text-sm">
                     <span className="text-gray-300">{genre === 'Science Fiction' ? 'Sci-Fi' : genre}</span>
@@ -81,7 +81,7 @@ const DeckPopup: React.FC<DeckPopupProps> = ({ deck, discardPile }) => {
           </div>
           
           {/* Card Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 [@media(min-width:1600px)]:grid-cols-6 gap-2 flex-1 overflow-y-auto content-start px-2 pb-2 pt-4">
+          <div className="grid grid-cols-3 lg:grid-cols-2 lg:md:grid-cols-4 lg:[@media(min-width:1600px)]:grid-cols-6 gap-2 flex-1 overflow-y-auto content-start px-2 pb-2 pt-4 min-h-[200px] max-h-[400px] lg:max-h-full">
             {deck.map(card => (
             <div 
               key={card.id} 
@@ -112,8 +112,8 @@ const DeckPopup: React.FC<DeckPopupProps> = ({ deck, discardPile }) => {
           </div>
 
           {/* Card Detail Section */}
-          <div className="w-72 shrink-0 flex flex-col gap-4 min-w-0">
-            <div className="overflow-x-visible overflow-y-auto flex-1">
+          <div className="hidden lg:flex w-full lg:w-72 shrink-0 flex-col gap-4 min-w-0">
+            <div className="overflow-x-visible lg:overflow-y-auto flex-1">
               {selectedCard ? (
                 <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3 border border-white/10 overflow-visible">
                   {/* Poster with Navigation */}
