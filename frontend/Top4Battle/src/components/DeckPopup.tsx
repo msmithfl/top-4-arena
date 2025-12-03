@@ -48,7 +48,7 @@ const DeckPopup: React.FC<DeckPopupProps> = ({ deck, discardPile }) => {
 
   const modalContent = isOpen ? (
     <div 
-      className="fixed inset-0 bg-black/90 flex items-center justify-center z-100 p-4"
+      className="fixed inset-0 bg-black/90 flex items-center justify-center z-100 p-2 lg:p-4"
       onClick={() => setIsOpen(false)}
     >
       <div
@@ -59,15 +59,117 @@ const DeckPopup: React.FC<DeckPopupProps> = ({ deck, discardPile }) => {
           scrollbarWidth: "auto"
         }}
       >
-        <div className="flex flex-col lg:flex-row gap-6 px-8 pb-8 pt-4 lg:pt-8 flex-1 overflow-hidden">
-          {/* Genre Overview Section */}
-          <div className="w-full lg:w-56 shrink-0 min-w-0">
-            <h3 className="lg:text-2xl font-bold text-white mb-4 flex items-center justify-center gap-2">
+        <div className="flex flex-col lg:flex-row gap-6 px-4 lg:px-8 pb-8 pt-4 lg:pt-8 flex-1 overflow-hidden">
+          {/* Mobile: Genre Overview + Card Details (2 columns) */}
+          <div className="lg:hidden grid grid-cols-2 gap-4">
+            {/* Genre Overview */}
+            <div className="flex flex-col min-w-0">
+              <h3 className="text-lg font-bold text-white mb-2 flex items-center justify-start gap-1">
+                <Layers className="w-5 h-5" />
+                Deck Overview
+              </h3>
+              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-white/10">
+                <div className="space-y-2 overflow-y-auto max-h-[140px]">
+                  {genreCounts.filter(([, count]) => count > 1).map(([genre, count]) => (
+                    <div key={genre} className="flex justify-between items-center text-xs">
+                      <span className="text-gray-300 truncate">{genre === 'Science Fiction' ? 'Sci-Fi' : genre}</span>
+                      <span className="bg-blue-600 text-white px-1.5 py-0.5 rounded font-bold text-xs ml-1">
+                        {count}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Card Details */}
+            <div className="flex flex-col min-w-0">
+              {selectedCard ? (
+                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 mt-9 border border-white/10 overflow-y-auto max-h-[200px]">
+                  {/* Title */}
+                  <h4 className="text-sm font-bold text-white mb-1 text-center truncate">
+                    {selectedCard.title}
+                  </h4>
+                  
+                  {/* Genres */}
+                  <div className="mb-2">
+                    <div className="flex flex-wrap gap-1 justify-center">
+                      {selectedCard.genres.slice(0, 2).map(genre => (
+                        <span 
+                          key={genre.id} 
+                          className="text-xs px-1.5 py-0.5 bg-blue-600 rounded font-semibold text-white"
+                        >
+                          {genre.name === 'Science Fiction' ? 'Sci-Fi' : genre.name}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  {/* Stats */}
+                  <div className="space-y-1">
+                    <div className="flex justify-between items-center text-xs">
+                      <span className="text-gray-400">Rating:</span>
+                      <div className="flex items-center gap-1">
+                        <span className="text-red-400 font-bold">{(selectedCard.basePower / 100).toFixed(1)}</span>
+                        <Sword className='w-3 h-3 text-red-400' />
+                      </div>
+                    </div>
+                    
+                    <div className="flex justify-between items-center text-xs">
+                      <span className="text-gray-400">Runtime:</span>
+                      <div className="flex items-center gap-1">
+                        <span className="text-blue-400 font-bold">{selectedCard.runtime}m</span>
+                        <Shield className='w-3 h-3 text-blue-400' />
+                      </div>
+                    </div>
+                    
+                    <div className="flex justify-between items-center text-xs">
+                      <span className="text-gray-400">Release:</span>
+                      <div className="flex items-center gap-1">
+                        <span className="text-green-400 font-bold">{selectedCard.release_date.split('-')[0]}</span>
+                        <ArrowUp className='w-3 h-3 text-green-400' />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Navigation Buttons */}
+                  <div className="flex gap-1 mt-2">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleNavigateCard('prev');
+                      }}
+                      className="flex-1 bg-black/80 hover:bg-black/95 py-1 rounded flex items-center justify-center transition-all cursor-pointer"
+                    >
+                      <ChevronLeft className="w-4 h-4 text-white" />
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleNavigateCard('next');
+                      }}
+                      className="flex-1 bg-black/80 hover:bg-black/95 py-1 rounded flex items-center justify-center transition-all cursor-pointer"
+                    >
+                      <ChevronRight className="w-4 h-4 text-white" />
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-white/10 flex items-center justify-center flex-1">
+                  <p className="text-gray-400 text-xs text-center">Select a card</p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Desktop: Genre Overview Section */}
+          <div className="hidden lg:block w-56 shrink-0 min-w-0">
+            <h3 className="text-2xl font-bold text-white mb-4 flex items-center justify-center gap-2">
               <Layers className="w-6 h-6" />
               Deck Overview
             </h3>
             <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/10">
-              <div className="space-y-2 overflow-y-auto max-h-[150px] lg:max-h-[70vh]">
+              <div className="space-y-2 overflow-y-auto max-h-[70vh]">
                 {genreCounts.filter(([, count]) => count > 1).map(([genre, count]) => (
                   <div key={genre} className="flex justify-between items-center text-sm">
                     <span className="text-gray-300">{genre === 'Science Fiction' ? 'Sci-Fi' : genre}</span>
@@ -81,7 +183,7 @@ const DeckPopup: React.FC<DeckPopupProps> = ({ deck, discardPile }) => {
           </div>
           
           {/* Card Grid */}
-          <div className="grid grid-cols-3 lg:grid-cols-2 lg:md:grid-cols-4 lg:[@media(min-width:1600px)]:grid-cols-6 gap-2 flex-1 overflow-y-auto content-start px-2 pb-2 pt-4 min-h-[200px] max-h-[400px] lg:max-h-full">
+          <div className="grid grid-cols-4 lg:grid-cols-4 lg:[@media(min-width:1600px)]:grid-cols-6 gap-2 flex-1 overflow-y-auto content-start px-2 pb-2 pt-4 min-h-[200px] max-h-[400px] lg:max-h-full">
             {deck.map(card => (
             <div 
               key={card.id} 
