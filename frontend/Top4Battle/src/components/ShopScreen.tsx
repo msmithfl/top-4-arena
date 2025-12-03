@@ -164,6 +164,95 @@ useEffect(() => {
           </div>
         </div>
 
+        {/* Mobile Actions - Above Cards */}
+        <div className="lg:hidden mb-4">
+          <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/10">
+            {!selectedAction ? (
+              <div className="flex gap-2">
+                <button
+                  onClick={() => handleActionSelect('upgrade')}
+                  disabled={tickets < 1}
+                  className={`flex-1 p-3 rounded-lg font-bold text-sm transition-all cursor-pointer ${
+                    tickets < 1
+                      ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                      : 'bg-green-500 hover:bg-green-600 text-white'
+                  }`}
+                >
+                  Level Up
+                </button>
+                <button
+                  disabled={true}
+                  className="flex-1 p-3 rounded-lg font-bold text-sm transition-all cursor-not-allowed bg-gray-600 text-gray-400"
+                >
+                  Genre Shifter
+                </button>
+                <button
+                  onClick={() => handleActionSelect('new-card')}
+                  disabled={tickets < 1}
+                  className={`flex-1 p-3 rounded-lg font-bold text-sm transition-all cursor-pointer ${
+                    tickets < 1
+                      ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                      : 'bg-blue-500 hover:bg-blue-600 text-white'
+                  }`}
+                >
+                  New Card
+                </button>
+              </div>
+            ) : selectedAction === 'upgrade' ? (
+              <div className="flex items-center justify-center h-24">
+                {!actionComplete ? (
+                  <p className="text-gray-300 text-center">
+                    Choose a card to upgrade <span className="text-red-400 font-bold">ATTACK</span> and <span className="text-blue-400 font-bold">DEFENSE</span>
+                  </p>
+                ) : selectedCard && (
+                  <div className="text-center">
+                    <p className="text-white text-lg mb-2">
+                      <span className="font-bold text-green-400">{selectedCard.title}</span> upgraded!
+                    </p>
+                    <p className="text-gray-300 text-sm">
+                      ATK: <span className="text-red-400">{(selectedCard.basePower / 100).toFixed(1)}</span> → <span className="text-red-400 font-bold">{((selectedCard.basePower + 200) / 100).toFixed(1)}</span>
+                    </p>
+                    <p className="text-gray-300 text-sm mt-1">
+                      DEF: <span className="text-blue-400">{selectedCard.baseDefense}</span> → <span className="text-blue-400 font-bold">{selectedCard.baseDefense + 50}</span>
+                    </p>
+                  </div>
+                )}
+              </div>
+            ) : selectedAction === 'new-card' ? (
+              <div className="flex items-center justify-center h-32">
+                {loading ? (
+                  <div className="text-center">
+                    <img 
+                      src={spinnerImg} 
+                      alt="Loading" 
+                      className="w-12 h-12 animate-spin mx-auto mb-2" 
+                    />
+                    <p className="text-white text-sm">Loading...</p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-3 gap-2 w-full">
+                    {shopCards.map(card => (
+                      <div 
+                        key={card.id} 
+                        onClick={() => !selectedCard && handleCardSelect(card)} 
+                        className={`cursor-pointer transition-opacity duration-150 ${selectedCard && selectedCard.id !== card.id ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
+                      >
+                        <PlayerCard
+                          card={card}
+                          isSelected={selectedCard?.id === card.id}
+                          onSelect={() => {}}
+                          small={true}
+                          disableScaling={true}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ) : null}
+          </div>
+        </div>
+
         {/* Main Content */}
         <div className="flex flex-col lg:flex-row flex-1 overflow-hidden gap-6">
           {/* Genre Overview Section - Desktop Only */}
@@ -194,7 +283,7 @@ useEffect(() => {
 
           {/* Deck Cards */}
           <div className="flex-1 overflow-y-auto p-2 lg:p-5 min-h-[200px] max-h-[300px] lg:max-h-full">
-            <div className="grid grid-cols-3 lg:grid-cols-4 gap-2">
+            <div className="grid grid-cols-4 lg:grid-cols-4 gap-2">
               {(updatedDeck.length > 0 ? updatedDeck : deck).map(card => (
                 <div 
                   key={card.id} 
@@ -218,93 +307,9 @@ useEffect(() => {
             </div>
           </div>
 
-          {/* Right Side - Actions */}
-          <div className="w-full lg:flex-1 space-y-4 shrink-0 flex flex-col lg:ml-4">
-            {/* Mobile Version */}
-            <div className="lg:hidden flex-1 flex flex-col bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/10">
-              {!selectedAction ? (
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => handleActionSelect('upgrade')}
-                    disabled={tickets < 1}
-                    className={`flex-1 p-3 rounded-lg font-bold text-sm transition-all cursor-pointer ${
-                      tickets < 1
-                        ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
-                        : 'bg-green-500 hover:bg-green-600 text-white'
-                    }`}
-                  >
-                    Level Up
-                  </button>
-                  <button
-                    disabled={true}
-                    className="flex-1 p-3 rounded-lg font-bold text-sm transition-all cursor-not-allowed bg-gray-600 text-gray-400"
-                  >
-                    Genre Shifter
-                  </button>
-                  <button
-                    onClick={() => handleActionSelect('new-card')}
-                    disabled={tickets < 1}
-                    className={`flex-1 p-3 rounded-lg font-bold text-sm transition-all cursor-pointer ${
-                      tickets < 1
-                        ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
-                        : 'bg-blue-500 hover:bg-blue-600 text-white'
-                    }`}
-                  >
-                    New Card
-                  </button>
-                </div>
-              ) : selectedAction === 'upgrade' ? (
-                <div className="flex-1 flex items-center justify-center">
-                  {!actionComplete ? (
-                    <p className="text-gray-300 text-center">
-                      Choose a card to upgrade <span className="text-red-400 font-bold">ATTACK</span> and <span className="text-blue-400 font-bold">DEFENSE</span>
-                    </p>
-                  ) : selectedCard && (
-                    <div className="text-center">
-                      <p className="text-white text-lg mb-2">
-                        <span className="font-bold text-green-400">{selectedCard.title}</span> upgraded!
-                      </p>
-                      <p className="text-gray-300 text-sm">
-                        ATK: <span className="text-red-400">{(selectedCard.basePower / 100).toFixed(1)}</span> → <span className="text-red-400 font-bold">{((selectedCard.basePower + 200) / 100).toFixed(1)}</span>
-                      </p>
-                      <p className="text-gray-300 text-sm mt-1">
-                        DEF: <span className="text-blue-400">{selectedCard.baseDefense}</span> → <span className="text-blue-400 font-bold">{selectedCard.baseDefense + 50}</span>
-                      </p>
-                    </div>
-                  )}
-                </div>
-              ) : selectedAction === 'new-card' ? (
-                <div className="flex-1 flex items-center justify-center overflow-y-auto">
-                  {loading ? (
-                    <div className="text-center">
-                      <img 
-                        src={spinnerImg} 
-                        alt="Loading" 
-                        className="w-12 h-12 animate-spin mx-auto mb-2" 
-                      />
-                      <p className="text-white text-sm">Loading...</p>
-                    </div>
-                  ) : (
-                    <div className="grid grid-cols-3 gap-2 w-11/12">
-                      {shopCards.map(card => (
-                        <div key={card.id} onClick={() => handleCardSelect(card)} className="cursor-pointer">
-                          <PlayerCard
-                            card={card}
-                            isSelected={selectedCard?.id === card.id}
-                            onSelect={() => {}}
-                            small={true}
-                            disableScaling={true}
-                          />
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ) : null}
-            </div>
-
-            {/* Desktop Version */}
-            <div className="hidden lg:flex flex-col flex-1 space-y-4">
+          {/* Right Side - Actions (Desktop Only) */}
+          <div className="hidden lg:flex lg:flex-1 space-y-4 shrink-0 flex-col lg:ml-4">
+            <div className="flex flex-col flex-1 space-y-4">
               {/* Top Section - Upgrade and Augment */}
               <div className="flex-1 flex flex-col bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/10">
                 <div className='flex gap-4 mb-4'>
@@ -386,12 +391,17 @@ useEffect(() => {
                     ) : (
                       <div className="grid grid-cols-3 gap-3">
                         {shopCards.map(card => (
-                          <div key={card.id} onClick={() => handleCardSelect(card)} className="cursor-pointer">
+                          <div 
+                            key={card.id} 
+                            onClick={() => !selectedCard && handleCardSelect(card)} 
+                            className={`cursor-pointer transition-opacity duration-150 ${selectedCard && selectedCard.id !== card.id ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
+                          >
                             <PlayerCard
                               card={card}
                               isSelected={selectedCard?.id === card.id}
                               onSelect={() => {}}
                               small={true}
+                              disableScaling={true}
                             />
                           </div>
                         ))}
