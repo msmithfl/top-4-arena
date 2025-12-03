@@ -235,7 +235,7 @@ useEffect(() => {
                       <div 
                         key={card.id} 
                         onClick={() => !selectedCard && handleCardSelect(card)} 
-                        className={`cursor-pointer ${selectedCard && selectedCard.id !== card.id ? 'invisible' : ''}`}
+                        className={`cursor-pointer transition-opacity duration-150 ${selectedCard && selectedCard.id !== card.id ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
                       >
                         <PlayerCard
                           card={card}
@@ -394,7 +394,7 @@ useEffect(() => {
                           <div 
                             key={card.id} 
                             onClick={() => !selectedCard && handleCardSelect(card)} 
-                            className={`cursor-pointer ${selectedCard && selectedCard.id !== card.id ? 'invisible' : ''}`}
+                            className={`cursor-pointer transition-opacity duration-150 ${selectedCard && selectedCard.id !== card.id ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
                           >
                             <PlayerCard
                               card={card}
