@@ -199,7 +199,7 @@ useEffect(() => {
                 </button>
               </div>
             ) : selectedAction === 'upgrade' ? (
-              <div className="flex items-center justify-center py-4">
+              <div className="flex items-center justify-center h-24">
                 {!actionComplete ? (
                   <p className="text-gray-300 text-center">
                     Choose a card to upgrade <span className="text-red-400 font-bold">ATTACK</span> and <span className="text-blue-400 font-bold">DEFENSE</span>
@@ -219,7 +219,7 @@ useEffect(() => {
                 )}
               </div>
             ) : selectedAction === 'new-card' ? (
-              <div className="flex items-center justify-center">
+              <div className="flex items-center justify-center h-32">
                 {loading ? (
                   <div className="text-center">
                     <img 
@@ -232,7 +232,11 @@ useEffect(() => {
                 ) : (
                   <div className="grid grid-cols-3 gap-2 w-full">
                     {shopCards.map(card => (
-                      <div key={card.id} onClick={() => handleCardSelect(card)} className="cursor-pointer">
+                      <div 
+                        key={card.id} 
+                        onClick={() => !selectedCard && handleCardSelect(card)} 
+                        className={`cursor-pointer ${selectedCard && selectedCard.id !== card.id ? 'invisible' : ''}`}
+                      >
                         <PlayerCard
                           card={card}
                           isSelected={selectedCard?.id === card.id}
@@ -387,12 +391,17 @@ useEffect(() => {
                     ) : (
                       <div className="grid grid-cols-3 gap-3">
                         {shopCards.map(card => (
-                          <div key={card.id} onClick={() => handleCardSelect(card)} className="cursor-pointer">
+                          <div 
+                            key={card.id} 
+                            onClick={() => !selectedCard && handleCardSelect(card)} 
+                            className={`cursor-pointer ${selectedCard && selectedCard.id !== card.id ? 'invisible' : ''}`}
+                          >
                             <PlayerCard
                               card={card}
                               isSelected={selectedCard?.id === card.id}
                               onSelect={() => {}}
                               small={true}
+                              disableScaling={true}
                             />
                           </div>
                         ))}
