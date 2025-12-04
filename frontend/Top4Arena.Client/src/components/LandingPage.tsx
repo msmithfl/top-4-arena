@@ -3,8 +3,9 @@ import { Swords, Film, Trophy, Mail, X } from 'lucide-react'
 import { useState } from 'react'
 import MovieCarousel from './MovieCarousel';
 import Footer from './Footer';
+import packageJson from '../../package.json';
 
-const APP_VERSION = "0.1.0-early";
+const APP_VERSION = `${packageJson.version}`;
 
 const LandingPage = () => {
   const navigate = useNavigate()
@@ -37,7 +38,7 @@ const LandingPage = () => {
         {/* Title */}
         <div className="mb-2 mt-8 md:mb-6 w-full text-center">
           <h1 className="pb-2 md:pb-0 text-5xl md:text-7xl font-bold text-white bg-clip-text">
-            TOP 4 ARENA<span className='text-xs text-amber-300 md:inline block'>EARLY ACCESSv0.1.0</span>
+            TOP 4 ARENA<span className='text-xs text-amber-300 md:inline block'>EARLY ACCESSv{packageJson.version}</span>
           <p className="pt-4 text-xl md:text-2xl text-gray-300 ">Movie Battle Deckbuilder</p>
           </h1>
         </div>
