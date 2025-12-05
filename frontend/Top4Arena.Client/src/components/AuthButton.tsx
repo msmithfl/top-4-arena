@@ -1,7 +1,17 @@
 import { SignedIn, SignedOut, SignInButton, UserButton, useUser } from "@clerk/clerk-react";
 
 const AuthButton = () => {
-  const { user } = useUser();
+  const { user, isLoaded } = useUser();
+
+  if (!isLoaded) {
+    return (
+      <div className="absolute top-4 right-4 z-10">
+        <div className="bg-gray-600 text-transparent font-semibold py-2 px-6 rounded-full animate-pulse">
+          Sign In
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="absolute top-4 right-4 z-10">

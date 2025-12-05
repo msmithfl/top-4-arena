@@ -284,6 +284,9 @@ Temporary Items
 # Project specific
 # ===================================
 
+# Backend secrets and local config
+**/appsettings.Development.json
+
 # Game assets (if you don't want to track large files)
 # *.png
 # *.jpg

@@ -1,0 +1,64 @@
+using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
+using Top4Arena.Api.Data;
+using Top4Arena.Api.Models.Entities;
+
+namespace Top4Arena.Api.Endpoints;
+
+public static class WebhookEndpoints
+{
+    public static void MapWebhookEndpoints(this IEndpointRouteBuilder app)
+    {
+        var group = app.MapGroup("/api/webhooks");
+
+        group.MapPost("/clerk", async (HttpContext context, AppDbContext db) =>
+        {
+            using var reader = new StreamReader(context.Request.Body);
+            var payload = await reader.ReadToEndAsync();
+
+            try
+            {
+                var webhookData = JsonSerializer.Deserialize<JsonElement>(payload);
+                var eventType = webhookData.GetProperty("type").GetString();
+
+                if (eventType == "user.created")
+                {
+                    var data = webhookData.GetProperty("data");
+                    var userId = data.GetProperty("id").GetString()!;
+                    
+                    // Get name fields
+                    var firstName = data.TryGetProperty("first_name", out var fn) ? fn.GetString() : null;
+                    var lastName = data.TryGetProperty("last_name", out var ln) ? ln.GetString() : null;
+                    var username = data.GetProperty("username").GetString();
+                    
+                    // Get email
+                    var emailAddresses = data.GetProperty("email_addresses");
+                    var primaryEmail = "";
+                    if (emailAddresses.GetArrayLength() > 0)
+                    {
+                        primaryEmail = emailAddresses[0].GetProperty("email_address").GetString()!;
+                    }
+
+                    var user = new User
+                    {
+                        Id = userId,
+                        FirstName = firstName,
+                        LastName = lastName,
+                        Username = username ?? primaryEmail.Split('@')[0],
+                        Email = primaryEmail,
+                        CreatedAt = DateTime.UtcNow
+                    };
+
+                    db.Users.Add(user);
+                    await db.SaveChangesAsync();
+                }
+
+                return Results.Ok(new { received = true });
+            }
+            catch (Exception ex)
+            {
+                return Results.BadRequest(new { error = ex.Message });
+            }
+        });
+    }
+}
