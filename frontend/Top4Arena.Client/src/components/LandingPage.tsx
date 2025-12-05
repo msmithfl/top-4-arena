@@ -3,6 +3,7 @@ import { Swords, Film, Trophy, Mail, X } from 'lucide-react'
 import { useState } from 'react'
 import MovieCarousel from './MovieCarousel';
 import Footer from './Footer';
+import AuthButton from './AuthButton';
 import packageJson from '../../package.json';
 
 const APP_VERSION = `${packageJson.version}`;
@@ -32,6 +33,9 @@ const LandingPage = () => {
         alt="Top 4 Arena Logo" 
         className="absolute top-4 left-1/2 -translate-x-1/2 md:left-4 md:translate-x-0 w-16 h-16 z-10"
       />
+      
+      {/* Auth Button in top right */}
+      <AuthButton />
       
       <div className="max-w-5xl w-full flex flex-col items-center justify-end space-y-6 grow pt-16 md:pt-0">
 
