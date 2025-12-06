@@ -26,6 +26,13 @@ public static class WebhookEndpoints
                     var data = webhookData.GetProperty("data");
                     var userId = data.GetProperty("id").GetString()!;
                     
+                    // Check if user already exists (prevent duplicates)
+                    var existingUser = await db.Users.FindAsync(userId);
+                    if (existingUser != null)
+                    {
+                        return Results.Ok(new { received = true, message = "User already exists" });
+                    }
+                    
                     // Get name fields
                     var firstName = data.TryGetProperty("first_name", out var fn) ? fn.GetString() : null;
                     var lastName = data.TryGetProperty("last_name", out var ln) ? ln.GetString() : null;
@@ -51,6 +58,18 @@ public static class WebhookEndpoints
 
                     db.Users.Add(user);
                     await db.SaveChangesAsync();
+                }
+                else if (eventType == "user.deleted")
+                {
+                    var data = webhookData.GetProperty("data");
+                    var userId = data.GetProperty("id").GetString()!;
+                    
+                    var user = await db.Users.FindAsync(userId);
+                    if (user != null)
+                    {
+                        db.Users.Remove(user);
+                        await db.SaveChangesAsync();
+                    }
                 }
 
                 return Results.Ok(new { received = true });
