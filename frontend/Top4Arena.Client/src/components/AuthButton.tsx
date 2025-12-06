@@ -1,7 +1,9 @@
 import { SignedIn, SignedOut, SignInButton, UserButton, useUser } from "@clerk/clerk-react";
+import { useNavigate } from "react-router-dom";
 
 const AuthButton = () => {
   const { user, isLoaded } = useUser();
+  const navigate = useNavigate();
 
   if (!isLoaded) {
     return (
@@ -25,16 +27,28 @@ const AuthButton = () => {
       
       <SignedIn>
         <div className="flex items-center gap-3">
-          <span className="text-white font-semibold hidden md:block">
+          <button
+            onClick={() => navigate('/profile')}
+            className="text-white font-semibold hidden md:block hover:text-blue-400 transition-colors cursor-pointer"
+          >
             {user?.username || user?.firstName || "User"}
-          </span>
+          </button>
           <UserButton 
+            afterSignOutUrl="/"
             appearance={{
               elements: {
-                avatarBox: "w-10 h-10"
+                avatarBox: "w-10 h-10 cursor-pointer"
               }
             }}
-          />
+          >
+            <UserButton.MenuItems>
+              <UserButton.Action
+                label="View Profile"
+                labelIcon={<span>👤</span>}
+                onClick={() => navigate('/profile')}
+              />
+            </UserButton.MenuItems>
+          </UserButton>
         </div>
       </SignedIn>
     </div>
