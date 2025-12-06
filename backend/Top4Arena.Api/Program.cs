@@ -59,4 +59,6 @@ app.MapGet("/api/health", () => Results.Ok(new { status = "healthy", timestamp =
 app.MapWebhookEndpoints();
 app.MapUserEndpoints();
 
+await app.MigrateDbAsync();
+
 app.Run();
