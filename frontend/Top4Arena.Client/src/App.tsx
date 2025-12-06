@@ -3,6 +3,7 @@ import { Analytics } from '@vercel/analytics/react'
 import LandingPage from './components/LandingPage'
 import GameScreen from './components/GameScreen'
 import MobileNotSupported from './components/MobileNotSupported'
+import ProfileDashboard from './components/ProfileDashboard'
 import './App.css'
 
 function App() {
@@ -11,6 +12,7 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/game" element={<GameScreen />} />
+        <Route path="/profile" element={<ProfileDashboard />} />
         <Route path="/mobile-not-supported" element={<MobileNotSupported />} />
       </Routes>
       <Analytics />
