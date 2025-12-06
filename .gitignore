@@ -110,6 +110,10 @@ lerna-debug.log*
 node_modules/
 jspm_packages/
 
+# Vite
+.vite/
+dist/
+
 # Snowpack dependency directory (https://snowpack.dev/)
 web_modules/
 
