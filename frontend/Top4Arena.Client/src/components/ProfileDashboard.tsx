@@ -1,6 +1,6 @@
 import { useUser } from "@clerk/clerk-react";
 import { useNavigate } from "react-router-dom";
-import { User, Trophy, Star, Film, ArrowLeft, X, Search, Plus, Edit2 } from "lucide-react";
+import { Trophy, Star, Film, ArrowLeft, X, Search, Plus, Edit2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { fetchMovieDetails } from "../utils/tmdbApi";
 import Footer from "./Footer";
