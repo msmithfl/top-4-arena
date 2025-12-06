@@ -1,5 +1,6 @@
 import { SignedIn, SignedOut, SignInButton, UserButton, useUser } from "@clerk/clerk-react";
 import { useNavigate } from "react-router-dom";
+import { FaUserAstronaut } from "react-icons/fa";
 
 const AuthButton = () => {
   const { user, isLoaded } = useUser();
@@ -40,7 +41,7 @@ const AuthButton = () => {
             <UserButton.MenuItems>
               <UserButton.Action
                 label="View Profile"
-                labelIcon={<span>👤</span>}
+                labelIcon={<span><FaUserAstronaut /></span>}
                 onClick={() => navigate('/profile')}
               />
             </UserButton.MenuItems>

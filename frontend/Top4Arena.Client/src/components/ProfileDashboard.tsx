@@ -196,6 +196,17 @@ const ProfileDashboard = () => {
                 </div>
               ))}
             </div>
+
+            {/* Use Top 4 by Default Checkbox */}
+            <div className="mt-4">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  className="w-6 h-6 rounded border-2 border-white/50 bg-[#14181C] checked:bg-[#14181C] checked:border-white/70 focus:ring-0 focus:ring-offset-0 cursor-pointer appearance-none relative checked:after:content-['✓'] checked:after:absolute checked:after:inset-0 checked:after:flex checked:after:items-center checked:after:justify-center checked:after:text-white checked:after:text-lg checked:after:font-bold checked:after:leading-none"
+                />
+                <span className="text-white/70">USE TOP 4</span>
+              </label>
+            </div>
           </div>
 
           {/* Achievements - 1/4 width */}
