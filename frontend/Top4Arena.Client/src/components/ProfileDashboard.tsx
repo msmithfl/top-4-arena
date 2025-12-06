@@ -108,14 +108,22 @@ const ProfileDashboard = () => {
         <div className="max-w-6xl mx-auto mt-6">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
             <div className="flex items-center gap-6">
-              <div className="w-24 h-24 rounded-full bg-linear-to-br from-blue-500 to-purple-500 flex items-center justify-center text-4xl font-bold">
-                {user.username?.[0]?.toUpperCase() || user.firstName?.[0]?.toUpperCase() || "U"}
-              </div>
+              {user.imageUrl ? (
+                <img 
+                  src={user.imageUrl} 
+                  alt={user.username || "User"} 
+                  className="w-24 h-24 rounded-full object-cover"
+                />
+              ) : (
+                <div className="w-24 h-24 rounded-full bg-linear-to-br from-blue-500 to-purple-500 flex items-center justify-center text-4xl font-bold">
+                  {user.username?.[0]?.toUpperCase() || user.firstName?.[0]?.toUpperCase() || "U"}
+                </div>
+              )}
               <div>
                 <h1 className="text-3xl font-bold">{user.username || user.firstName || "Player"}</h1>
-                <p className="text-white/70">{user.primaryEmailAddress?.emailAddress}</p>
+                {/* <p className="text-white/70">{user.primaryEmailAddress?.emailAddress}</p> */}
                 <p className="text-sm text-white/50 mt-1">
-                  Member since {new Date(user.createdAt || Date.now()).toLocaleDateString()}
+                  Member Since {new Date(user.createdAt || Date.now()).toLocaleDateString()}
                 </p>
               </div>
             </div>
@@ -147,8 +155,8 @@ const ProfileDashboard = () => {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-4">
           {/* My Top 4 Films - 3/4 width */}
           <div className="lg:col-span-3">
-            <h2 className="text-lg text-white/70">TOP 4</h2>
-            <div className="w-full h-px bg-white/20 mb-4"></div>
+            <h2 className="text-lg font-bold">TOP 4</h2>
+            <div className="w-full h-px bg-white/50 mb-4"></div>
 
             <div className="grid grid-cols-4 gap-4">
               {[0, 1, 2, 3].map(index => (
@@ -192,8 +200,8 @@ const ProfileDashboard = () => {
 
           {/* Achievements - 1/4 width */}
           <div className="lg:col-span-1">
-            <h2 className="text-lg text-white/70">AWARDS</h2>
-            <div className="w-full h-px bg-white/20 mb-4"></div>
+            <h2 className="text-lg font-bold">AWARDS</h2>
+            <div className="w-full h-px bg-white/50 mb-4"></div>
             <div className="grid grid-cols-3 md:grid-cols-2 gap-4 max-h-[220px]  md:max-h-[400px] overflow-y-auto scrollbar-thin pr-4">
               {[...Array(12)].map((_, index) => (
                 <div
@@ -268,8 +276,8 @@ const ProfileDashboard = () => {
 
 
         {/* Quick Actions */}
-        <h2 className="text-lg text-white/70">QUICK ACTIONS</h2>
-        <div className="w-full h-px bg-white/20 mb-4"></div>
+        <h2 className="text-lg font-bold">QUICK ACTIONS</h2>
+        <div className="w-full h-px bg-white/50 mb-4"></div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
           <button
             onClick={() => navigate('/game')}

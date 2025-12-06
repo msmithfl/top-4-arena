@@ -16,7 +16,7 @@ const AuthButton = () => {
   }
 
   return (
-    <div className="absolute top-4 right-4 z-10">
+    <div className="absolute top-6 right-6 z-10">
       <SignedOut>
         <SignInButton mode="modal">
           <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-full transition-all duration-200 cursor-pointer">
@@ -29,18 +29,14 @@ const AuthButton = () => {
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigate('/profile')}
-            className="text-white font-semibold hidden md:block hover:text-blue-400 transition-colors cursor-pointer"
+            className="text-white pb-2 pr-2 font-semibold hidden md:block hover:text-gray-400 transition-colors cursor-pointer"
           >
             {user?.username || user?.firstName || "User"}
           </button>
-          <UserButton 
-            afterSignOutUrl="/"
-            appearance={{
-              elements: {
-                avatarBox: "w-10 h-10 cursor-pointer"
-              }
-            }}
-          >
+          <div className="scale-150 origin-center">
+            <UserButton 
+              afterSignOutUrl="/"
+            >
             <UserButton.MenuItems>
               <UserButton.Action
                 label="View Profile"
@@ -48,7 +44,8 @@ const AuthButton = () => {
                 onClick={() => navigate('/profile')}
               />
             </UserButton.MenuItems>
-          </UserButton>
+            </UserButton>
+          </div>
         </div>
       </SignedIn>
     </div>
