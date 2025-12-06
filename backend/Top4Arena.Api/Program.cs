@@ -41,11 +41,23 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization();
 
-// Dynamic CORS - reads from appsettings.{Environment}.json
-var corsOriginsSection = builder.Configuration.GetSection("CorsOrigins");
-var corsOrigins = corsOriginsSection.Get<string[]>() 
-    ?? corsOriginsSection.Get<List<string>>()?.ToArray()
-    ?? new[] { "http://localhost:5173" }; // Fallback for local dev
+// Dynamic CORS - reads from environment variable or appsettings.{Environment}.json
+var corsOriginsEnv = builder.Configuration["CORS_ORIGINS"];
+string[] corsOrigins;
+
+if (!string.IsNullOrEmpty(corsOriginsEnv))
+{
+    // Split comma-separated environment variable
+    corsOrigins = corsOriginsEnv.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+}
+else
+{
+    // Fallback to JSON configuration
+    var corsOriginsSection = builder.Configuration.GetSection("CorsOrigins");
+    corsOrigins = corsOriginsSection.Get<string[]>() 
+        ?? corsOriginsSection.Get<List<string>>()?.ToArray()
+        ?? new[] { "http://localhost:5173" }; // Final fallback for local dev
+}
 
 Console.WriteLine($"Environment: {builder.Environment.EnvironmentName}");
 Console.WriteLine($"CORS Origins: {string.Join(", ", corsOrigins)}");
@@ -56,7 +68,8 @@ builder.Services.AddCors(options =>
     {
         policy.WithOrigins(corsOrigins)
               .AllowAnyHeader()
-              .AllowAnyMethod();
+              .AllowAnyMethod()
+              .AllowCredentials();
     });
 });
 
@@ -67,8 +80,7 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-app.UseCors("AllowFrontend");
-app.UseHttpsRedirection();
+app.UseCors("AllowFrontend");  // CORS must be before HTTPS redirection
 app.UseAuthentication();
 app.UseAuthorization();
 
