@@ -10,7 +10,7 @@ const UserTest = () => {
   const fetchUserFromBackend = async () => {
     try {
       const token = await getToken();
-      const response = await fetch('http://localhost:5157/api/users/me', {
+      const response = await fetch('https://top-4-arena-staging.up.railway.app/api/users/me', {
         headers: {
           'Authorization': `Bearer ${token}`
         }
