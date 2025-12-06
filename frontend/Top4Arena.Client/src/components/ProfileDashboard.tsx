@@ -1,6 +1,7 @@
 import { useUser } from "@clerk/clerk-react";
 import { useNavigate } from "react-router-dom";
-import { Trophy, Star, Film, ArrowLeft, X, Search, Plus, Edit2 } from "lucide-react";
+import { ArrowLeft, X, Search, Plus, Edit2 } from "lucide-react";
+import { GiLaurelsTrophy } from "react-icons/gi";
 import { useEffect, useState } from "react";
 import { fetchMovieDetails } from "../utils/tmdbApi";
 import Footer from "./Footer";
@@ -104,67 +105,107 @@ const ProfileDashboard = () => {
           Back to Home
         </button>
         
-        <div className="max-w-6xl mx-auto flex items-center gap-6">
-          <div className="w-24 h-24 rounded-full bg-linear-to-br from-blue-500 to-purple-500 flex items-center justify-center text-4xl font-bold">
-            {user.username?.[0]?.toUpperCase() || user.firstName?.[0]?.toUpperCase() || "U"}
-          </div>
-          <div>
-            <h1 className="text-3xl font-bold">{user.username || user.firstName || "Player"}</h1>
-            <p className="text-white/70">{user.primaryEmailAddress?.emailAddress}</p>
-            <p className="text-sm text-white/50 mt-1">
-              Member since {new Date(user.createdAt || Date.now()).toLocaleDateString()}
-            </p>
+        <div className="max-w-6xl mx-auto mt-6">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+            <div className="flex items-center gap-6">
+              <div className="w-24 h-24 rounded-full bg-linear-to-br from-blue-500 to-purple-500 flex items-center justify-center text-4xl font-bold">
+                {user.username?.[0]?.toUpperCase() || user.firstName?.[0]?.toUpperCase() || "U"}
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold">{user.username || user.firstName || "Player"}</h1>
+                <p className="text-white/70">{user.primaryEmailAddress?.emailAddress}</p>
+                <p className="text-sm text-white/50 mt-1">
+                  Member since {new Date(user.createdAt || Date.now()).toLocaleDateString()}
+                </p>
+              </div>
+            </div>
+            
+            {/* Stats */}
+            <div className="flex items-center justify-center gap-6 md:ml-auto">
+              <div className="text-center">
+                <p className="text-2xl font-bold text-white">{stats.gamesPlayed}</p>
+                <p className="text-xs text-white/50">GAMES</p>
+              </div>
+              <div className="w-px h-12 bg-white/20"></div>
+              <div className="text-center">
+                <p className="text-2xl font-bold text-white">{stats.highScore}</p>
+                <p className="text-xs text-white/50">BEST RUN</p>
+              </div>
+              <div className="w-px h-12 bg-white/20"></div>
+              <div className="text-center">
+                <p className="text-2xl font-bold text-white">{stats.achievementsUnlocked}</p>
+                <p className="text-xs text-white/50">AWARDS</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Main Content */}
-      <div className="w-full p-6">
+      <div className="w-full px-6 md:p-6">
         <div className="max-w-6xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-4">
           {/* My Top 4 Films - 3/4 width */}
           <div className="lg:col-span-3">
-            <h2 className="text-xl font-bold mb-4">My Top 4</h2>
+            <h2 className="text-lg text-white/70">TOP 4</h2>
+            <div className="w-full h-px bg-white/20 mb-4"></div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {[0, 1, 2, 3].map(index => (
-              <div
-                key={index}
-                className="bg-white/10 backdrop-blur-sm rounded-lg border border-white/20 overflow-hidden relative aspect-2/3 group"
-              >
-                {top4Movies[index] ? (
-                  <>
-                    <img
-                      src={`https://image.tmdb.org/t/p/w300${top4Movies[index].poster_path}`}
-                      alt={top4Movies[index].title}
-                      className="w-full h-full object-cover"
-                    />
+            <div className="grid grid-cols-4 gap-4">
+              {[0, 1, 2, 3].map(index => (
+                <div
+                  key={index}
+                  className="bg-white/10 backdrop-blur-sm rounded-lg border border-white/20 overflow-hidden relative aspect-2/3 group"
+                >
+                  {top4Movies[index] ? (
+                    <>
+                      <img
+                        src={`https://image.tmdb.org/t/p/w300${top4Movies[index].poster_path}`}
+                        alt={top4Movies[index].title}
+                        className="w-full h-full object-cover"
+                      />
+                      <button
+                        onClick={() => handleOpenModal(index)}
+                        className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer"
+                      >
+                        <Edit2 className="w-12 h-12 text-white" />
+                      </button>
+                      <div className="absolute bottom-0 left-0 right-0 p-3 pointer-events-none">
+                        <p className="hidden text-white font-bold text-sm truncate">{top4Movies[index].title}</p>
+                        <p className="hidden text-white/70 text-xs">
+                          {top4Movies[index].release_date ? new Date(top4Movies[index].release_date).getFullYear() : 'N/A'}
+                        </p>
+                      </div>
+                    </>
+                  ) : (
                     <button
                       onClick={() => handleOpenModal(index)}
-                      className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer"
+                      className="w-full h-full flex flex-col items-center justify-center text-gray-500 hover:text-white hover:bg-white/5 transition-all cursor-pointer"
                     >
-                      <Edit2 className="w-12 h-12 text-white" />
+                      <Plus className="w-12 h-12 mb-2" />
+                      <span className="hidden md:block text-sm">Add Movie</span>
                     </button>
-                    <div className="absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/90 to-transparent p-3 pointer-events-none">
-                      <p className="text-white font-bold text-sm truncate">{top4Movies[index].title}</p>
-                      <p className="text-white/70 text-xs">
-                        {top4Movies[index].release_date ? new Date(top4Movies[index].release_date).getFullYear() : 'N/A'}
-                      </p>
-                    </div>
-                  </>
-                ) : (
-                  <button
-                    onClick={() => handleOpenModal(index)}
-                    className="w-full h-full flex flex-col items-center justify-center text-gray-500 hover:text-white hover:bg-white/5 transition-all cursor-pointer"
-                  >
-                    <Plus className="w-12 h-12 mb-2" />
-                    <span className="text-sm">Add Movie</span>
-                  </button>
-                )}
-              </div>
-            ))}
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
+
+          {/* Achievements - 1/4 width */}
+          <div className="lg:col-span-1">
+            <h2 className="text-lg text-white/70">AWARDS</h2>
+            <div className="w-full h-px bg-white/20 mb-4"></div>
+            <div className="grid grid-cols-3 md:grid-cols-2 gap-4 max-h-[220px]  md:max-h-[400px] overflow-y-auto scrollbar-thin pr-4">
+              {[...Array(12)].map((_, index) => (
+                <div
+                  key={index}
+                  className="bg-white/10 backdrop-blur-sm p-6 rounded-lg border border-white/20 flex items-center justify-center aspect-square hover:bg-white/15 transition-all"
+                >
+                  <GiLaurelsTrophy className="w-12 h-12 text-yellow-400" />
+                </div>
+              ))}
+            </div>
           </div>
+        </div>
 
           {/* Movie Selection Modal */}
           {selectedSlot !== null && (
@@ -224,43 +265,11 @@ const ProfileDashboard = () => {
             </div>
           )}
 
-          {/* Stats Grid - 1/4 width */}
-          <div className="lg:col-span-1">
-            {/* <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
-              <Trophy className="w-5 h-5 text-yellow-400" />
-              Stats
-            </h2> */}
-            
-            <div className="grid grid-cols-2 lg:grid-cols-1 gap-4 mt-12">
-              <div className="bg-white/10 backdrop-blur-sm p-4 rounded-lg border border-white/20">
-                <div className="flex items-center gap-2 mb-2">
-                  <Film className="w-5 h-5 text-blue-400" />
-                  <h3 className="text-sm font-semibold">Games</h3>
-                </div>
-                <p className="text-2xl font-bold">{stats.gamesPlayed}</p>
-              </div>
 
-              <div className="bg-white/10 backdrop-blur-sm p-4 rounded-lg border border-white/20">
-                <div className="flex items-center gap-2 mb-2">
-                  <Trophy className="w-5 h-5 text-yellow-400" />
-                  <h3 className="text-sm font-semibold">High Score</h3>
-                </div>
-                <p className="text-2xl font-bold">{stats.highScore}</p>
-              </div>
-
-              <div className="bg-white/10 backdrop-blur-sm p-4 rounded-lg border border-white/20">
-                <div className="flex items-center gap-2 mb-2">
-                  <Star className="w-5 h-5 text-purple-400" />
-                  <h3 className="text-sm font-semibold">Achievements</h3>
-                </div>
-                <p className="text-2xl font-bold">{stats.achievementsUnlocked}</p>
-              </div>
-            </div>
-          </div>
-        </div>
 
         {/* Quick Actions */}
-        <h2 className="text-2xl font-bold mb-4">Quick Actions</h2>
+        <h2 className="text-lg text-white/70">QUICK ACTIONS</h2>
+        <div className="w-full h-px bg-white/20 mb-4"></div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
           <button
             onClick={() => navigate('/game')}
