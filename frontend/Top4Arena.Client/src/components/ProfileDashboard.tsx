@@ -105,14 +105,14 @@ const ProfileDashboard = () => {
           Back to Home
         </button>
         
-        <div className="max-w-6xl mx-auto mt-6">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+        <div className="max-w-5xl mx-auto mt-6">
+          <div className="flex flex-col md:flex-row items-center md:justify-between gap-6">
             <div className="flex items-center gap-6">
               {user.imageUrl ? (
                 <img 
                   src={user.imageUrl} 
                   alt={user.username || "User"} 
-                  className="w-24 h-24 rounded-full object-cover"
+                  className="w-16 md:w-24 h-16 md:h-24 rounded-full object-cover"
                 />
               ) : (
                 <div className="w-24 h-24 rounded-full bg-linear-to-br from-blue-500 to-purple-500 flex items-center justify-center text-4xl font-bold">
@@ -120,7 +120,7 @@ const ProfileDashboard = () => {
                 </div>
               )}
               <div>
-                <h1 className="text-3xl font-bold">{user.username || user.firstName || "Player"}</h1>
+                <h1 className="text-2xl md:text-3xl font-bold">{user.username || user.firstName || "Player"}</h1>
                 {/* <p className="text-white/70">{user.primaryEmailAddress?.emailAddress}</p> */}
                 <p className="text-sm text-white/50 mt-1">
                   Member Since {new Date(user.createdAt || Date.now()).toLocaleDateString()}
@@ -129,7 +129,7 @@ const ProfileDashboard = () => {
             </div>
             
             {/* Stats */}
-            <div className="flex items-center justify-center gap-6 md:ml-auto">
+            <div className="flex items-center justify-center gap-6 md:ml-auto md:mr-4">
               <div className="text-center">
                 <p className="text-2xl font-bold text-white">{stats.gamesPlayed}</p>
                 <p className="text-xs text-white/50">GAMES</p>
@@ -151,14 +151,14 @@ const ProfileDashboard = () => {
 
       {/* Main Content */}
       <div className="w-full px-6 md:p-6">
-        <div className="max-w-6xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-4">
+        <div className="max-w-5xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-4 mb-4">
           {/* My Top 4 Films - 3/4 width */}
           <div className="lg:col-span-3">
-            <h2 className="text-lg font-bold">TOP 4</h2>
-            <div className="w-full h-px bg-white/50 mb-4"></div>
+            <h2 className="text-lg font-bold mb-1">TOP 4</h2>
+            <div className="md:w-11/12 h-px bg-white/50 mb-3"></div>
 
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid md:w-11/12 grid-cols-4 gap-4">
               {[0, 1, 2, 3].map(index => (
                 <div
                   key={index}
@@ -198,7 +198,7 @@ const ProfileDashboard = () => {
             </div>
 
             {/* Use Top 4 by Default Checkbox */}
-            <div className="mt-4">
+            <div className="mt-4 mb-4">
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="checkbox"
@@ -209,11 +209,11 @@ const ProfileDashboard = () => {
             </div>
           </div>
 
-          {/* Achievements - 1/4 width */}
+          {/* Awards - 1/4 width */}
           <div className="lg:col-span-1">
-            <h2 className="text-lg font-bold">AWARDS</h2>
-            <div className="w-full h-px bg-white/50 mb-4"></div>
-            <div className="grid grid-cols-3 md:grid-cols-2 gap-4 max-h-[220px]  md:max-h-[400px] overflow-y-auto scrollbar-thin pr-4">
+            <h2 className="text-lg font-bold mb-1">AWARDS</h2>
+            <div className="md:w-11/12 h-px bg-white/50 mb-3"></div>
+            <div className="grid grid-cols-3 md:grid-cols-2 gap-4 max-h-[220px] md:max-h-[400px] overflow-y-auto scrollbar-thin pr-4">
               {[...Array(12)].map((_, index) => (
                 <div
                   key={index}
@@ -287,8 +287,8 @@ const ProfileDashboard = () => {
 
 
         {/* Quick Actions */}
-        <h2 className="text-lg font-bold">QUICK ACTIONS</h2>
-        <div className="w-full h-px bg-white/50 mb-4"></div>
+        <h2 className="text-lg font-bold mb-1">QUICK ACTIONS</h2>
+        <div className="w-full h-px bg-white/50 mb-3"></div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
           <button
             onClick={() => navigate('/game')}
