@@ -42,9 +42,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization();
 
 // Dynamic CORS - reads from appsettings.{Environment}.json
-var corsOrigins = builder.Configuration.GetSection("CorsOrigins").Get<string[]>()
+var corsOriginsSection = builder.Configuration.GetSection("CorsOrigins");
+var corsOrigins = corsOriginsSection.Get<string[]>() 
+    ?? corsOriginsSection.Get<List<string>>()?.ToArray()
     ?? new[] { "http://localhost:5173" }; // Fallback for local dev
 
+Console.WriteLine($"Environment: {builder.Environment.EnvironmentName}");
 Console.WriteLine($"CORS Origins: {string.Join(", ", corsOrigins)}");
 
 builder.Services.AddCors(options =>
