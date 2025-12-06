@@ -59,6 +59,35 @@ public static class WebhookEndpoints
                     db.Users.Add(user);
                     await db.SaveChangesAsync();
                 }
+                else if (eventType == "user.updated")
+                {
+                    var data = webhookData.GetProperty("data");
+                    var userId = data.GetProperty("id").GetString()!;
+                    
+                    var user = await db.Users.FindAsync(userId);
+                    if (user != null)
+                    {
+                        // Update name fields
+                        user.FirstName = data.TryGetProperty("first_name", out var fn) ? fn.GetString() : user.FirstName;
+                        user.LastName = data.TryGetProperty("last_name", out var ln) ? ln.GetString() : user.LastName;
+                        
+                        // Update username
+                        if (data.TryGetProperty("username", out var un) && un.ValueKind != JsonValueKind.Null)
+                        {
+                            user.Username = un.GetString() ?? user.Username;
+                        }
+                        
+                        // Update email if changed
+                        var emailAddresses = data.GetProperty("email_addresses");
+                        if (emailAddresses.GetArrayLength() > 0)
+                        {
+                            var primaryEmail = emailAddresses[0].GetProperty("email_address").GetString()!;
+                            user.Email = primaryEmail;
+                        }
+                        
+                        await db.SaveChangesAsync();
+                    }
+                }
                 else if (eventType == "user.deleted")
                 {
                     var data = webhookData.GetProperty("data");
