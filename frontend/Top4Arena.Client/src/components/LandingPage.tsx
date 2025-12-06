@@ -4,6 +4,7 @@ import { useState } from 'react'
 import MovieCarousel from './MovieCarousel';
 import Footer from './Footer';
 import AuthButton from './AuthButton';
+//import UserTest from './UserTest';
 import packageJson from '../../package.json';
 
 const APP_VERSION = `${packageJson.version}`;
@@ -36,6 +37,9 @@ const LandingPage = () => {
       
       {/* Auth Button in top right */}
       <AuthButton />
+      
+      {/* Temporary test component */}
+      {/* <UserTest /> */}
       
       <div className="max-w-5xl w-full flex flex-col items-center justify-end space-y-6 grow pt-16 md:pt-0">
 
