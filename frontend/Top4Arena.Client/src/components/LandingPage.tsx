@@ -3,7 +3,7 @@ import { Swords, Film, Trophy, Mail, X } from 'lucide-react'
 import { useState } from 'react'
 import MovieCarousel from './MovieCarousel';
 import Footer from './Footer';
-import AuthButton from './AuthButton';
+import Header from './Header';
 //import UserTest from './UserTest';
 import packageJson from '../../package.json';
 
@@ -28,20 +28,12 @@ const LandingPage = () => {
 
   return (
     <div className="min-h-dvh bg-[#14181C] text-white flex flex-col items-center overflow-x-hidden relative">
-      {/* Logo in top left corner on desktop, centered on mobile */}
-      <img 
-        src="/favicon-top4.png" 
-        alt="Top 4 Arena Logo" 
-        className="absolute top-4 left-4 translate-x-0 w-16 h-16 z-10"
-      />
-      
-      {/* Auth Button in top right */}
-      <AuthButton />
+      <Header />
       
       {/* Temporary test component */}
       {/* <UserTest /> */}
       
-      <div className="max-w-5xl w-full flex flex-col items-center justify-end space-y-6 grow pt-16 md:pt-0">
+      <div className="max-w-5xl w-full flex flex-col items-center justify-end space-y-6 grow">
 
         {/* Title */}
         <div className="mb-2 mt-8 md:mb-6 w-full text-center">
