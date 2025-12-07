@@ -214,13 +214,13 @@ const ProfileDashboard = () => {
     }
   }, [isLoaded, user, navigate]);
 
-  // Save when movies or checkbox changes (skip initial load)
+  // Save when movies change (skip initial load)
   useEffect(() => {
     if (isLoaded && user && hasLoaded) {
       // Only save if we've already loaded (not on initial mount)
       saveTop4Preset();
     }
-  }, [top4Movies, useAsDefault]);
+  }, [top4Movies]);
 
   if (!isLoaded || !user) {
     return (
