@@ -29,7 +29,7 @@ const SignUpPage = () => {
           routing="path"
           path="/sign-up"
           signInUrl="/sign-in"
-          afterSignUpUrl="/"
+          forceRedirectUrl="/"
           appearance={{
             elements: {
               rootBox: "mx-auto",
