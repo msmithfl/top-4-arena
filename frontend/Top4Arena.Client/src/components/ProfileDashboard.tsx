@@ -113,6 +113,7 @@ const ProfileDashboard = () => {
       console.error('Failed to load Top 4 preset:', err);
     } finally {
       setIsLoadingTop4(false);
+      setHasLoaded(true); // Mark as loaded after fetch completes
     }
   };
 
@@ -122,6 +123,12 @@ const ProfileDashboard = () => {
       const token = await getToken();
       // Create array of exactly 4 movie IDs, using 0 for empty slots
       const movieIds = [0, 1, 2, 3].map(index => top4Movies[index]?.id || 0);
+      
+      // Don't save if we haven't loaded yet or if trying to save all zeros when not intentional
+      if (!hasLoaded) {
+        setIsSaving(false);
+        return;
+      }
       
       const response = await fetch(`${API_URL}/api/users/me/top4`, {
         method: 'POST',
@@ -214,13 +221,6 @@ const ProfileDashboard = () => {
       saveTop4Preset();
     }
   }, [top4Movies, useAsDefault]);
-
-  // Mark as loaded after initial data fetch
-  useEffect(() => {
-    if (top4Movies.length > 0 || hasLoaded) {
-      setHasLoaded(true);
-    }
-  }, [top4Movies]);
 
   if (!isLoaded || !user) {
     return (
