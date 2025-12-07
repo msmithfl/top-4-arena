@@ -2,10 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '@clerk/clerk-react';
 import { fetchMovieDetails, fetchPopularMovies } from '../utils/tmdbApi';
 import { Film, Shuffle, X, Layers } from 'lucide-react';
-import { Link } from 'react-router-dom';
 import { CELEBRITY_TOP4S, ARCHETYPE_TOP4S } from '../data/prebuiltTop4Presets';
+import Header from './Header';
 import InstructionsButton from './InstructionsButton';
-import AuthButton from './AuthButton';
 
 const TMDB_API_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmODZmYTE3MzcwNzRmMzY3NzkwNzc1Y2Q1NTQwNmExYyIsIm5iZiI6MTY4NzYyNzAzOC40MDEsInN1YiI6IjY0OTcyNTFlYjM0NDA5MDBhZDUyNTY4YSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.YA8K57yrPNiM_UwefPB6Bv2t8fZdY_v1GD9AS3rRrU0';
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5157';
@@ -213,25 +212,12 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
   };
 
     return (
-      <div className="min-h-dvh bg-[#14181C] text-white flex items-center justify-center p-4">
-        {/* Logo in top left corner */}
-        <Link to="/">
-          <img 
-            src="/favicon-top4.png" 
-            alt="Top 4 Arena Logo" 
-            className="absolute top-4 left-4 w-16 h-16 z-10"
-          />
-        </Link>
-
-        {/* Instructions button center top - mobile only */}
-        <div className="lg:hidden absolute top-6 left-1/2 -translate-x-1/2 z-10">
-          <InstructionsButton />
-        </div>
-
-        {/* Auth Button in top right */}
-        <AuthButton />
+      <div className="min-h-dvh bg-[#14181C] text-white flex flex-col">
+        <Header />
         
-        <div className="max-w-3xl w-full text-center space-y-8 bg-white/10 backdrop-blur-sm p-8 rounded-lg border border-white/10 shadow-2xl relative">
+        {/* Main content - centered */}
+        <div className="flex-1 flex flex-col items-center justify-center px-4">
+          <div className="max-w-3xl w-full text-center space-y-8 bg-white/10 backdrop-blur-sm p-8 rounded-lg border border-white/10 shadow-2xl relative">
         
         {/* Presets button - top right (desktop only) */}
         <div className="hidden lg:block absolute right-4 top-4">
@@ -376,6 +362,12 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
               >
               Start Game
               </button>
+          </div>
+          </div>
+          
+          {/* Instructions button - mobile only, centered below */}
+          <div className="lg:hidden mt-4">
+            <InstructionsButton />
           </div>
         </div>
 

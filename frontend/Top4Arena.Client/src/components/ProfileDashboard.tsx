@@ -220,7 +220,7 @@ const ProfileDashboard = () => {
       // Only save if we've already loaded (not on initial mount)
       saveTop4Preset();
     }
-  }, [top4Movies]);
+  }, [top4Movies, useAsDefault]);
 
   if (!isLoaded || !user) {
     return (
