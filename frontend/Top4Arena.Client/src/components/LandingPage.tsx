@@ -32,7 +32,7 @@ const LandingPage = () => {
       <img 
         src="/favicon-top4.png" 
         alt="Top 4 Arena Logo" 
-        className="absolute top-4 left-1/2 -translate-x-1/2 md:left-4 md:translate-x-0 w-16 h-16 z-10"
+        className="absolute top-4 left-4 translate-x-0 w-16 h-16 z-10"
       />
       
       {/* Auth Button in top right */}
