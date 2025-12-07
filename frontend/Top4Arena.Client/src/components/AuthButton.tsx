@@ -17,7 +17,7 @@ const AuthButton = () => {
   }
 
   return (
-    <div className="absolute top-6 right-6 z-10">
+    <div className="z-10">
       <SignedOut>
         <button 
           onClick={() => navigate('/sign-in')}
@@ -28,10 +28,10 @@ const AuthButton = () => {
       </SignedOut>
       
       <SignedIn>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 mt-2 mr-2 ml-2">
           <button
             onClick={() => navigate('/profile')}
-            className="text-white pb-2 pr-2 font-semibold hidden md:block hover:text-gray-400 transition-colors cursor-pointer"
+            className="text-white pb-2 pr-2 font-semibold hover:text-gray-400 transition-colors cursor-pointer"
           >
             {user?.username || user?.firstName || "User"}
           </button>
