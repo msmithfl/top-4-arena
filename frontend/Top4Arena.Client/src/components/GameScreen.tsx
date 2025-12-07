@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useAuth } from '@clerk/clerk-react';
 import PlayerCard from './MovieCard';
 import BossCardDisplay from './BossCard';
 import GameSidebar from './GameSidebar';
@@ -38,6 +39,9 @@ const getRandomBoss = () => {
 };
 
 const GameScreen: React.FC = () => {
+  const { getToken, isSignedIn } = useAuth();
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5157';
+  
   const [collectionDeck, setCollectionDeck] = useState<MovieCard[]>([]); // Full collection for viewing
   const [playDeck, setPlayDeck] = useState<MovieCard[]>([]); // Shuffled deck for drawing
   const [discardPile, setDiscardPile] = useState<MovieCard[]>([]); // Cards that have been used
@@ -68,6 +72,27 @@ const GameScreen: React.FC = () => {
     genrePlayCount: {} as Record<string, number>,
     defeatedBy: null as string | null,
   });
+  
+  const updateUserStats = async (finalRound: number) => {
+    if (!isSignedIn) return;
+    
+    try {
+      const token = await getToken();
+      await fetch(`${API_URL}/api/users/me/stats`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ 
+          round: finalRound,
+          highestCombo: gameStats.bestHand.score
+        })
+      });
+    } catch (err) {
+      console.error('Failed to update user stats:', err);
+    }
+  };
   
   useEffect(() => {
     // Don't initialize until we have picked movies
@@ -286,6 +311,7 @@ const GameScreen: React.FC = () => {
       // Check if player died - if so, skip hand refill and show loss screen
       if (newPlayerHP <= 0) {
         setGameStats(prev => ({ ...prev, defeatedBy: boss!.title }));
+        updateUserStats(round);
         setTimeout(() => {
           setIsAttacking(false);
           setGameState('lost');

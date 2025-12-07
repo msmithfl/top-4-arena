@@ -56,6 +56,9 @@ namespace Top4Arena.Api.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("text");
 
+                    b.Property<int>("BestRun")
+                        .HasColumnType("integer");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -66,8 +69,14 @@ namespace Top4Arena.Api.Migrations
                     b.Property<string>("FirstName")
                         .HasColumnType("text");
 
+                    b.Property<int>("HighestCombo")
+                        .HasColumnType("integer");
+
                     b.Property<string>("LastName")
                         .HasColumnType("text");
+
+                    b.Property<int>("TotalGames")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Username")
                         .IsRequired()

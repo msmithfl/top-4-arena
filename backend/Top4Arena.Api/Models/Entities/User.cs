@@ -8,4 +8,9 @@ public class User
     public string Username { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    
+    // Game stats
+    public int BestRun { get; set; } = 0; // Furthest round reached
+    public int TotalGames { get; set; } = 0;
+    public int HighestCombo { get; set; } = 0; // Highest damage dealt in single attack
 }

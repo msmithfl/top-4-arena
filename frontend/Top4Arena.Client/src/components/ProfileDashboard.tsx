@@ -11,7 +11,7 @@ const ProfileDashboard = () => {
   const { user, isLoaded } = useUser();
   const { getToken } = useAuth();
   const navigate = useNavigate();
-  const [stats] = useState({
+  const [stats, setStats] = useState({
     gamesPlayed: 0,
     highScore: 0,
     achievementsUnlocked: 0,
@@ -32,6 +32,29 @@ const ProfileDashboard = () => {
 
   const TMDB_API_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmODZmYTE3MzcwNzRmMzY3NzkwNzc1Y2Q1NTQwNmExYyIsIm5iZiI6MTY4NzYyNzAzOC40MDEsInN1YiI6IjY0OTcyNTFlYjM0NDA5MDBhZDUyNTY4YSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.YA8K57yrPNiM_UwefPB6Bv2t8fZdY_v1GD9AS3rRrU0';
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5157';
+
+  const loadUserStats = async () => {
+    try {
+      const token = await getToken();
+      const response = await fetch(`${API_URL}/api/users/me`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        setStats(prev => ({
+          ...prev,
+          gamesPlayed: data.totalGames || 0,
+          highScore: data.bestRun || 0,
+          achievementsUnlocked: data.highestCombo || 0
+        }));
+      }
+    } catch (err) {
+      console.error('Failed to load user stats:', err);
+    }
+  };
 
   const handleSearchMovie = async (query: string) => {
     setSearchQuery(query);
@@ -179,6 +202,7 @@ const ProfileDashboard = () => {
     if (isLoaded && !user) {
       navigate('/');
     } else if (isLoaded && user) {
+      loadUserStats();
       loadTop4Preset();
     }
   }, [isLoaded, user, navigate]);
@@ -254,8 +278,12 @@ const ProfileDashboard = () => {
               </div>
               <div className="w-px h-12 bg-white/20"></div>
               <div className="text-center">
-                <p className="text-2xl font-bold text-white">{stats.achievementsUnlocked}</p>
-                <p className="text-xs text-white/50">AWARDS</p>
+                <p className="text-2xl font-bold text-white">
+                  {stats.achievementsUnlocked >= 1000 
+                    ? `${(stats.achievementsUnlocked / 1000).toFixed(1)}k` 
+                    : stats.achievementsUnlocked}
+                </p>
+                <p className="text-xs text-white/50">TOP COMBO</p>
               </div>
             </div>
           </div>
@@ -336,7 +364,10 @@ const ProfileDashboard = () => {
 
           {/* Awards - 1/4 width */}
           <div className="lg:col-span-1">
-            <h2 className="text-lg font-bold mb-1">AWARDS</h2>
+            <div className="flex items-center justify-between mb-1">
+              <h2 className="text-lg font-bold">AWARDS</h2>
+              <span className=" text-white/50 md:mr-5">0/12</span>
+            </div>
             <div className="md:w-11/12 h-px bg-white/50 mb-3"></div>
             <div className="grid grid-cols-3 md:grid-cols-2 gap-4 max-h-[220px] md:max-h-[400px] overflow-y-auto scrollbar-thin pr-4">
               {[...Array(12)].map((_, index) => (
