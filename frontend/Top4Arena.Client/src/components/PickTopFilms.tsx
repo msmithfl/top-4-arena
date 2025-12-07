@@ -107,7 +107,8 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
 
   const handleSelectSuggestion = async (movie: any) => {
     if (picked.some(m => m.id === movie.id)) {
-      setDuplicateError('You already picked this movie!');
+      setDuplicateError(`"${movie.title}" is already in your Top 4.`);
+      setTimeout(() => setDuplicateError(null), 3000);
       setShowSuggestions(false);
       return;
     }
@@ -122,6 +123,7 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
       // Check if runtime is over 240 minutes
       if (details.runtime && details.runtime > 240) {
         setRuntimeError(`"${details.title}" is too long (${details.runtime} min) for a starter. Please choose a film under 4 hours.`);
+        setTimeout(() => setRuntimeError(null), 3000);
         setShowSuggestions(false);
         setLoading(false);
         return;
@@ -210,9 +212,6 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
     if (picked.length === 4) onComplete(picked);
   };
 
-    {error && <div className="text-red-400 mb-2 text-center">{error}</div>}
-    {duplicateError && <div className="text-yellow-400 mb-2 text-center">{duplicateError}</div>}
-
     return (
       <div className="min-h-dvh bg-[#14181C] text-white flex items-center justify-center p-4">
         {/* Logo in top left corner */}
@@ -264,10 +263,17 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
               onChange={e => handleSearchChange(e.target.value)}
               onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
               onFocus={() => search.length >= 2 && suggestions.length > 0 && setShowSuggestions(true)}
-              placeholder="Type a film title"
-              className="w-full p-3 rounded bg-[#2C3440] border border-white/10 text-lg text-white"
+              placeholder="Search for a movie..."
+              className="w-full p-3 rounded-lg bg-[#2C3440] border border-white/10 text-lg text-white"
               disabled={loading || picked.length >= 4}
               />
+              
+              {/* Duplicate Error Popup */}
+              {duplicateError && (
+                <div className="absolute z-50 w-full mt-1 bg-red-500 border border-red-700 rounded-lg shadow-xl p-3 text-sm text-white animate-in fade-in duration-200">
+                  {duplicateError}
+                </div>
+              )}
               
               {/* Suggestions Dropdown */}
               {showSuggestions && suggestions.length > 0 && (

@@ -28,6 +28,7 @@ const ProfileDashboard = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [hasLoaded, setHasLoaded] = useState(false);
   const [isLoadingTop4, setIsLoadingTop4] = useState(false);
+  const [duplicateError, setDuplicateError] = useState<string | null>(null);
 
   const TMDB_API_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmODZmYTE3MzcwNzRmMzY3NzkwNzc1Y2Q1NTQwNmExYyIsIm5iZiI6MTY4NzYyNzAzOC40MDEsInN1YiI6IjY0OTcyNTFlYjM0NDA5MDBhZDUyNTY4YSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.YA8K57yrPNiM_UwefPB6Bv2t8fZdY_v1GD9AS3rRrU0';
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5157';
@@ -126,8 +127,27 @@ const ProfileDashboard = () => {
   const handleAddMovie = async (movieId: number) => {
     if (selectedSlot === null) return;
     
+    // Check if movie is already in Top 4 (excluding the current slot being replaced)
+    const existingMovie = top4Movies.find((movie, index) => 
+      movie && movie.id === movieId && index !== selectedSlot
+    );
+    
+    if (existingMovie) {
+      setDuplicateError(`"${existingMovie.title}" is already in your Top 4.`);
+      setTimeout(() => setDuplicateError(null), 3000);
+      return;
+    }
+    
     try {
       const details = await fetchMovieDetails(movieId);
+      
+      // Check if runtime is over 240 minutes
+      if (details.runtime && details.runtime > 240) {
+        setDuplicateError(`"${details.title}" is too long (${details.runtime} min) for a starter. Please choose a film under 4 hours.`);
+        setTimeout(() => setDuplicateError(null), 3000);
+        return;
+      }
+      
       const newMovies = [...top4Movies];
       // Ensure array has 4 slots
       while (newMovies.length < 4) {
@@ -351,16 +371,25 @@ const ProfileDashboard = () => {
 
                   {/* Search Bar */}
                   <div className="p-4">
-                    <div className="flex items-center gap-2 bg-[#14181C] border border-white/10 rounded-lg p-2">
-                      <Search className="w-5 h-5 text-gray-400 ml-2" />
-                      <input
-                        type="text"
-                        value={searchQuery}
-                        onChange={(e) => handleSearchMovie(e.target.value)}
-                        placeholder="Search for a movie..."
-                        className="flex-1 bg-transparent text-white outline-none"
-                        autoFocus
-                      />
+                    <div className="relative">
+                      <div className="flex items-center gap-2 bg-[#14181C] rounded-lg p-2 border border-white/5">
+                        <Search className="w-5 h-5 text-gray-400 ml-2" />
+                        <input
+                          type="text"
+                          value={searchQuery}
+                          onChange={(e) => handleSearchMovie(e.target.value)}
+                          placeholder="Search for a movie..."
+                          className="flex-1 bg-transparent text-white outline-none"
+                          autoFocus
+                        />
+                      </div>
+                      
+                      {/* Duplicate Error Popup */}
+                      {duplicateError && (
+                        <div className="absolute z-50 text-center w-full mt-2 bg-red-500 border border-red-700 rounded-lg shadow-xl p-3 text-sm text-white animate-in fade-in duration-200">
+                          {duplicateError}
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
