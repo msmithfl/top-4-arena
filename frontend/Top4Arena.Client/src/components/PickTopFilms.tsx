@@ -1,17 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useAuth } from '@clerk/clerk-react';
 import { fetchMovieDetails, fetchPopularMovies } from '../utils/tmdbApi';
 import { Film, Shuffle, X, Layers } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { CELEBRITY_TOP4S, ARCHETYPE_TOP4S } from '../data/prebuiltTop4Presets';
 import InstructionsButton from './InstructionsButton';
+import AuthButton from './AuthButton';
 
 const TMDB_API_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmODZmYTE3MzcwNzRmMzY3NzkwNzc1Y2Q1NTQwNmExYyIsIm5iZiI6MTY4NzYyNzAzOC40MDEsInN1YiI6IjY0OTcyNTFlYjM0NDA5MDBhZDUyNTY4YSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.YA8K57yrPNiM_UwefPB6Bv2t8fZdY_v1GD9AS3rRrU0';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5157';
 
 interface PickTopFilmsProps {
   onComplete: (movies: any[]) => void;
 }
 
 const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
+  const { getToken, isSignedIn } = useAuth();
   const [search, setSearch] = useState('');
   const [picked, setPicked] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
@@ -24,6 +28,44 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const presetListRef = React.useRef<HTMLDivElement>(null);
   const searchTimeoutRef = React.useRef<number | null>(null);
+
+  // Load user's default preset on mount if signed in
+  useEffect(() => {
+    const loadDefaultPreset = async () => {
+      if (!isSignedIn) return;
+      
+      try {
+        const token = await getToken();
+        const response = await fetch(`${API_URL}/api/users/me/top4`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          
+          // Only auto-fill if IsDefault is true and we have movie IDs
+          if (data.isDefault && data.movieIds && data.movieIds.length > 0) {
+            setLoading(true);
+            // Filter out 0s (empty slots) and fetch movie details
+            const validMovieIds = data.movieIds.filter((id: number) => id !== 0);
+            if (validMovieIds.length > 0) {
+              const movieDetails = await Promise.all(
+                validMovieIds.map((id: number) => fetchMovieDetails(id))
+              );
+              setPicked(movieDetails);
+            }
+            setLoading(false);
+          }
+        }
+      } catch (err) {
+        console.error('Failed to load default preset:', err);
+      }
+    };
+    
+    loadDefaultPreset();
+  }, [isSignedIn, getToken]);
 
   const handleSearchChange = (value: string) => {
     setSearch(value);
@@ -65,7 +107,8 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
 
   const handleSelectSuggestion = async (movie: any) => {
     if (picked.some(m => m.id === movie.id)) {
-      setDuplicateError('You already picked this movie!');
+      setDuplicateError(`"${movie.title}" is already in your Top 4.`);
+      setTimeout(() => setDuplicateError(null), 3000);
       setShowSuggestions(false);
       return;
     }
@@ -80,6 +123,7 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
       // Check if runtime is over 240 minutes
       if (details.runtime && details.runtime > 240) {
         setRuntimeError(`"${details.title}" is too long (${details.runtime} min) for a starter. Please choose a film under 4 hours.`);
+        setTimeout(() => setRuntimeError(null), 3000);
         setShowSuggestions(false);
         setLoading(false);
         return;
@@ -168,9 +212,6 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
     if (picked.length === 4) onComplete(picked);
   };
 
-    {error && <div className="text-red-400 mb-2 text-center">{error}</div>}
-    {duplicateError && <div className="text-yellow-400 mb-2 text-center">{duplicateError}</div>}
-
     return (
       <div className="min-h-dvh bg-[#14181C] text-white flex items-center justify-center p-4">
         {/* Logo in top left corner */}
@@ -182,8 +223,11 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
           />
         </Link>
 
+        {/* Auth Button in top right */}
+        <AuthButton />
+
         {/* Instructions button in top right - mobile only */}
-        <div className="lg:hidden absolute top-4 right-4 z-10">
+        <div className="lg:hidden absolute top-4 right-16 z-10">
           <InstructionsButton />
         </div>
         
@@ -219,10 +263,17 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
               onChange={e => handleSearchChange(e.target.value)}
               onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
               onFocus={() => search.length >= 2 && suggestions.length > 0 && setShowSuggestions(true)}
-              placeholder="Type a film title"
-              className="w-full p-3 rounded bg-[#2C3440] border border-white/10 text-lg text-white"
+              placeholder="Search for a movie..."
+              className="w-full p-3 rounded-lg bg-[#2C3440] border border-white/10 text-lg text-white"
               disabled={loading || picked.length >= 4}
               />
+              
+              {/* Duplicate Error Popup */}
+              {duplicateError && (
+                <div className="absolute z-50 w-full mt-1 bg-red-500 border border-red-700 rounded-lg shadow-xl p-3 text-sm text-white animate-in fade-in duration-200">
+                  {duplicateError}
+                </div>
+              )}
               
               {/* Suggestions Dropdown */}
               {showSuggestions && suggestions.length > 0 && (

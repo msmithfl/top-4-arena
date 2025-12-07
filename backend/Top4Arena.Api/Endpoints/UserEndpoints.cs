@@ -30,9 +30,52 @@ public static class UserEndpoints
                 lastName = user.LastName,
                 username = user.Username,
                 email = user.Email,
-                createdAt = user.CreatedAt
+                createdAt = user.CreatedAt,
+                bestRun = user.BestRun,
+                totalGames = user.TotalGames,
+                highestCombo = user.HighestCombo
             });
         })
         .WithName("GetCurrentUser");
+
+        group.MapPost("/me/stats", async (HttpContext context, AppDbContext db, GameStatsRequest request) =>
+        {
+            var userId = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            
+            if (string.IsNullOrEmpty(userId))
+                return Results.Unauthorized();
+
+            var user = await db.Users.FindAsync(userId);
+            
+            if (user == null)
+                return Results.NotFound(new { error = "User not found" });
+
+            // Update total games
+            user.TotalGames++;
+
+            // Update best run if current round is higher
+            if (request.Round > user.BestRun)
+            {
+                user.BestRun = request.Round;
+            }
+
+            // Update highest combo if current combo is higher
+            if (request.HighestCombo > user.HighestCombo)
+            {
+                user.HighestCombo = request.HighestCombo;
+            }
+
+            await db.SaveChangesAsync();
+
+            return Results.Ok(new
+            {
+                bestRun = user.BestRun,
+                totalGames = user.TotalGames,
+                highestCombo = user.HighestCombo
+            });
+        })
+        .WithName("UpdateUserStats");
     }
 }
+
+public record GameStatsRequest(int Round, int HighestCombo);
