@@ -1,13 +1,15 @@
-import { useUser } from "@clerk/clerk-react";
+import { useUser, useAuth } from "@clerk/clerk-react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, X, Search, Plus, Edit2 } from "lucide-react";
 import { GiLaurelsTrophy } from "react-icons/gi";
 import { useEffect, useState } from "react";
 import { fetchMovieDetails } from "../utils/tmdbApi";
 import Footer from "./Footer";
+import spinnerImg from '../assets/imgs/top4-spinner.png';
 
 const ProfileDashboard = () => {
   const { user, isLoaded } = useUser();
+  const { getToken } = useAuth();
   const navigate = useNavigate();
   const [stats] = useState({
     gamesPlayed: 0,
@@ -16,14 +18,19 @@ const ProfileDashboard = () => {
     favoriteGenre: "None yet"
   });
 
-  const [top4Movies, setTop4Movies] = useState<any[]>([]);
+  const [top4Movies, setTop4Movies] = useState<any[]>([null, null, null, null]);
   const [selectedSlot, setSelectedSlot] = useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [_isSearching, setIsSearching] = useState(false);
   const [_isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
+  const [useAsDefault, setUseAsDefault] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [hasLoaded, setHasLoaded] = useState(false);
+  const [isLoadingTop4, setIsLoadingTop4] = useState(false);
 
   const TMDB_API_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmODZmYTE3MzcwNzRmMzY3NzkwNzc1Y2Q1NTQwNmExYyIsIm5iZiI6MTY4NzYyNzAzOC40MDEsInN1YiI6IjY0OTcyNTFlYjM0NDA5MDBhZDUyNTY4YSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.YA8K57yrPNiM_UwefPB6Bv2t8fZdY_v1GD9AS3rRrU0';
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5157';
 
   const handleSearchMovie = async (query: string) => {
     setSearchQuery(query);
@@ -51,12 +58,81 @@ const ProfileDashboard = () => {
     setIsSearching(false);
   };
 
+  const loadTop4Preset = async () => {
+    setIsLoadingTop4(true);
+    try {
+      const token = await getToken();
+      const response = await fetch(`${API_URL}/api/users/me/top4`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        setUseAsDefault(data.isDefault);
+        
+        // Load movie details for each movie ID, maintaining 4-slot array
+        if (data.movieIds && data.movieIds.length > 0) {
+          const moviePromises = data.movieIds.slice(0, 4).map((id: number) => 
+            id ? fetchMovieDetails(id) : Promise.resolve(null)
+          );
+          const movies = await Promise.all(moviePromises);
+          // Pad array to exactly 4 slots
+          while (movies.length < 4) {
+            movies.push(null);
+          }
+          setTop4Movies(movies);
+        }
+      }
+    } catch (err) {
+      console.error('Failed to load Top 4 preset:', err);
+    } finally {
+      setIsLoadingTop4(false);
+    }
+  };
+
+  const saveTop4Preset = async () => {
+    setIsSaving(true);
+    try {
+      const token = await getToken();
+      // Create array of exactly 4 movie IDs, using 0 for empty slots
+      const movieIds = [0, 1, 2, 3].map(index => top4Movies[index]?.id || 0);
+      
+      const response = await fetch(`${API_URL}/api/users/me/top4`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          movieIds,
+          isDefault: useAsDefault
+        })
+      });
+      
+      if (response.ok) {
+        console.log('Top 4 preset saved successfully', movieIds);
+      } else {
+        console.error('Failed to save:', await response.text());
+      }
+    } catch (err) {
+      console.error('Failed to save Top 4 preset:', err);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   const handleAddMovie = async (movieId: number) => {
     if (selectedSlot === null) return;
     
     try {
       const details = await fetchMovieDetails(movieId);
       const newMovies = [...top4Movies];
+      // Ensure array has 4 slots
+      while (newMovies.length < 4) {
+        newMovies.push(null);
+      }
       newMovies[selectedSlot] = details;
       setTop4Movies(newMovies);
       setSearchQuery("");
@@ -82,8 +158,25 @@ const ProfileDashboard = () => {
   useEffect(() => {
     if (isLoaded && !user) {
       navigate('/');
+    } else if (isLoaded && user) {
+      loadTop4Preset();
     }
   }, [isLoaded, user, navigate]);
+
+  // Save when movies or checkbox changes (skip initial load)
+  useEffect(() => {
+    if (isLoaded && user && hasLoaded) {
+      // Only save if we've already loaded (not on initial mount)
+      saveTop4Preset();
+    }
+  }, [top4Movies, useAsDefault]);
+
+  // Mark as loaded after initial data fetch
+  useEffect(() => {
+    if (top4Movies.length > 0 || hasLoaded) {
+      setHasLoaded(true);
+    }
+  }, [top4Movies]);
 
   if (!isLoaded || !user) {
     return (
@@ -158,7 +251,16 @@ const ProfileDashboard = () => {
             <h2 className="text-lg font-bold mb-1">TOP 4</h2>
             <div className="md:w-11/12 h-px bg-white/50 mb-3"></div>
 
-            <div className="grid md:w-11/12 grid-cols-4 gap-4">
+            <div className="grid md:w-11/12 grid-cols-4 gap-4 relative">
+              {isLoadingTop4 && (
+                <div className="absolute inset-0 bg-[#14181C]/80 backdrop-blur-sm z-10 flex items-center justify-center rounded-lg">
+                  <img 
+                    src={spinnerImg} 
+                    alt="Loading" 
+                    className="w-12 h-12 animate-spin" 
+                  />
+                </div>
+              )}
               {[0, 1, 2, 3].map(index => (
                 <div
                   key={index}
@@ -202,9 +304,12 @@ const ProfileDashboard = () => {
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="checkbox"
-                  className="w-6 h-6 rounded border-2 border-white/50 bg-[#14181C] checked:bg-[#14181C] checked:border-white/70 focus:ring-0 focus:ring-offset-0 cursor-pointer appearance-none relative checked:after:content-['✓'] checked:after:absolute checked:after:inset-0 checked:after:flex checked:after:items-center checked:after:justify-center checked:after:text-white checked:after:text-lg checked:after:font-bold checked:after:leading-none"
+                  checked={useAsDefault}
+                  onChange={(e) => setUseAsDefault(e.target.checked)}
+                  disabled={isSaving}
+                  className="w-6 h-6 rounded border-2 border-white/50 bg-[#14181C] checked:bg-[#14181C] checked:border-white/70 focus:ring-0 focus:ring-offset-0 cursor-pointer appearance-none relative checked:after:content-['✓'] checked:after:absolute checked:after:inset-0 checked:after:flex checked:after:items-center checked:after:justify-center checked:after:text-white checked:after:text-lg checked:after:font-bold checked:after:leading-none disabled:opacity-50"
                 />
-                <span className="text-white/70">USE TOP 4</span>
+                <span className="text-white/70">PRESET TOP 4 {isSaving && '(Saving...)'}</span>
               </label>
             </div>
           </div>
@@ -283,8 +388,6 @@ const ProfileDashboard = () => {
               </div>
             </div>
           )}
-
-
 
         {/* Quick Actions */}
         <h2 className="text-lg font-bold mb-1">QUICK ACTIONS</h2>

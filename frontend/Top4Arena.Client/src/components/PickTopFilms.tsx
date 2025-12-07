@@ -1,17 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useAuth } from '@clerk/clerk-react';
 import { fetchMovieDetails, fetchPopularMovies } from '../utils/tmdbApi';
 import { Film, Shuffle, X, Layers } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { CELEBRITY_TOP4S, ARCHETYPE_TOP4S } from '../data/prebuiltTop4Presets';
 import InstructionsButton from './InstructionsButton';
+import AuthButton from './AuthButton';
 
 const TMDB_API_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmODZmYTE3MzcwNzRmMzY3NzkwNzc1Y2Q1NTQwNmExYyIsIm5iZiI6MTY4NzYyNzAzOC40MDEsInN1YiI6IjY0OTcyNTFlYjM0NDA5MDBhZDUyNTY4YSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.YA8K57yrPNiM_UwefPB6Bv2t8fZdY_v1GD9AS3rRrU0';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5157';
 
 interface PickTopFilmsProps {
   onComplete: (movies: any[]) => void;
 }
 
 const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
+  const { getToken, isSignedIn } = useAuth();
   const [search, setSearch] = useState('');
   const [picked, setPicked] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
@@ -24,6 +28,44 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const presetListRef = React.useRef<HTMLDivElement>(null);
   const searchTimeoutRef = React.useRef<number | null>(null);
+
+  // Load user's default preset on mount if signed in
+  useEffect(() => {
+    const loadDefaultPreset = async () => {
+      if (!isSignedIn) return;
+      
+      try {
+        const token = await getToken();
+        const response = await fetch(`${API_URL}/api/users/me/top4`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          
+          // Only auto-fill if IsDefault is true and we have movie IDs
+          if (data.isDefault && data.movieIds && data.movieIds.length > 0) {
+            setLoading(true);
+            // Filter out 0s (empty slots) and fetch movie details
+            const validMovieIds = data.movieIds.filter((id: number) => id !== 0);
+            if (validMovieIds.length > 0) {
+              const movieDetails = await Promise.all(
+                validMovieIds.map((id: number) => fetchMovieDetails(id))
+              );
+              setPicked(movieDetails);
+            }
+            setLoading(false);
+          }
+        }
+      } catch (err) {
+        console.error('Failed to load default preset:', err);
+      }
+    };
+    
+    loadDefaultPreset();
+  }, [isSignedIn, getToken]);
 
   const handleSearchChange = (value: string) => {
     setSearch(value);
@@ -182,8 +224,11 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
           />
         </Link>
 
+        {/* Auth Button in top right */}
+        <AuthButton />
+
         {/* Instructions button in top right - mobile only */}
-        <div className="lg:hidden absolute top-4 right-4 z-10">
+        <div className="lg:hidden absolute top-4 right-16 z-10">
           <InstructionsButton />
         </div>
         
