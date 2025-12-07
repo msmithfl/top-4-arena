@@ -223,13 +223,13 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
           />
         </Link>
 
-        {/* Auth Button in top right */}
-        <AuthButton />
-
-        {/* Instructions button in top right - mobile only */}
-        <div className="lg:hidden absolute top-4 right-16 z-10">
+        {/* Instructions button center top - mobile only */}
+        <div className="lg:hidden absolute top-6 left-1/2 -translate-x-1/2 z-10">
           <InstructionsButton />
         </div>
+
+        {/* Auth Button in top right */}
+        <AuthButton />
         
         <div className="max-w-3xl w-full text-center space-y-8 bg-white/10 backdrop-blur-sm p-8 rounded-lg border border-white/10 shadow-2xl relative">
         
