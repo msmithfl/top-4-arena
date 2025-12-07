@@ -1,4 +1,4 @@
-import { SignedIn, SignedOut, SignInButton, UserButton, useUser } from "@clerk/clerk-react";
+import { SignedIn, SignedOut, UserButton, useUser } from "@clerk/clerk-react";
 import { useNavigate } from "react-router-dom";
 import { FaUserAstronaut } from "react-icons/fa";
 
@@ -19,11 +19,12 @@ const AuthButton = () => {
   return (
     <div className="absolute top-6 right-6 z-10">
       <SignedOut>
-        <SignInButton mode="modal">
-          <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-full transition-all duration-200 cursor-pointer">
-            Sign In
-          </button>
-        </SignInButton>
+        <button 
+          onClick={() => navigate('/sign-in')}
+          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-full transition-all duration-200 cursor-pointer"
+        >
+          Sign In
+        </button>
       </SignedOut>
       
       <SignedIn>
