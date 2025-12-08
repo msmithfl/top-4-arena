@@ -4,13 +4,15 @@ import { useEffect, useState } from 'react';
 const LeaderboardSection = () => {
   const [leaderboardData, setLeaderboardData] = useState<Array<{ username: string; bestRun: number }>>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [timePeriod, setTimePeriod] = useState<'all-time' | 'weekly' | 'daily'>('all-time');
 
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5157';
 
   useEffect(() => {
     const fetchLeaderboard = async () => {
+      setIsLoading(true);
       try {
-        const response = await fetch(`${API_URL}/api/leaderboard`);
+        const response = await fetch(`${API_URL}/api/leaderboard?period=${timePeriod}`);
         if (response.ok) {
           const data = await response.json();
           setLeaderboardData(data);
@@ -23,7 +25,7 @@ const LeaderboardSection = () => {
     };
 
     fetchLeaderboard();
-  }, []);
+  }, [timePeriod]);
 
   const getRankColor = (rank: number) => {
     if (rank === 1) return "text-yellow-400";
@@ -38,7 +40,18 @@ const LeaderboardSection = () => {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Leaderboard - 3/4 width */}
           <div className="lg:col-span-3">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">Leaderboards</h2>
+            <div className="flex items-center gap-4 mb-6">
+              <h2 className="text-3xl md:text-4xl font-bold">Leaderboards</h2>
+              <select 
+                value={timePeriod}
+                onChange={(e) => setTimePeriod(e.target.value as 'all-time' | 'weekly' | 'daily')}
+                className="bg-[#2C3440] border border-white/10 text-white rounded-lg px-4 py-2 font-bold cursor-pointer hover:bg-[#3C4450] transition-colors"
+              >
+                <option value="all-time">All Time</option>
+                <option value="weekly">Weekly</option>
+                <option value="daily">Daily</option>
+              </select>
+            </div>
             {/* Header Row */}
             <div className="md:w-11/12 px-4 py-2 mb-2">
               <div className="flex items-center gap-4">

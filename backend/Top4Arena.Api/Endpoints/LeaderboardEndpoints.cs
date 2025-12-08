@@ -11,10 +11,24 @@ public static class LeaderboardEndpoints
         var group = app.MapGroup("/api/leaderboard");
 
         // Get top 10 leaderboard (public - no auth required)
-        group.MapGet("", async (AppDbContext db) =>
+        group.MapGet("", async (AppDbContext db, string? period) =>
         {
-            var leaderboard = await db.Users
-                .Where(u => u.BestRun > 0)
+            var query = db.Users.Where(u => u.BestRun > 0);
+
+            // Filter by time period
+            if (period == "daily")
+            {
+                var yesterday = DateTime.UtcNow.AddDays(-1);
+                query = query.Where(u => u.LastHighScoreAt.HasValue && u.LastHighScoreAt >= yesterday);
+            }
+            else if (period == "weekly")
+            {
+                var lastWeek = DateTime.UtcNow.AddDays(-7);
+                query = query.Where(u => u.LastHighScoreAt.HasValue && u.LastHighScoreAt >= lastWeek);
+            }
+            // "all-time" or null - no additional filtering
+
+            var leaderboard = await query
                 .OrderByDescending(u => u.BestRun)
                 .ThenByDescending(u => u.HighestCombo)
                 .Take(10)
@@ -57,6 +71,7 @@ public static class LeaderboardEndpoints
             if (request.Round > user.BestRun)
             {
                 user.BestRun = request.Round;
+                user.LastHighScoreAt = DateTime.UtcNow;
             }
 
             // Update highest combo if current combo is higher
