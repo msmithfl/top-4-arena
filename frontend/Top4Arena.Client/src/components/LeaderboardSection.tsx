@@ -1,4 +1,3 @@
-import { Trophy } from 'lucide-react';
 import { GiLaurelsTrophy } from 'react-icons/gi';
 
 const LeaderboardSection = () => {
@@ -16,10 +15,10 @@ const LeaderboardSection = () => {
     { rank: 10, username: "CreditCrawler", bestRun: 8, topCombo: 16200 }
   ];
 
-  const formatCombo = (combo: number) => {
-    if (combo >= 1000) return `${(combo / 1000).toFixed(1)}k`;
-    return combo.toString();
-  };
+  // const formatCombo = (combo: number) => {
+  //   if (combo >= 1000) return `${(combo / 1000).toFixed(1)}k`;
+  //   return combo.toString();
+  // };
 
   const getRankColor = (rank: number) => {
     if (rank === 1) return "text-yellow-400";
@@ -31,51 +30,60 @@ const LeaderboardSection = () => {
   return (
     <div id="leaderboard-section" className="w-full px-6 pb-6 pt-4 bg-[#14181C]">
       <div className="max-w-5xl mx-auto">
-        <div className="text-center mb-8">
-          <h2 className="text-3xl md:text-4xl font-bold mb-2">Global Leaderboard</h2>
-          <p className="text-white/70">Top players ranked by highest round reached</p>
-        </div>
-
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Leaderboard - 3/4 width */}
           <div className="lg:col-span-3">
-            <h3 className="text-lg font-bold mb-1">ALL TIME</h3>
-            <div className="md:w-11/12 h-px bg-white/50 mb-3"></div>
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">Leaderboards</h2>
+            {/* Header Row */}
+            <div className="md:w-11/12 px-4 py-2 mb-2">
+              <div className="flex items-center gap-4">
+                <div className="w-9 md:w-26 text-center">
+                  <p className="text-white/50 text-xs font-bold">RANK</p>
+                </div>
+                <div className="flex-1">
+                  <p className="text-white/50 text-xs font-bold">USERNAME</p>
+                </div>
+                <div className="flex gap-6">
+                  <div className="w-24 text-right md:text-left">
+                    <p className="text-white/50 text-xs font-bold">ROUND</p>
+                  </div>
+                  {/* <div className="w-px"></div>
+                  <div className="w-24 text-right">
+                    <p className="text-white/50 text-xs font-bold">TOP COMBO</p>
+                  </div> */}
+                </div>
+              </div>
+            </div>
 
-            <div className="md:w-11/12 space-y-2 max-h-[500px] md:max-h-[1200px] overflow-y-auto scrollbar-thin pr-4 md:pr-0">
+            <div className="md:w-11/12 space-y-2 max-h-[600px] md:max-h-[1200px] overflow-y-auto scrollbar-thin">
               {leaderboardData.map((player) => (
                 <div
                   key={player.rank}
                   className="bg-white/10 rounded-lg border border-white/20 px-4 py-2 hover:bg-white/15 transition-colors"
                 >
-                  <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-                    {/* Top row: Rank and Username */}
-                    <div className="flex items-center gap-4 flex-1">
-                      {/* Rank */}
-                      <div className={`flex items-center gap-2 w-16 ${getRankColor(player.rank)} font-bold text-xl`}>
-                        {player.rank === 1 && <Trophy className="w-5 h-5 text-yellow-400" />}
-                        {player.rank === 2 && <Trophy className="w-5 h-5 text-gray-400" />}
-                        {player.rank === 3 && <Trophy className="w-5 h-5 text-amber-600" />}
-                        <span>#{player.rank}</span>
-                      </div>
-
-                      {/* Username */}
-                      <div className="flex-1">
-                        <p className="font-bold text-white md:text-lg">{player.username}</p>
-                      </div>
+                  <div className="flex items-center gap-4">
+                    {/* Rank */}
+                    <div className={`flex justify-center gap-2 w-9 md:w-26 ${getRankColor(player.rank)} font-bold text-xl`}>
+                      {player.rank === 1}
+                      {player.rank === 2}
+                      {player.rank === 3}
+                      <span>{player.rank}</span>
                     </div>
 
-                    {/* Stats - Second row on mobile, same row on desktop */}
-                    <div className="flex gap-6 text-left md:text-right ml-20 md:ml-0">
-                      <div>
-                        <p className="text-white/50 text-xs mb-1">BEST RUN</p>
-                        <p className="font-bold text-white text-lg">Round {player.bestRun}</p>
+                    {/* Username */}
+                    <div className="flex-1">
+                      <p className="text-white md:text-lg">{player.username}</p>
+                    </div>
+
+                    {/* Stats */}
+                    <div className="flex gap-6 text-right md:text-left">
+                      <div className="w-24">
+                        <p className="text-white text-lg">{player.bestRun}</p>
                       </div>
-                      <div className="w-px bg-white/20"></div>
-                      <div>
-                        <p className="text-white/50 text-xs mb-1">TOP COMBO</p>
+                      {/* <div className="w-px bg-white/20"></div>
+                      <div className="w-24">
                         <p className="font-bold text-orange-400 text-lg">{formatCombo(player.topCombo)}</p>
-                      </div>
+                      </div> */}
                     </div>
                   </div>
                 </div>
