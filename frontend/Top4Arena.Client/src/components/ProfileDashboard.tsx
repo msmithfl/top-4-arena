@@ -461,7 +461,15 @@ const ProfileDashboard = () => {
           </button>
           
           <button
-            onClick={() => navigate('/leaderboard')}
+            onClick={() => {
+              navigate('/');
+              setTimeout(() => {
+                const leaderboardSection = document.getElementById('leaderboard-section');
+                if (leaderboardSection) {
+                  leaderboardSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+              }, 100);
+            }}
             className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-6 rounded-lg transition-all cursor-pointer"
           >
             View Leaderboard
