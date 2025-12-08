@@ -299,7 +299,7 @@ const ProfileDashboard = () => {
             <h2 className="text-lg font-bold mb-1">TOP 4</h2>
             <div className="md:w-11/12 h-px bg-white/50 mb-3"></div>
 
-            <div className="grid md:w-11/12 grid-cols-4 gap-4 relative">
+            <div className="grid md:w-11/12 grid-cols-4 gap-2 md:gap-4 relative">
               {isLoadingTop4 && (
                 <div className="absolute inset-0 bg-[#14181C]/80 backdrop-blur-sm z-10 flex items-center justify-center rounded-lg">
                   <img 
@@ -348,7 +348,7 @@ const ProfileDashboard = () => {
             </div>
 
             {/* Use Top 4 by Default Checkbox */}
-            <div className="mt-4 mb-4">
+            <div className="mt-4 mb-8">
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="checkbox"
@@ -450,7 +450,7 @@ const ProfileDashboard = () => {
           )}
 
         {/* Quick Actions */}
-        <h2 className="text-lg font-bold mb-1">QUICK ACTIONS</h2>
+        <h2 className="text-lg font-bold mt-6 mb-1">QUICK ACTIONS</h2>
         <div className="w-full h-px bg-white/50 mb-3"></div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
           <button
