@@ -14,7 +14,7 @@ Top 4 Arena is a rougelike deckbuilder web app where you use movie cards to batt
 ## Tech Stack
 
 - **React/Vercel** - Frontend
-- **ASP.NET/Railway** - Backend
+- **ASP.NET Core/Railway** - Backend
 - **PostgreSQL** - Database
 - **Clerk** - User Authentication
 - **TMDB API** - Movie Data
