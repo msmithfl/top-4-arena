@@ -5,20 +5,16 @@ Top 4 Arena is a rougelike deckbuilder web app where you use movie cards to batt
 
 ### As of v0.2.0:
 
-- **Procedurally Generated Cards**: Using TMDB (The Movie Database), we generate cards from any film possible to build out your deck how you choose. Rating is mapped to a card's attack, while runtime is mapped to a card's defense. Other attributes like genre, era, cast/crew and more are used to pair cards together for multiplying attack and defense strength.
-
+- **Procedurally Generated Cards**: Using TMDB (The Movie Database), we generate cards from any film possible to build out your deck in a multitude of ways. Rating is mapped to a card's attack, while runtime is mapped to a card's defense. Other attributes like genre, era, cast/crew and more are used to pair cards together for multiplying attack and defense strength.
 - **Ticket Booth**: Each round will earn you 1 or more tickets that can be used either to upgrade card strength or get a new card from a variety of card packs. 
-
 - **Awards**: Earn awards for dealing massive damage, finding unique synergies, surviving difficult bosses and more. Awards also give users access to custom titles that show off their achievement.
-
-- **Profiles**: Custom user profiles allowing for setting a Top 4 starting preset, viewing awards and recent game stats
-
-- **Leaderboards**: Compete against the ranks in a daily, weekly and all time leaderboard.
+- **Profiles**: Custom user profiles allowing Top 4 starting presets, viewing awards and recent game stats.
+- **Leaderboards**: Compete against the ranks with a daily, weekly and all time leaderboard.
 
 ## Tech Stack
 
-- **Vercel** - Frontend Deployment
-- **Railway** - Backend Deployment
+- **React/Vercel** - Frontend
+- **ASP.NET/Railway** - Backend
 - **PostgreSQL** - Database
 - **Clerk** - User Authentication
 - **TMDB API** - Movie Data
