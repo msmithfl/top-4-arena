@@ -29,7 +29,7 @@ const LeaderboardSection = () => {
   };
 
   return (
-    <div className="w-full px-6 pb-12 bg-[#14181C]">
+    <div id="leaderboard-section" className="w-full px-6 pb-6 pt-4 bg-[#14181C]">
       <div className="max-w-5xl mx-auto">
         <div className="text-center mb-8">
           <h2 className="text-3xl md:text-4xl font-bold mb-2">Global Leaderboard</h2>
@@ -42,7 +42,7 @@ const LeaderboardSection = () => {
             <h3 className="text-lg font-bold mb-1">ALL TIME</h3>
             <div className="md:w-11/12 h-px bg-white/50 mb-3"></div>
 
-            <div className="md:w-11/12 space-y-2  max-h-[500px] md:max-h-[1200px] overflow-y-auto scrollbar-thin pr-4">
+            <div className="md:w-11/12 space-y-2 max-h-[500px] md:max-h-[1200px] overflow-y-auto scrollbar-thin pr-4 md:pr-0">
               {leaderboardData.map((player) => (
                 <div
                   key={player.rank}
@@ -87,16 +87,16 @@ const LeaderboardSection = () => {
           <div className="lg:col-span-1">
             <div className="flex items-center justify-between mb-1">
               <h3 className="text-lg font-bold">AWARDS</h3>
-              <span className="text-white/50 md:mr-5">0/12</span>
+              {/* <span className="text-white/50 md:mr-5">0/12</span> */}
             </div>
-            <div className="md:w-11/12 h-px bg-white/50 mb-3"></div>
-            <div className="grid grid-cols-3 md:grid-cols-2 gap-4 max-h-[220px] md:max-h-[1200px] overflow-y-auto scrollbar-thin pr-4">
+            <div className="h-px bg-white/50 mb-3"></div>
+            <div className="grid grid-cols-3 md:grid-cols-2 gap-4 max-h-[220px] md:max-h-[1200px] overflow-y-auto scrollbar-thin pr-4 md:pr-0">
               {[...Array(12)].map((_, index) => (
                 <div
                   key={index}
                   className="bg-white/10 p-6 rounded-lg border border-white/20 flex items-center justify-center aspect-square hover:bg-white/15 transition-colors relative isolate"
                 >
-                  <GiLaurelsTrophy className="w-12 h-12 text-yellow-400" />
+                  <GiLaurelsTrophy className="w-14 h-12 text-yellow-400" />
                 </div>
               ))}
             </div>

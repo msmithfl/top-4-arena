@@ -65,7 +65,7 @@ const PatchNotes: React.FC<PatchNotesProps> = ({ isOpen, onClose, version }) => 
           </div>
 
           {/* Content */}
-          <div className="flex-1 overflow-y-auto p-6 space-y-6">
+          <div className="flex-1 overflow-y-auto scrollbar-thin p-6 mr-2 my-2 space-y-6">
             {/* New Features */}
             <div>
               <h3 className="text-lg font-bold text-orange-400 mb-3 flex items-center gap-2">
