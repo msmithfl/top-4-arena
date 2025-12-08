@@ -4,6 +4,8 @@ import { useState } from 'react'
 import MovieCarousel from './MovieCarousel';
 import Footer from './Footer';
 import Header from './Header';
+import PatchNotes from './PatchNotes';
+import LeaderboardSection from './LeaderboardSection';
 //import UserTest from './UserTest';
 import packageJson from '../../package.json';
 
@@ -16,6 +18,7 @@ const LandingPage = () => {
     message: `\n\n---\nFeedback for Top 4 Arena v${APP_VERSION}\n`
   })
   const [isPanelOpen, setIsPanelOpen] = useState(false)
+  const [isPatchNotesOpen, setIsPatchNotesOpen] = useState(false)
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -38,7 +41,12 @@ const LandingPage = () => {
         {/* Title */}
         <div className="mb-2 mt-8 md:mb-6 w-full text-center">
           <h1 className="pb-2 md:pb-0 text-5xl md:text-7xl font-bold text-white bg-clip-text">
-            TOP 4 ARENA<span className='text-xs text-amber-300 md:inline block'>EARLY ACCESSv{packageJson.version}</span>
+            TOP 4 ARENA<span 
+              onClick={() => setIsPatchNotesOpen(true)}
+              className='text-xs text-amber-300 md:inline block cursor-pointer hover:underline transition-colors'
+            >
+              EARLY ACCESSv{packageJson.version}
+            </span>
           <p className="pt-4 text-xl md:text-2xl text-gray-300 ">Movie Battle Deckbuilder</p>
           </h1>
         </div>
@@ -81,6 +89,9 @@ const LandingPage = () => {
       <div className="w-screen" style={{ minHeight: '320px' }}>
         <MovieCarousel />
       </div>
+
+      {/* Leaderboard Section */}
+      <LeaderboardSection />
 
       {/* Sliding Feedback Panel */}
       <div
@@ -141,6 +152,13 @@ const LandingPage = () => {
           className="fixed inset-0 bg-black/50 z-40"
         />
       )}
+
+      {/* Patch Notes Modal */}
+      <PatchNotes 
+        isOpen={isPatchNotesOpen}
+        onClose={() => setIsPatchNotesOpen(false)}
+        version={APP_VERSION}
+      />
 
       {/* Footer */}
       <Footer onFeedbackClick={() => setIsPanelOpen(true)} />

@@ -461,10 +461,10 @@ const ProfileDashboard = () => {
           </button>
           
           <button
-            disabled
-            className="bg-white/10 text-white/50 font-bold py-4 px-6 rounded-lg cursor-not-allowed"
+            onClick={() => navigate('/leaderboard')}
+            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-6 rounded-lg transition-all cursor-pointer"
           >
-            View Leaderboard (Coming Soon)
+            View Leaderboard
           </button>
         </div>
         </div>
