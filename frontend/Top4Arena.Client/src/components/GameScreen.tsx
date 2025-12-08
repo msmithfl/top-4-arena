@@ -78,7 +78,7 @@ const GameScreen: React.FC = () => {
     
     try {
       const token = await getToken();
-      await fetch(`${API_URL}/api/users/me/stats`, {
+      await fetch(`${API_URL}/api/leaderboard/submit`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -90,7 +90,7 @@ const GameScreen: React.FC = () => {
         })
       });
     } catch (err) {
-      console.error('Failed to update user stats:', err);
+      console.error('Failed to update leaderboard:', err);
     }
   };
   

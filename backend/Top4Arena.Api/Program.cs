@@ -92,6 +92,7 @@ app.MapGet("/api/health", () => Results.Ok(new { status = "healthy", timestamp =
 app.MapWebhookEndpoints();
 app.MapUserEndpoints();
 app.MapTop4PresetEndpoints();
+app.MapLeaderboardEndpoints();
 
 await app.MigrateDbAsync();
 
