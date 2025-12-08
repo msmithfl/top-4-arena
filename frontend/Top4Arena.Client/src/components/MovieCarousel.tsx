@@ -38,7 +38,7 @@ const MovieCarousel: React.FC = () => {
   }
 
   return (
-    <div className="w-screen pt-8 pb-10">
+    <div className="w-screen pt-8">
       <Marquee speed={50} gradient={false}>
         {posters.map((poster, idx) => (
           <div
