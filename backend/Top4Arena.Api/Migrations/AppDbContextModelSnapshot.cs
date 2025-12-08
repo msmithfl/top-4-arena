@@ -72,6 +72,9 @@ namespace Top4Arena.Api.Migrations
                     b.Property<int>("HighestCombo")
                         .HasColumnType("integer");
 
+                    b.Property<DateTime?>("LastHighScoreAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("LastName")
                         .HasColumnType("text");
 

@@ -13,4 +13,5 @@ public class User
     public int BestRun { get; set; } = 0; // Furthest round reached
     public int TotalGames { get; set; } = 0;
     public int HighestCombo { get; set; } = 0; // Highest damage dealt in single attack
+    public DateTime? LastHighScoreAt { get; set; } // When the best run was achieved
 }
