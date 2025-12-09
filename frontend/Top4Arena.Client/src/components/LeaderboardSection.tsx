@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 const LeaderboardSection = () => {
   const [leaderboardData, setLeaderboardData] = useState<Array<{ username: string; bestRun: number }>>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [timePeriod, setTimePeriod] = useState<'all-time' | 'weekly' | 'daily'>('all-time');
+  const [timePeriod, setTimePeriod] = useState<'all-time' | 'weekly' | 'daily'>('daily');
 
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5157';
 
@@ -45,11 +45,11 @@ const LeaderboardSection = () => {
               <select 
                 value={timePeriod}
                 onChange={(e) => setTimePeriod(e.target.value as 'all-time' | 'weekly' | 'daily')}
-                className="bg-[#2C3440] border border-white/10 text-white rounded-lg px-4 py-2 font-bold cursor-pointer hover:bg-[#3C4450] transition-colors"
+                className="bg-[#2C3440] border border-white/10 text-white rounded-lg px-2 py-2 font-bold cursor-pointer hover:bg-[#3C4450] transition-colors"
               >
+                <option value="daily">Last 24 Hours</option>
+                <option value="weekly">Last 7 Days</option>
                 <option value="all-time">All Time</option>
-                <option value="weekly">Weekly</option>
-                <option value="daily">Daily</option>
               </select>
             </div>
             {/* Header Row */}
