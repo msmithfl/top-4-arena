@@ -9,6 +9,7 @@ public class AppDbContext : DbContext
 
     public DbSet<User> Users { get; set; }
     public DbSet<Top4Preset> Top4Presets { get; set; }
+    public DbSet<GameSession> GameSessions { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -27,6 +28,17 @@ public class AppDbContext : DbContext
                 .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasIndex(t => t.UserId);
+        });
+
+        builder.Entity<GameSession>(entity =>
+        {
+            entity.HasKey(g => g.Id);
+            entity.HasOne(g => g.User)
+                .WithMany()
+                .HasForeignKey(g => g.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+            entity.HasIndex(g => g.UserId);
+            entity.HasIndex(g => g.PlayedAt);
         });
     }
 }

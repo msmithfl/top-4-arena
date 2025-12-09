@@ -10,8 +10,11 @@ public class User
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     
     // Game stats
-    public int BestRun { get; set; } = 0; // Furthest round reached
+    public int BestRun { get; set; } = 0; // All-time furthest round reached
     public int TotalGames { get; set; } = 0;
     public int HighestCombo { get; set; } = 0; // Highest damage dealt in single attack
-    public DateTime? LastHighScoreAt { get; set; } // When the best run was achieved
+    
+    // Period leaderboard tracking
+    public int LastGameRound { get; set; } = 0; // Round reached in most recent game
+    public DateTime? LastGameAt { get; set; } // When the last game was played
 }
