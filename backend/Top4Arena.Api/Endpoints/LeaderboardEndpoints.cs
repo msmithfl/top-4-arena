@@ -9,10 +9,12 @@ public static class LeaderboardEndpoints
 {
     public static void MapLeaderboardEndpoints(this IEndpointRouteBuilder app)
     {
-        var group = app.MapGroup("/api/leaderboard");
+        //var group = app.MapGroup("/api/leaderboard");
+        var leaderboardGroup = app.MapGroup("/api/leaderboard");
+        var gameGroup = app.MapGroup("/api/game");
 
         // Get top 10 leaderboard (public - no auth required)
-        group.MapGet("", async (AppDbContext db, string? period) =>
+        leaderboardGroup.MapGet("", async (AppDbContext db, string? period) =>
         {
             if (period == "daily" || period == "weekly")
             {
@@ -64,18 +66,70 @@ public static class LeaderboardEndpoints
         .WithName("GetLeaderboard")
         .AllowAnonymous();
 
+        gameGroup.MapPost("/init", async (HttpContext context, AppDbContext db) =>
+        {
+            var userId = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            // Guest users: return a temporary client-side token
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Results.Ok(new { 
+                    gameId = $"guest-{Guid.NewGuid()}", 
+                    isGuest = true 
+                });
+            }
+
+            var gameToken = new GameToken
+            {
+                Id = Guid.NewGuid().ToString(),
+                UserId = userId,
+                CreatedAt = DateTime.UtcNow,
+                ExpiresAt = DateTime.UtcNow.AddHours(10),
+                Used = false
+            };
+
+            db.GameTokens.Add(gameToken);
+            await db.SaveChangesAsync();
+
+            return Results.Ok(new { gameId = gameToken.Id, isGuest = false });
+        })
+        .WithName("InitGame")
+        .AllowAnonymous(); // Allow guests!
+
         // Submit score (requires authentication)
-        group.MapPost("/submit", async (HttpContext context, AppDbContext db, SubmitScoreRequest request) =>
+        leaderboardGroup.MapPost("/submit", async (HttpContext context, AppDbContext db, SubmitScoreRequest request) =>
         {
             var userId = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             
             if (string.IsNullOrEmpty(userId))
-                return Results.Unauthorized();
+                return Results.Ok(new { message = "Sign in to save your score to the leaderboard!" });
 
             var user = await db.Users.FindAsync(userId);
             
             if (user == null)
                 return Results.NotFound(new { error = "User not found" });
+
+            if (!request.gameId.StartsWith("guest-"))
+            {
+                // Token validation
+                var gameToken = await db.GameTokens.FindAsync(request.gameId);
+                    
+                if (gameToken == null || gameToken.UserId != userId || gameToken.Used)
+                    return Results.BadRequest(new { error = "Invalid game session" });
+                    
+                // Simple time check (15 seconds per round minimum)
+                var duration = DateTime.UtcNow - gameToken.CreatedAt;
+                var minDuration = TimeSpan.FromSeconds(request.Round * 15);
+                    
+                if (duration < minDuration)
+                    return Results.BadRequest(new { error = "Game completed too quickly" });
+
+                // Check if token is expired
+                if (DateTime.UtcNow > gameToken.ExpiresAt)
+                    return Results.BadRequest(new { error = "Game session expired" });
+                    
+                // Mark as used
+                gameToken.Used = true;
+            }
 
             // Flag suspicious submissions
             if (request.Round > 100)
@@ -123,4 +177,4 @@ public static class LeaderboardEndpoints
     }
 }
 
-public record SubmitScoreRequest(int Round, int? HighestCombo);
+public record SubmitScoreRequest(string gameId, int Round, int? HighestCombo);

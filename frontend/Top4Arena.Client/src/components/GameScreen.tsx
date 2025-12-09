@@ -61,6 +61,7 @@ const GameScreen: React.FC = () => {
   const [round, setRound] = useState(1);
   const [isAttacking, setIsAttacking] = useState(false);
   const [tickets, setTickets] = useState(0);
+  const [gameId, setGameId] = useState<string | null>(null);
   
   // Game stats tracking
   const [gameStats, setGameStats] = useState({
@@ -74,21 +75,33 @@ const GameScreen: React.FC = () => {
   });
   
   const updateUserStats = async (finalRound: number) => {
-    if (!isSignedIn) return;
+    // Guests can't submit scores
+    if (!isSignedIn || !gameId) {
+      console.log('Guest user - score not saved to leaderboard');
+      return;
+    }
     
     try {
       const token = await getToken();
-      await fetch(`${API_URL}/api/leaderboard/submit`, {
+      const response = await fetch(`${API_URL}/api/leaderboard/submit`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({ 
+          gameId: gameId,
           round: finalRound,
           highestCombo: gameStats.bestHand.score
         })
       });
+      
+      const data = await response.json();
+      
+      // Optional: Show message to guest users
+      if (data.message) {
+        console.log(data.message); // "Sign in to save your score to the leaderboard!"
+      }
     } catch (err) {
       console.error('Failed to update leaderboard:', err);
     }
@@ -104,6 +117,26 @@ const GameScreen: React.FC = () => {
       try {
         setIsLoading(true);
         setError(null);
+
+        // Get game token (works for both guests and authenticated users)
+        let gameIdFromServer = `guest-${Date.now()}`; // Fallback for guests
+        
+        try {
+          const token = isSignedIn ? await getToken() : null;
+          const initResponse = await fetch(`${API_URL}/api/game/init`, {
+            method: 'POST',
+            headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+          });
+          
+          if (initResponse.ok) {
+            const { gameId } = await initResponse.json();
+            gameIdFromServer = gameId;
+          }
+        } catch (initErr) {
+          console.log('Playing as guest - scores will not be saved');
+        }
+        
+        setGameId(gameIdFromServer);
 
         // Fetch deck from random page (1-100) for variety
         const randomPage = Math.floor(Math.random() * 100) + 1;
@@ -167,7 +200,7 @@ const GameScreen: React.FC = () => {
     return () => {
       isMounted = false;
     };
-  }, [pickedMovies]);
+  }, [pickedMovies, isSignedIn]);
 
   const toggleCardSelection = (cardId: number) => {
     if (isAttacking) return;
