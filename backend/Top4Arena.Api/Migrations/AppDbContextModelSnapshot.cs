@@ -22,6 +22,36 @@ namespace Top4Arena.Api.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("Top4Arena.Api.Models.Entities.GameSession", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("HighestCombo")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("PlayedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Round")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PlayedAt");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("GameSessions");
+                });
+
             modelBuilder.Entity("Top4Arena.Api.Models.Entities.Top4Preset", b =>
                 {
                     b.Property<int>("Id")
@@ -72,8 +102,11 @@ namespace Top4Arena.Api.Migrations
                     b.Property<int>("HighestCombo")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime?>("LastHighScoreAt")
+                    b.Property<DateTime?>("LastGameAt")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("LastGameRound")
+                        .HasColumnType("integer");
 
                     b.Property<string>("LastName")
                         .HasColumnType("text");
@@ -88,6 +121,17 @@ namespace Top4Arena.Api.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("Top4Arena.Api.Models.Entities.GameSession", b =>
+                {
+                    b.HasOne("Top4Arena.Api.Models.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Top4Arena.Api.Models.Entities.Top4Preset", b =>
