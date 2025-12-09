@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Top4Arena.Api.Models.Entities;
 using System.Security.Claims;
 using Top4Arena.Api.Data;
 
@@ -13,33 +14,52 @@ public static class LeaderboardEndpoints
         // Get top 10 leaderboard (public - no auth required)
         group.MapGet("", async (AppDbContext db, string? period) =>
         {
-            var query = db.Users.Where(u => u.BestRun > 0);
-
-            // Filter by time period
-            if (period == "daily")
+            if (period == "daily" || period == "weekly")
             {
-                var yesterday = DateTime.UtcNow.AddDays(-1);
-                query = query.Where(u => u.LastHighScoreAt.HasValue && u.LastHighScoreAt >= yesterday);
+                DateTime periodStart = period == "daily"
+                    ? DateTime.UtcNow.Date.AddDays(-1)
+                    : DateTime.UtcNow.Date.AddDays(-7);
+
+                // Get best round per user in the period
+                var leaderboard = await db.GameSessions
+                    .Where(gs => gs.PlayedAt >= periodStart)
+                    .GroupBy(gs => gs.UserId)
+                    .Select(g => new
+                    {
+                        UserId = g.Key,
+                        bestRun = g.Max(x => x.Round)
+                    })
+                    .OrderByDescending(x => x.bestRun)
+                    .Take(10)
+                    .Join(db.Users,
+                        g => g.UserId,
+                        u => u.Id,
+                        (g, u) => new
+                        {
+                            username = u.Username,
+                            bestRun = g.bestRun
+                        })
+                    .ToListAsync();
+
+                return Results.Ok(leaderboard);
             }
-            else if (period == "weekly")
+            else
             {
-                var lastWeek = DateTime.UtcNow.AddDays(-7);
-                query = query.Where(u => u.LastHighScoreAt.HasValue && u.LastHighScoreAt >= lastWeek);
+                // "all-time" - use BestRun from User table
+                var allTimeLeaderboard = await db.Users
+                    .Where(u => u.BestRun > 0)
+                    .OrderByDescending(u => u.BestRun)
+                    .ThenByDescending(u => u.HighestCombo)
+                    .Take(10)
+                    .Select(u => new
+                    {
+                        username = u.Username,
+                        bestRun = u.BestRun
+                    })
+                    .ToListAsync();
+
+                return Results.Ok(allTimeLeaderboard);
             }
-            // "all-time" or null - no additional filtering
-
-            var leaderboard = await query
-                .OrderByDescending(u => u.BestRun)
-                .ThenByDescending(u => u.HighestCombo)
-                .Take(10)
-                .Select(u => new
-                {
-                    username = u.Username,
-                    bestRun = u.BestRun
-                })
-                .ToListAsync();
-
-            return Results.Ok(leaderboard);
         })
         .WithName("GetLeaderboard")
         .AllowAnonymous();
@@ -67,11 +87,14 @@ public static class LeaderboardEndpoints
             // Update total games
             user.TotalGames++;
 
-            // Update best run if current round is higher
+            // Always track last game for daily/weekly leaderboards
+            user.LastGameRound = request.Round;
+            user.LastGameAt = DateTime.UtcNow;
+
+            // Update all-time best run if current round is higher
             if (request.Round > user.BestRun)
             {
                 user.BestRun = request.Round;
-                user.LastHighScoreAt = DateTime.UtcNow;
             }
 
             // Update highest combo if current combo is higher
@@ -79,6 +102,16 @@ public static class LeaderboardEndpoints
             {
                 user.HighestCombo = request.HighestCombo.Value;
             }
+
+            // Create a new GameSession record
+            var session = new GameSession
+            {
+                UserId = userId,
+                Round = request.Round,
+                HighestCombo = request.HighestCombo,
+                PlayedAt = DateTime.UtcNow
+            };
+            db.GameSessions.Add(session);
 
             await db.SaveChangesAsync();
 
