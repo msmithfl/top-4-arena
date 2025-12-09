@@ -83,7 +83,7 @@ public static class LeaderboardEndpoints
                 Id = Guid.NewGuid().ToString(),
                 UserId = userId,
                 CreatedAt = DateTime.UtcNow,
-                ExpiresAt = DateTime.UtcNow.AddHours(10),
+                ExpiresAt = DateTime.UtcNow.AddHours(2),
                 Used = false
             };
 
@@ -108,29 +108,29 @@ public static class LeaderboardEndpoints
             if (user == null)
                 return Results.NotFound(new { error = "User not found" });
 
-            GameToken? gameToken = null; // ✅ Declare OUTSIDE the block
+            GameToken? gameToken = null;
 
             // Token validation - only for non-guest tokens
             if (!request.gameId.StartsWith("guest-"))
             {
-                gameToken = await db.GameTokens.FindAsync(request.gameId); // ✅ Assign here
+                gameToken = await db.GameTokens.FindAsync(request.gameId); // Assign here
                     
                 if (gameToken == null || gameToken.UserId != userId || gameToken.Used)
                     return Results.BadRequest(new { error = "Invalid game session" });
                     
                 // Simple time check (15 seconds per round minimum)
                 var duration = DateTime.UtcNow - gameToken.CreatedAt;
-                var minDuration = TimeSpan.FromSeconds(request.Round * 15);
+                var minDuration = TimeSpan.FromSeconds(request.Round * 10);
                     
                 if (duration < minDuration)
                     return Results.BadRequest(new { error = "Game completed too quickly" });
 
                 // Check if token is expired
-                if (DateTime.UtcNow > gameToken.ExpiresAt)
-                    return Results.BadRequest(new { error = "Game session expired" });
+                // if (DateTime.UtcNow > gameToken.ExpiresAt)
+                //     return Results.BadRequest(new { error = "Game session expired" });
                     
                 // Mark as used
-                gameToken.Used = true; // ✅ This now works because gameToken is in scope
+                gameToken.Used = true;
             }
 
             // Flag suspicious submissions
