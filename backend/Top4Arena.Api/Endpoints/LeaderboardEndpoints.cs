@@ -87,10 +87,6 @@ public static class LeaderboardEndpoints
             // Update total games
             user.TotalGames++;
 
-            // Always track last game for daily/weekly leaderboards
-            user.LastGameRound = request.Round;
-            user.LastGameAt = DateTime.UtcNow;
-
             // Update all-time best run if current round is higher
             if (request.Round > user.BestRun)
             {
