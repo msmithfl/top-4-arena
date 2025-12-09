@@ -8,7 +8,7 @@ const AuthButton = () => {
 
   if (!isLoaded) {
     return (
-      <div className="absolute top-4 right-4 z-10">
+      <div className="z-10">
         <div className="bg-gray-600 text-transparent font-semibold py-2 px-6 rounded-full animate-pulse">
           Sign In
         </div>
