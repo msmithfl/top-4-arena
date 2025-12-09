@@ -108,10 +108,12 @@ public static class LeaderboardEndpoints
             if (user == null)
                 return Results.NotFound(new { error = "User not found" });
 
+            GameToken? gameToken = null; // ✅ Declare OUTSIDE the block
+
+            // Token validation - only for non-guest tokens
             if (!request.gameId.StartsWith("guest-"))
             {
-                // Token validation
-                var gameToken = await db.GameTokens.FindAsync(request.gameId);
+                gameToken = await db.GameTokens.FindAsync(request.gameId); // ✅ Assign here
                     
                 if (gameToken == null || gameToken.UserId != userId || gameToken.Used)
                     return Results.BadRequest(new { error = "Invalid game session" });
@@ -128,7 +130,7 @@ public static class LeaderboardEndpoints
                     return Results.BadRequest(new { error = "Game session expired" });
                     
                 // Mark as used
-                gameToken.Used = true;
+                gameToken.Used = true; // ✅ This now works because gameToken is in scope
             }
 
             // Flag suspicious submissions
@@ -163,7 +165,7 @@ public static class LeaderboardEndpoints
             };
             db.GameSessions.Add(session);
 
-            await db.SaveChangesAsync();
+            await db.SaveChangesAsync(); // ✅ Now EF can track gameToken changes
 
             return Results.Ok(new
             {
