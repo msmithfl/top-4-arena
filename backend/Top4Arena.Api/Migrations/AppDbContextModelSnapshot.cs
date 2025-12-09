@@ -52,6 +52,37 @@ namespace Top4Arena.Api.Migrations
                     b.ToTable("GameSessions");
                 });
 
+            modelBuilder.Entity("Top4Arena.Api.Models.Entities.GameToken", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("Used")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("ExpiresAt");
+
+                    b.HasIndex("Used");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("GameTokens");
+                });
+
             modelBuilder.Entity("Top4Arena.Api.Models.Entities.Top4Preset", b =>
                 {
                     b.Property<int>("Id")
@@ -118,6 +149,17 @@ namespace Top4Arena.Api.Migrations
                 });
 
             modelBuilder.Entity("Top4Arena.Api.Models.Entities.GameSession", b =>
+                {
+                    b.HasOne("Top4Arena.Api.Models.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Top4Arena.Api.Models.Entities.GameToken", b =>
                 {
                     b.HasOne("Top4Arena.Api.Models.Entities.User", "User")
                         .WithMany()
