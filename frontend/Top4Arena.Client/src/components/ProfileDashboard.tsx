@@ -2,7 +2,7 @@ import { useUser, useAuth } from "@clerk/clerk-react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, X, Search, Plus, Edit2 } from "lucide-react";
 import { GiLaurelsTrophy } from "react-icons/gi";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { fetchMovieDetails } from "../utils/tmdbApi";
 import Footer from "./Footer";
 import spinnerImg from '../assets/imgs/top4-spinner.png';
@@ -33,6 +33,21 @@ const ProfileDashboard = () => {
   const [userAwards, setUserAwards] = useState<string[]>([]);
   const [selectedAwardHover, setSelectedAwardHover] = useState<{awardId: string, awardTitle: string, description: string} | null>(null);
   const [tooltipPosition, setTooltipPosition] = useState<{top: number, left: number} | null>(null);
+  const hoveredElementRef = useRef<HTMLDivElement | null>(null);
+  // Keep tooltip positioned next to hovered award, even on scroll
+  useEffect(() => {
+    const updateTooltipPosition = () => {
+      if (hoveredElementRef.current && selectedAwardHover) {
+        const rect = hoveredElementRef.current.getBoundingClientRect();
+        setTooltipPosition({
+          top: rect.top,
+          left: rect.left + rect.width / 2
+        });
+      }
+    };
+    window.addEventListener('scroll', updateTooltipPosition, true);
+    return () => window.removeEventListener('scroll', updateTooltipPosition, true);
+  }, [selectedAwardHover]);
 
   const TMDB_API_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmODZmYTE3MzcwNzRmMzY3NzkwNzc1Y2Q1NTQwNmExYyIsIm5iZiI6MTY4NzYyNzAzOC40MDEsInN1YiI6IjY0OTcyNTFlYjM0NDA5MDBhZDUyNTY4YSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.YA8K57yrPNiM_UwefPB6Bv2t8fZdY_v1GD9AS3rRrU0';
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5157';
@@ -314,88 +329,118 @@ const loadUserAwards = async () => {
         </div>
       </div>
 
+
       {/* Main Content */}
       <div className="w-full px-6 md:p-6">
         <div className="max-w-5xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-4 mb-4">
-          {/* My Top 4 Films - 3/4 width */}
-          <div className="lg:col-span-3">
-            <h2 className="text-lg font-bold mb-1">TOP 4</h2>
-            <div className="md:w-11/12 h-px bg-white/50 mb-3"></div>
+          <div className="grid grid-cols-1 lg:grid-cols-4 mb-4">
+            {/* My Top 4 Films - 3/4 width */}
+            <div className="lg:col-span-3">
+              <h2 className="text-lg font-bold mb-1">TOP 4</h2>
+              <div className="md:w-11/12 h-px bg-white/50 mb-3"></div>
 
-            <div className="grid md:w-11/12 grid-cols-4 gap-2 md:gap-4 relative">
-              {isLoadingTop4 && (
-                <div className="absolute inset-0 bg-[#14181C]/80 backdrop-blur-sm z-10 flex items-center justify-center rounded-lg">
-                  <img 
-                    src={spinnerImg} 
-                    alt="Loading" 
-                    className="w-12 h-12 animate-spin" 
-                  />
-                </div>
-              )}
-              {[0, 1, 2, 3].map(index => (
-                <div
-                  key={index}
-                  className="bg-white/10 backdrop-blur-sm rounded-lg border border-white/20 overflow-hidden relative aspect-2/3 group"
-                >
-                  {top4Movies[index] ? (
-                    <>
-                      <img
-                        src={`https://image.tmdb.org/t/p/w300${top4Movies[index].poster_path}`}
-                        alt={top4Movies[index].title}
-                        className="w-full h-full object-cover"
-                      />
+              <div className="grid md:w-11/12 grid-cols-4 gap-2 md:gap-4 relative">
+                {isLoadingTop4 && (
+                  <div className="absolute inset-0 bg-[#14181C]/80 backdrop-blur-sm z-10 flex items-center justify-center rounded-lg">
+                    <img 
+                      src={spinnerImg} 
+                      alt="Loading" 
+                      className="w-12 h-12 animate-spin" 
+                    />
+                  </div>
+                )}
+                {[0, 1, 2, 3].map(index => (
+                  <div
+                    key={index}
+                    className="bg-white/10 backdrop-blur-sm rounded-lg border border-white/20 overflow-hidden relative aspect-2/3 group"
+                  >
+                    {top4Movies[index] ? (
+                      <>
+                        <img
+                          src={`https://image.tmdb.org/t/p/w300${top4Movies[index].poster_path}`}
+                          alt={top4Movies[index].title}
+                          className="w-full h-full object-cover"
+                        />
+                        <button
+                          onClick={() => handleOpenModal(index)}
+                          className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer"
+                        >
+                          <Edit2 className="w-12 h-12 text-white" />
+                        </button>
+                        <div className="absolute bottom-0 left-0 right-0 p-3 pointer-events-none">
+                          <p className="hidden text-white font-bold text-sm truncate">{top4Movies[index].title}</p>
+                          <p className="hidden text-white/70 text-xs">
+                            {top4Movies[index].release_date ? new Date(top4Movies[index].release_date).getFullYear() : 'N/A'}
+                          </p>
+                        </div>
+                      </>
+                    ) : (
                       <button
                         onClick={() => handleOpenModal(index)}
-                        className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer"
+                        className="w-full h-full flex flex-col items-center justify-center text-gray-500 hover:text-white hover:bg-white/5 transition-all cursor-pointer"
                       >
-                        <Edit2 className="w-12 h-12 text-white" />
+                        <Plus className="w-12 h-12 mb-2" />
+                        <span className="hidden md:block text-sm">Add Movie</span>
                       </button>
-                      <div className="absolute bottom-0 left-0 right-0 p-3 pointer-events-none">
-                        <p className="hidden text-white font-bold text-sm truncate">{top4Movies[index].title}</p>
-                        <p className="hidden text-white/70 text-xs">
-                          {top4Movies[index].release_date ? new Date(top4Movies[index].release_date).getFullYear() : 'N/A'}
-                        </p>
-                      </div>
-                    </>
-                  ) : (
-                    <button
-                      onClick={() => handleOpenModal(index)}
-                      className="w-full h-full flex flex-col items-center justify-center text-gray-500 hover:text-white hover:bg-white/5 transition-all cursor-pointer"
-                    >
-                      <Plus className="w-12 h-12 mb-2" />
-                      <span className="hidden md:block text-sm">Add Movie</span>
-                    </button>
-                  )}
-                </div>
-              ))}
-            </div>
+                    )}
+                  </div>
+                ))}
+              </div>
 
-            {/* Use Top 4 by Default Checkbox */}
-            <div className="mt-4 mb-8">
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={useAsDefault}
-                  onChange={(e) => setUseAsDefault(e.target.checked)}
-                  disabled={isSaving}
-                  className="w-6 h-6 rounded border-2 border-white/50 bg-[#14181C] checked:bg-[#14181C] checked:border-white/70 focus:ring-0 focus:ring-offset-0 cursor-pointer appearance-none relative checked:after:content-['✓'] checked:after:absolute checked:after:inset-0 checked:after:flex checked:after:items-center checked:after:justify-center checked:after:text-white checked:after:text-lg checked:after:font-bold checked:after:leading-none disabled:opacity-50"
-                />
-                <span className="text-white/70">PRESET TOP 4 {isSaving && '(Saving...)'}</span>
-              </label>
+              {/* Use Top 4 by Default Checkbox */}
+              <div className="mt-4 mb-8">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={useAsDefault}
+                    onChange={(e) => setUseAsDefault(e.target.checked)}
+                    disabled={isSaving}
+                    className="w-6 h-6 rounded border-2 border-white/50 bg-[#14181C] checked:bg-[#14181C] checked:border-white/70 focus:ring-0 focus:ring-offset-0 cursor-pointer appearance-none relative checked:after:content-['✓'] checked:after:absolute checked:after:inset-0 checked:after:flex checked:after:items-center checked:after:justify-center checked:after:text-white checked:after:text-lg checked:after:font-bold checked:after:leading-none disabled:opacity-50"
+                  />
+                  <span className="text-white/70">PRESET TOP 4 {isSaving && '(Saving...)'}</span>
+                </label>
+              </div>
+            </div>
+            {/* Quick Actions - 1/4 width */}
+            <div className="lg:col-span-1 flex flex-col justify-start">
+              <h2 className="text-lg font-bold mt-0 mb-1">QUICK ACTIONS</h2>
+              <div className="h-px bg-white/50 mb-3"></div>
+              <div className="grid grid-cols-1 gap-4 mb-8">
+                <button
+                  onClick={() => navigate('/game')}
+                  className="bg-linear-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 text-white font-bold py-4 px-6 rounded-lg transition-all cursor-pointer"
+                >
+                  Start Game
+                </button>
+                <button
+                  onClick={() => {
+                    navigate('/');
+                    setTimeout(() => {
+                      const leaderboardSection = document.getElementById('leaderboard-section');
+                      if (leaderboardSection) {
+                        leaderboardSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                      }
+                    }, 100);
+                  }}
+                  className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-6 rounded-lg transition-all cursor-pointer"
+                >
+                  View Leaderboard
+                </button>
+              </div>
             </div>
           </div>
 
-          {/* Awards - 1/4 width */}
-          <div className="lg:col-span-1">
+
+        {/* Awards - 1/4 width */}
+        <div className="mb-4">
+          <div>
             <div className="flex items-center justify-between mb-1">
               <h2 className="text-lg font-bold">AWARDS</h2>
-              <span className="text-white/50 md:mr-5">
+              <span className="text-white/50">
                 {userAwards.length}/{AWARDS.length}
               </span>
             </div>
-            <div className="md:w-11/12 h-px bg-white/50 mb-3"></div>
-            
+            <div className="h-px bg-white/50 mb-3"></div>
             {/* Fixed tooltip outside scroll container */}
             {selectedAwardHover && tooltipPosition && (
               <div 
@@ -416,21 +461,25 @@ const loadUserAwards = async () => {
                 </div>
               </div>
             )}
-            
-            <div className="grid grid-cols-3 md:grid-cols-2 gap-4 max-h-[220px] md:max-h-[400px] overflow-y-auto scrollbar-thin pr-4">
+            <div className="grid grid-cols-3 md:grid-cols-6 gap-4 pb-4">
               {AWARDS.map((award) => {
                 const isUnlocked = userAwards.includes(award.awardId);
-                
                 return (
                   <div
                     key={award.awardId}
+                    ref={el => {
+                      if (selectedAwardHover?.awardId === award.awardId) {
+                        hoveredElementRef.current = el;
+                      }
+                    }}
                     className={`backdrop-blur-sm p-6 rounded-lg border flex items-center justify-center aspect-square transition-all cursor-pointer ${
                       isUnlocked
                         ? 'bg-yellow-500/20 border-yellow-400/50 hover:bg-yellow-500/30'
                         : 'bg-white/10 border-white/20 grayscale opacity-50 hover:opacity-70'
                     }`}
-                    onMouseEnter={(e) => {
+                    onMouseEnter={e => {
                       setSelectedAwardHover(award);
+                      hoveredElementRef.current = e.currentTarget;
                       const rect = e.currentTarget.getBoundingClientRect();
                       setTooltipPosition({
                         top: rect.top,
@@ -440,6 +489,7 @@ const loadUserAwards = async () => {
                     onMouseLeave={() => {
                       setSelectedAwardHover(null);
                       setTooltipPosition(null);
+                      hoveredElementRef.current = null;
                     }}
                   >
                     <GiLaurelsTrophy 
@@ -520,33 +570,6 @@ const loadUserAwards = async () => {
               </div>
             </div>
           )}
-
-        {/* Quick Actions */}
-        <h2 className="text-lg font-bold mt-6 mb-1">QUICK ACTIONS</h2>
-        <div className="w-full h-px bg-white/50 mb-3"></div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-          <button
-            onClick={() => navigate('/game')}
-            className="bg-linear-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 text-white font-bold py-4 px-6 rounded-lg transition-all cursor-pointer"
-          >
-            Start New Game
-          </button>
-          
-          <button
-            onClick={() => {
-              navigate('/');
-              setTimeout(() => {
-                const leaderboardSection = document.getElementById('leaderboard-section');
-                if (leaderboardSection) {
-                  leaderboardSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-              }, 100);
-            }}
-            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-6 rounded-lg transition-all cursor-pointer"
-          >
-            View Leaderboard
-          </button>
-        </div>
         </div>
       </div>
       <div className="mt-auto">

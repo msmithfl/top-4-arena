@@ -38,7 +38,7 @@ const LeaderboardSection = () => {
         const rect = hoveredElementRef.current.getBoundingClientRect();
         setTooltipPosition({
           top: rect.top,
-          left: rect.left
+          left: rect.left + rect.width / 2
         });
       }
     };
@@ -132,7 +132,7 @@ const LeaderboardSection = () => {
             <div className="flex items-center justify-between mb-1">
               <h2 className="text-lg font-bold">AWARDS</h2>
             </div>
-            <div className="md:w-11/12 h-px bg-white/50 mb-3"></div>
+            <div className="h-px bg-white/50 mb-3"></div>
             
             {/* Fixed tooltip outside scroll container */}
             {selectedAwardHover && tooltipPosition && (
@@ -141,7 +141,7 @@ const LeaderboardSection = () => {
                 style={{
                   top: `${tooltipPosition.top}px`,
                   left: `${tooltipPosition.left}px`,
-                  transform: 'translate(0, calc(-100% - 10px))'
+                  transform: 'translate(-50%, calc(-100% - 10px))'
                 }}
               >
                 <div className="bg-black/95 border border-white/20 rounded-lg p-3 shadow-xl whitespace-nowrap">
@@ -155,7 +155,7 @@ const LeaderboardSection = () => {
               </div>
             )}
             
-            <div className="grid grid-cols-3 md:grid-cols-2 gap-4 max-h-full overflow-y-auto scrollbar-thin pr-4">
+            <div className="grid grid-cols-3 md:grid-cols-2 gap-4 max-h-full">
               {AWARDS.map((award) => {
                 return (
                   <div
@@ -172,7 +172,7 @@ const LeaderboardSection = () => {
                       const rect = e.currentTarget.getBoundingClientRect();
                       setTooltipPosition({
                         top: rect.top,
-                        left: rect.left
+                        left: rect.left + rect.width / 2
                       });
                     }}
                     onMouseLeave={() => {
