@@ -73,6 +73,26 @@ const GameScreen: React.FC = () => {
     genrePlayCount: {} as Record<string, number>,
     defeatedBy: null as string | null,
   });
+
+  const unlockAward = async (awardId: string) => {
+    if (!isSignedIn || !gameId) return;
+    
+    try {
+      const token = await getToken();
+
+      await fetch(`${API_URL}/api/users/awards/unlock`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ awardId })
+      });
+    }
+    catch (err) {
+      console.error('Failed to unlock award:', err);
+    }
+  };
   
   const updateUserStats = async (finalRound: number) => {
     // Guests can't submit scores
@@ -314,7 +334,14 @@ const GameScreen: React.FC = () => {
         // Track round completion
         if (round === 1) {
           track('completed_round_1');
-        } else if (round === 10) {
+        }
+        if (round === 2) {
+          unlockAward('round-2');
+        }
+        if (round === 5) {
+          unlockAward('round-5');
+        }
+        else if (round === 10) {
           track('completed_round_10');
         }
 

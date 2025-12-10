@@ -75,7 +75,59 @@ public static class UserEndpoints
             });
         })
         .WithName("UpdateUserStats");
+
+        // NEW: Get user's awards
+        group.MapGet("/awards", async (HttpContext context, AppDbContext db) =>
+        {
+            var userId = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            
+            if (string.IsNullOrEmpty(userId))
+                return Results.Unauthorized();
+
+            var user = await db.Users.FindAsync(userId);
+            
+            if (user == null)
+                return Results.NotFound(new { error = "User not found" });
+
+            return Results.Ok(new { awardIds = user.AwardIds });
+        })
+        .WithName("GetUserAwards");
+
+        // NEW: Unlock award
+        group.MapPost("/awards/unlock", async (
+            HttpContext context, 
+            AppDbContext db, 
+            UnlockAwardRequest request
+        ) =>
+        {
+            var userId = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            
+            if (string.IsNullOrEmpty(userId))
+                return Results.Unauthorized();
+
+            var user = await db.Users.FindAsync(userId);
+            
+            if (user == null)
+                return Results.NotFound(new { error = "User not found" });
+
+            // Check if already unlocked
+            if (user.AwardIds.Contains(request.AwardId))
+            {
+                return Results.Ok(new { message = "Award already unlocked" });
+            }
+
+            // Add award to array
+            user.AwardIds = user.AwardIds.Append(request.AwardId).ToArray();
+            await db.SaveChangesAsync();
+
+            return Results.Ok(new { 
+                message = "Award unlocked!",
+                awardIds = user.AwardIds 
+            });
+        })
+        .WithName("UnlockAward");
     }
 }
 
 public record GameStatsRequest(int Round, int HighestCombo);
+public record UnlockAwardRequest(string AwardId);
