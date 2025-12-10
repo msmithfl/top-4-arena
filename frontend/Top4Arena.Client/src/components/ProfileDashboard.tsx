@@ -31,6 +31,8 @@ const ProfileDashboard = () => {
   const [isLoadingTop4, setIsLoadingTop4] = useState(false);
   const [duplicateError, setDuplicateError] = useState<string | null>(null);
   const [userAwards, setUserAwards] = useState<string[]>([]);
+  const [selectedAwardHover, setSelectedAwardHover] = useState<{awardId: string, awardTitle: string, description: string} | null>(null);
+  const [tooltipPosition, setTooltipPosition] = useState<{top: number, left: number} | null>(null);
 
   const TMDB_API_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmODZmYTE3MzcwNzRmMzY3NzkwNzc1Y2Q1NTQwNmExYyIsIm5iZiI6MTY4NzYyNzAzOC40MDEsInN1YiI6IjY0OTcyNTFlYjM0NDA5MDBhZDUyNTY4YSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.YA8K57yrPNiM_UwefPB6Bv2t8fZdY_v1GD9AS3rRrU0';
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5157';
@@ -386,40 +388,70 @@ const loadUserAwards = async () => {
 
           {/* Awards - 1/4 width */}
           <div className="lg:col-span-1">
-          <div className="flex items-center justify-between mb-1">
-            <h2 className="text-lg font-bold">AWARDS</h2>
-            <span className="text-white/50 md:mr-5">
-              {userAwards.length}/{AWARDS.length}
-            </span>
-          </div>
-          <div className="md:w-11/12 h-px bg-white/50 mb-3"></div>
-          <div className="grid grid-cols-3 md:grid-cols-2 gap-4 max-h-[220px] md:max-h-[400px] overflow-y-auto scrollbar-thin pr-4">
-            {AWARDS.map((award) => {
-              const isUnlocked = userAwards.includes(award.awardId);
-              
-              return (
-                <div
-                  key={award.awardId}
-                  className={`backdrop-blur-sm p-6 rounded-lg border flex flex-col items-center justify-center aspect-square transition-all ${
-                    isUnlocked
-                      ? 'bg-yellow-500/20 border-yellow-400/50 hover:bg-yellow-500/30'
-                      : 'bg-white/10 border-white/20 grayscale opacity-50'
-                  }`}
-                  title={award.description}
-                >
-                  <GiLaurelsTrophy 
-                    className={`w-12 h-12 ${
-                      isUnlocked ? 'text-yellow-400' : 'text-gray-500'
-                    }`} 
-                  />
-                  <p className="text-xs text-center mt-2 text-white/70">
-                    {award.description}
+            <div className="flex items-center justify-between mb-1">
+              <h2 className="text-lg font-bold">AWARDS</h2>
+              <span className="text-white/50 md:mr-5">
+                {userAwards.length}/{AWARDS.length}
+              </span>
+            </div>
+            <div className="md:w-11/12 h-px bg-white/50 mb-3"></div>
+            
+            {/* Fixed tooltip outside scroll container */}
+            {selectedAwardHover && tooltipPosition && (
+              <div 
+                className="fixed z-50 pointer-events-none"
+                style={{
+                  top: `${tooltipPosition.top}px`,
+                  left: `${tooltipPosition.left}px`,
+                  transform: 'translate(-50%, calc(-100% - 10px))'
+                }}
+              >
+                <div className="bg-black/95 border border-white/20 rounded-lg p-3 shadow-xl whitespace-nowrap">
+                  <p className="text-sm font-bold text-white">
+                    {selectedAwardHover.awardTitle}
+                  </p>
+                  <p className="text-xs text-white/70 mt-1">
+                    {selectedAwardHover.description}
                   </p>
                 </div>
-              );
-            })}
+              </div>
+            )}
+            
+            <div className="grid grid-cols-3 md:grid-cols-2 gap-4 max-h-[220px] md:max-h-[400px] overflow-y-auto scrollbar-thin pr-4">
+              {AWARDS.map((award) => {
+                const isUnlocked = userAwards.includes(award.awardId);
+                
+                return (
+                  <div
+                    key={award.awardId}
+                    className={`backdrop-blur-sm p-6 rounded-lg border flex items-center justify-center aspect-square transition-all cursor-pointer ${
+                      isUnlocked
+                        ? 'bg-yellow-500/20 border-yellow-400/50 hover:bg-yellow-500/30'
+                        : 'bg-white/10 border-white/20 grayscale opacity-50 hover:opacity-70'
+                    }`}
+                    onMouseEnter={(e) => {
+                      setSelectedAwardHover(award);
+                      const rect = e.currentTarget.getBoundingClientRect();
+                      setTooltipPosition({
+                        top: rect.top,
+                        left: rect.left + rect.width / 2
+                      });
+                    }}
+                    onMouseLeave={() => {
+                      setSelectedAwardHover(null);
+                      setTooltipPosition(null);
+                    }}
+                  >
+                    <GiLaurelsTrophy 
+                      className={`w-12 h-12 ${
+                        isUnlocked ? 'text-yellow-400' : 'text-gray-500'
+                      }`} 
+                    />
+                  </div>
+                );
+              })}
+            </div>
           </div>
-        </div>
         </div>
 
           {/* Movie Selection Modal */}
