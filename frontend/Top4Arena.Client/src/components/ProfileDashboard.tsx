@@ -5,8 +5,8 @@ import { GiLaurelsTrophy } from "react-icons/gi";
 import { useEffect, useState } from "react";
 import { fetchMovieDetails } from "../utils/tmdbApi";
 import Footer from "./Footer";
-import spinnerImg from '../assets/imgs/top4-spinner.png';
-import { AWARDS } from '../data/userAwards';
+import spinnerImg from "../assets/imgs/top4-spinner.png";
+import { AWARDS } from "../data/userAwards";
 
 const ProfileDashboard = () => {
   const { user, isLoaded } = useUser();
@@ -16,7 +16,7 @@ const ProfileDashboard = () => {
     gamesPlayed: 0,
     highScore: 0,
     achievementsUnlocked: 0,
-    favoriteGenre: "None yet"
+    favoriteGenre: "None yet",
   });
 
   const [top4Movies, setTop4Movies] = useState<any[]>([null, null, null, null]);
@@ -31,31 +31,36 @@ const ProfileDashboard = () => {
   const [isLoadingTop4, setIsLoadingTop4] = useState(false);
   const [duplicateError, setDuplicateError] = useState<string | null>(null);
   const [userAwards, setUserAwards] = useState<string[]>([]);
-  const [selectedAwardHover, setSelectedAwardHover] = useState<{awardId: string, awardTitle: string, description: string} | null>(null);
+  const [selectedAwardHover, setSelectedAwardHover] = useState<{
+    awardId: string;
+    awardTitle: string;
+    description: string;
+  } | null>(null);
 
-  const TMDB_API_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmODZmYTE3MzcwNzRmMzY3NzkwNzc1Y2Q1NTQwNmExYyIsIm5iZiI6MTY4NzYyNzAzOC40MDEsInN1YiI6IjY0OTcyNTFlYjM0NDA5MDBhZDUyNTY4YSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.YA8K57yrPNiM_UwefPB6Bv2t8fZdY_v1GD9AS3rRrU0';
-  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5157';
+  const TMDB_API_TOKEN =
+    "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmODZmYTE3MzcwNzRmMzY3NzkwNzc1Y2Q1NTQwNmExYyIsIm5iZiI6MTY4NzYyNzAzOC40MDEsInN1YiI6IjY0OTcyNTFlYjM0NDA5MDBhZDUyNTY4YSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.YA8K57yrPNiM_UwefPB6Bv2t8fZdY_v1GD9AS3rRrU0";
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5157";
 
   const loadUserStats = async () => {
     try {
       const token = await getToken();
       const response = await fetch(`${API_URL}/api/users/me`, {
         headers: {
-          'Authorization': `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
-      
+
       if (response.ok) {
         const data = await response.json();
-        setStats(prev => ({
+        setStats((prev) => ({
           ...prev,
           gamesPlayed: data.totalGames || 0,
           highScore: data.bestRun || 0,
-          achievementsUnlocked: data.highestCombo || 0
+          achievementsUnlocked: data.highestCombo || 0,
         }));
       }
     } catch (err) {
-      console.error('Failed to load user stats:', err);
+      console.error("Failed to load user stats:", err);
     }
   };
 
@@ -69,18 +74,20 @@ const ProfileDashboard = () => {
     setIsSearching(true);
     try {
       const res = await fetch(
-        `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(query)}&include_adult=false&language=en-US&page=1`,
+        `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(
+          query
+        )}&include_adult=false&language=en-US&page=1`,
         {
           headers: {
-            accept: 'application/json',
-            Authorization: `Bearer ${TMDB_API_TOKEN}`
-          }
+            accept: "application/json",
+            Authorization: `Bearer ${TMDB_API_TOKEN}`,
+          },
         }
       );
       const data = await res.json();
       setSearchResults(data.results?.slice(0, 5) || []);
     } catch (err) {
-      console.error('Search failed:', err);
+      console.error("Search failed:", err);
     }
     setIsSearching(false);
   };
@@ -91,19 +98,21 @@ const ProfileDashboard = () => {
       const token = await getToken();
       const response = await fetch(`${API_URL}/api/users/me/top4`, {
         headers: {
-          'Authorization': `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
-      
+
       if (response.ok) {
         const data = await response.json();
         setUseAsDefault(data.isDefault);
-        
+
         // Load movie details for each movie ID, maintaining 4-slot array
         if (data.movieIds && data.movieIds.length > 0) {
-          const moviePromises = data.movieIds.slice(0, 4).map((id: number) => 
-            id ? fetchMovieDetails(id) : Promise.resolve(null)
-          );
+          const moviePromises = data.movieIds
+            .slice(0, 4)
+            .map((id: number) =>
+              id ? fetchMovieDetails(id) : Promise.resolve(null)
+            );
           const movies = await Promise.all(moviePromises);
           // Pad array to exactly 4 slots
           while (movies.length < 4) {
@@ -113,7 +122,7 @@ const ProfileDashboard = () => {
         }
       }
     } catch (err) {
-      console.error('Failed to load Top 4 preset:', err);
+      console.error("Failed to load Top 4 preset:", err);
     } finally {
       setIsLoadingTop4(false);
       setHasLoaded(true); // Mark as loaded after fetch completes
@@ -125,33 +134,33 @@ const ProfileDashboard = () => {
     try {
       const token = await getToken();
       // Create array of exactly 4 movie IDs, using 0 for empty slots
-      const movieIds = [0, 1, 2, 3].map(index => top4Movies[index]?.id || 0);
-      
+      const movieIds = [0, 1, 2, 3].map((index) => top4Movies[index]?.id || 0);
+
       // Don't save if we haven't loaded yet or if trying to save all zeros when not intentional
       if (!hasLoaded) {
         setIsSaving(false);
         return;
       }
-      
+
       const response = await fetch(`${API_URL}/api/users/me/top4`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           movieIds,
-          isDefault: useAsDefault
-        })
+          isDefault: useAsDefault,
+        }),
       });
-      
+
       if (response.ok) {
-        console.log('Top 4 preset saved successfully', movieIds);
+        console.log("Top 4 preset saved successfully", movieIds);
       } else {
-        console.error('Failed to save:', await response.text());
+        console.error("Failed to save:", await response.text());
       }
     } catch (err) {
-      console.error('Failed to save Top 4 preset:', err);
+      console.error("Failed to save Top 4 preset:", err);
     } finally {
       setIsSaving(false);
     }
@@ -159,28 +168,30 @@ const ProfileDashboard = () => {
 
   const handleAddMovie = async (movieId: number) => {
     if (selectedSlot === null) return;
-    
+
     // Check if movie is already in Top 4 (excluding the current slot being replaced)
-    const existingMovie = top4Movies.find((movie, index) => 
-      movie && movie.id === movieId && index !== selectedSlot
+    const existingMovie = top4Movies.find(
+      (movie, index) => movie && movie.id === movieId && index !== selectedSlot
     );
-    
+
     if (existingMovie) {
       setDuplicateError(`"${existingMovie.title}" is already in your Top 4.`);
       setTimeout(() => setDuplicateError(null), 3000);
       return;
     }
-    
+
     try {
       const details = await fetchMovieDetails(movieId);
-      
+
       // Check if runtime is over 240 minutes
       if (details.runtime && details.runtime > 240) {
-        setDuplicateError(`"${details.title}" is too long (${details.runtime} min) for a starter. Please choose a film under 4 hours.`);
+        setDuplicateError(
+          `"${details.title}" is too long (${details.runtime} min) for a starter. Please choose a film under 4 hours.`
+        );
         setTimeout(() => setDuplicateError(null), 3000);
         return;
       }
-      
+
       const newMovies = [...top4Movies];
       // Ensure array has 4 slots
       while (newMovies.length < 4) {
@@ -192,7 +203,7 @@ const ProfileDashboard = () => {
       setSearchResults([]);
       setSelectedSlot(null);
     } catch (err) {
-      console.error('Failed to add movie:', err);
+      console.error("Failed to add movie:", err);
     }
   };
 
@@ -209,27 +220,27 @@ const ProfileDashboard = () => {
   };
 
   // Add function to load user awards
-const loadUserAwards = async () => {
-  try {
-    const token = await getToken();
-    const response = await fetch(`${API_URL}/api/users/awards`, {
-      headers: {
-        'Authorization': `Bearer ${token}`
+  const loadUserAwards = async () => {
+    try {
+      const token = await getToken();
+      const response = await fetch(`${API_URL}/api/users/awards`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setUserAwards(data.awardIds || []);
       }
-    });
-    
-    if (response.ok) {
-      const data = await response.json();
-      setUserAwards(data.awardIds || []);
+    } catch (err) {
+      console.error("Failed to load user awards:", err);
     }
-  } catch (err) {
-    console.error('Failed to load user awards:', err);
-  }
-};
+  };
 
   useEffect(() => {
     if (isLoaded && !user) {
-      navigate('/');
+      navigate("/");
     } else if (isLoaded && user) {
       loadUserStats();
       loadTop4Preset();
@@ -258,52 +269,61 @@ const loadUserAwards = async () => {
       {/* Header */}
       <div className="p-6">
         <button
-          onClick={() => navigate('/')}
+          onClick={() => navigate("/")}
           className="flex items-center gap-2 text-white/80 hover:text-white mb-4 transition-colors cursor-pointer"
         >
           <ArrowLeft className="w-5 h-5" />
           Back to Home
         </button>
-        
+
         <div className="max-w-5xl mx-auto mt-6">
           <div className="flex flex-col md:flex-row items-center md:justify-between gap-6">
             <div className="flex items-center gap-6">
               {user.imageUrl ? (
-                <img 
-                  src={user.imageUrl} 
-                  alt={user.username || "User"} 
+                <img
+                  src={user.imageUrl}
+                  alt={user.username || "User"}
                   className="w-16 md:w-24 h-16 md:h-24 rounded-full object-cover"
                 />
               ) : (
                 <div className="w-24 h-24 rounded-full bg-linear-to-br from-blue-500 to-purple-500 flex items-center justify-center text-4xl font-bold">
-                  {user.username?.[0]?.toUpperCase() || user.firstName?.[0]?.toUpperCase() || "U"}
+                  {user.username?.[0]?.toUpperCase() ||
+                    user.firstName?.[0]?.toUpperCase() ||
+                    "U"}
                 </div>
               )}
               <div>
-                <h1 className="text-2xl md:text-3xl font-bold">{user.username || user.firstName || "Player"}</h1>
+                <h1 className="text-2xl md:text-3xl font-bold">
+                  {user.username || user.firstName || "Player"}
+                </h1>
                 {/* <p className="text-white/70">{user.primaryEmailAddress?.emailAddress}</p> */}
                 <p className="text-sm text-white/50 mt-1">
-                  Member Since {new Date(user.createdAt || Date.now()).toLocaleDateString()}
+                  Member Since{" "}
+                  {new Date(user.createdAt || Date.now()).toLocaleDateString()}
                 </p>
               </div>
             </div>
-            
+
             {/* Stats */}
             <div className="flex items-center justify-center gap-6 md:ml-auto md:mr-4">
               <div className="text-center">
-                <p className="text-2xl font-bold text-white">{stats.gamesPlayed}</p>
+                <p className="text-2xl font-bold text-white">
+                  {stats.gamesPlayed}
+                </p>
                 <p className="text-xs text-white/50">GAMES</p>
               </div>
               <div className="w-px h-12 bg-white/20"></div>
               <div className="text-center">
-                <p className="text-2xl font-bold text-white">{stats.highScore}</p>
+                <p className="text-2xl font-bold text-white">
+                  {stats.highScore}
+                </p>
                 <p className="text-xs text-white/50">BEST RUN</p>
               </div>
               <div className="w-px h-12 bg-white/20"></div>
               <div className="text-center">
                 <p className="text-2xl font-bold text-white">
-                  {stats.achievementsUnlocked >= 1000 
-                    ? `${(stats.achievementsUnlocked / 1000).toFixed(1)}k` 
+                  {stats.achievementsUnlocked >= 1000
+                    ? `${(stats.achievementsUnlocked / 1000).toFixed(1)}k`
                     : stats.achievementsUnlocked}
                 </p>
                 <p className="text-xs text-white/50">TOP COMBO</p>
@@ -312,7 +332,6 @@ const loadUserAwards = async () => {
           </div>
         </div>
       </div>
-
 
       {/* Main Content */}
       <div className="w-full px-6 md:p-6">
@@ -326,14 +345,14 @@ const loadUserAwards = async () => {
               <div className="grid md:w-11/12 grid-cols-4 gap-2 md:gap-4 relative">
                 {isLoadingTop4 && (
                   <div className="absolute inset-0 bg-[#14181C]/80 backdrop-blur-sm z-10 flex items-center justify-center rounded-lg">
-                    <img 
-                      src={spinnerImg} 
-                      alt="Loading" 
-                      className="w-12 h-12 animate-spin" 
+                    <img
+                      src={spinnerImg}
+                      alt="Loading"
+                      className="w-12 h-12 animate-spin"
                     />
                   </div>
                 )}
-                {[0, 1, 2, 3].map(index => (
+                {[0, 1, 2, 3].map((index) => (
                   <div
                     key={index}
                     className="bg-white/10 backdrop-blur-sm rounded-lg border border-white/20 overflow-hidden relative aspect-2/3 group"
@@ -352,9 +371,15 @@ const loadUserAwards = async () => {
                           <Edit2 className="w-12 h-12 text-white" />
                         </button>
                         <div className="absolute bottom-0 left-0 right-0 p-3 pointer-events-none">
-                          <p className="hidden text-white font-bold text-sm truncate">{top4Movies[index].title}</p>
+                          <p className="hidden text-white font-bold text-sm truncate">
+                            {top4Movies[index].title}
+                          </p>
                           <p className="hidden text-white/70 text-xs">
-                            {top4Movies[index].release_date ? new Date(top4Movies[index].release_date).getFullYear() : 'N/A'}
+                            {top4Movies[index].release_date
+                              ? new Date(
+                                  top4Movies[index].release_date
+                                ).getFullYear()
+                              : "N/A"}
                           </p>
                         </div>
                       </>
@@ -364,7 +389,9 @@ const loadUserAwards = async () => {
                         className="w-full h-full flex flex-col items-center justify-center text-gray-500 hover:text-white hover:bg-white/5 transition-all cursor-pointer"
                       >
                         <Plus className="w-12 h-12 mb-2" />
-                        <span className="hidden md:block text-sm">Add Movie</span>
+                        <span className="hidden md:block text-sm">
+                          Add Movie
+                        </span>
                       </button>
                     )}
                   </div>
@@ -381,7 +408,9 @@ const loadUserAwards = async () => {
                     disabled={isSaving}
                     className="w-6 h-6 rounded border-2 border-white/50 bg-[#14181C] checked:bg-[#14181C] checked:border-white/70 focus:ring-0 focus:ring-offset-0 cursor-pointer appearance-none relative checked:after:content-['✓'] checked:after:absolute checked:after:inset-0 checked:after:flex checked:after:items-center checked:after:justify-center checked:after:text-white checked:after:text-lg checked:after:font-bold checked:after:leading-none disabled:opacity-50"
                   />
-                  <span className="text-white/70">PRESET TOP 4 {isSaving && '(Saving...)'}</span>
+                  <span className="text-white/70">
+                    PRESET TOP 4 {isSaving && "(Saving...)"}
+                  </span>
                 </label>
               </div>
             </div>
@@ -391,18 +420,23 @@ const loadUserAwards = async () => {
               <div className="h-px bg-white/50 mb-3"></div>
               <div className="grid grid-cols-1 gap-4 mb-8">
                 <button
-                  onClick={() => navigate('/game')}
+                  onClick={() => navigate("/game")}
                   className="bg-linear-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 text-white font-bold py-4 px-6 rounded-lg transition-all cursor-pointer"
                 >
                   Start Game
                 </button>
                 <button
                   onClick={() => {
-                    navigate('/');
+                    navigate("/");
                     setTimeout(() => {
-                      const leaderboardSection = document.getElementById('leaderboard-section');
+                      const leaderboardSection = document.getElementById(
+                        "leaderboard-section"
+                      );
                       if (leaderboardSection) {
-                        leaderboardSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        leaderboardSection.scrollIntoView({
+                          behavior: "smooth",
+                          block: "start",
+                        });
                       }
                     }, 100);
                   }}
@@ -414,86 +448,62 @@ const loadUserAwards = async () => {
             </div>
           </div>
 
-
-        {/* Awards - 1/4 width */}
-        <div className="mb-4">
-          <div>
-            <div className="flex items-center justify-between mb-1">
-              <h2 className="text-lg font-bold">AWARDS</h2>
-              <span className="text-white/50">
-                {userAwards.length}/{AWARDS.length}
-              </span>
-            </div>
-            <div className="h-px bg-white/50 mb-3"></div>
-            {/* Tooltip absolutely positioned above the hovered award */}
-            {selectedAwardHover && (
-              <div
-                className="absolute z-50 pointer-events-none"
-                style={{
-                  left: '50%',
-                  top: 0,
-                  transform: 'translate(-50%, calc(-100% - 10px))',
-                  width: 'max-content',
-                  minWidth: '180px',
-                  maxWidth: '260px',
-                }}
-              >
-                <div className="bg-black/95 border border-white/20 rounded-lg p-3 shadow-xl whitespace-nowrap">
-                  <p className="text-sm font-bold text-white">
-                    {selectedAwardHover.awardTitle}
-                  </p>
-                  <p className="text-xs text-white/70 mt-1">
-                    {selectedAwardHover.description}
-                  </p>
-                </div>
+          {/* Awards - 1/4 width */}
+          <div className="mb-4">
+            <div>
+              <div className="flex items-center justify-between mb-1">
+                <h2 className="text-lg font-bold">AWARDS</h2>
+                <span className="text-white/50">
+                  {userAwards.length}/{AWARDS.length}
+                </span>
               </div>
-            )}
-            <div className="grid grid-cols-3 md:grid-cols-6 gap-4 pb-4">
-              {AWARDS.map((award) => {
-                const isUnlocked = userAwards.includes(award.awardId);
-                return (
-                  <div
-                    key={award.awardId}
-                    className={`relative backdrop-blur-sm p-6 rounded-lg border flex items-center justify-center aspect-square transition-all cursor-pointer ${
-                      isUnlocked
-                        ? 'bg-yellow-500/20 border-yellow-400/50 hover:bg-yellow-500/30'
-                        : 'bg-white/10 border-white/20 grayscale opacity-50 hover:opacity-70'
-                    }`}
-                    onMouseEnter={() => setSelectedAwardHover(award)}
-                    onMouseLeave={() => setSelectedAwardHover(null)}
-                  >
-                    {selectedAwardHover?.awardId === award.awardId && (
-                      <div
-                        className="absolute z-50 pointer-events-none"
-                        style={{
-                          left: '50%',
-                          top: 0,
-                          transform: 'translate(-50%, calc(-100% - 10px))',
-                          width: 'max-content',
-                          maxWidth: '260px',
-                        }}
-                      >
-                        <div className="bg-black/95 border border-white/20 rounded-lg p-3 shadow-xl whitespace-nowrap">
-                          <p className="text-sm font-bold text-white">
-                            {award.awardTitle}
-                          </p>
-                          <p className="text-xs text-white/70 mt-1">
-                            {award.description}
-                          </p>
+              <div className="h-px bg-white/50 mb-3"></div>
+              <div className="grid grid-cols-3 md:grid-cols-6 gap-4 pb-4">
+                {AWARDS.map((award) => {
+                  const isUnlocked = userAwards.includes(award.awardId);
+                  return (
+                    <div
+                      key={award.awardId}
+                      className={`relative backdrop-blur-sm p-6 rounded-lg border flex items-center justify-center aspect-square transition-all cursor-pointer ${
+                        isUnlocked
+                          ? "bg-yellow-500/20 border-yellow-400/50 hover:bg-yellow-500/30"
+                          : "bg-white/10 border-white/20 grayscale opacity-50 hover:opacity-70"
+                      }`}
+                      onMouseEnter={() => setSelectedAwardHover(award)}
+                      onMouseLeave={() => setSelectedAwardHover(null)}
+                    >
+                      {selectedAwardHover?.awardId === award.awardId && (
+                        <div
+                          className="absolute z-50 pointer-events-none"
+                          style={{
+                            left: "50%",
+                            top: 0,
+                            transform: "translate(-50%, calc(-100% - 10px))",
+                            width: "max-content",
+                            maxWidth: "260px",
+                          }}
+                        >
+                          <div className="bg-black/95 border border-white/20 rounded-lg p-3 shadow-xl whitespace-nowrap">
+                            <p className="text-sm font-bold text-white">
+                              {award.awardTitle}
+                            </p>
+                            <p className="text-xs text-white/70 mt-1">
+                              {award.description}
+                            </p>
+                          </div>
                         </div>
-                      </div>
-                    )}
-                    <GiLaurelsTrophy 
-                      className={`w-16 h-16 md:w-20 md:h-20 ${
-                        isUnlocked ? 'text-yellow-400' : 'text-gray-500'
-                      }`} 
-                    />
-                  </div>
-                );
-              })}
+                      )}
+                      <GiLaurelsTrophy
+                        className={`w-16 h-16 md:w-20 md:h-20 ${
+                          isUnlocked ? "text-yellow-400" : "text-gray-500"
+                        }`}
+                      />
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           </div>
-        </div>
 
           {/* Movie Selection Modal */}
           {selectedSlot !== null && (
@@ -503,7 +513,9 @@ const loadUserAwards = async () => {
                   {/* Modal Header */}
                   <div className="flex items-center justify-between p-4 border-b border-white/10">
                     <h3 className="text-xl font-bold text-white">
-                      {top4Movies[selectedSlot] ? 'Replace Movie' : `Select Movie for Slot ${selectedSlot + 1}`}
+                      {top4Movies[selectedSlot]
+                        ? "Replace Movie"
+                        : `Select Movie for Slot ${selectedSlot + 1}`}
                     </h3>
                     <button
                       onClick={handleCloseModal}
@@ -527,7 +539,7 @@ const loadUserAwards = async () => {
                           autoFocus
                         />
                       </div>
-                      
+
                       {/* Duplicate Error Popup */}
                       {duplicateError && (
                         <div className="absolute z-50 text-center w-full mt-2 bg-red-500 border border-red-700 rounded-lg shadow-xl p-3 text-sm text-white animate-in fade-in duration-200">
@@ -542,15 +554,20 @@ const loadUserAwards = async () => {
                 {searchResults.length > 0 && (
                   <div className="absolute top-full left-0 right-0 bg-[#2C3440] rounded-lg mt-2 max-h-96 overflow-y-auto">
                     <div className="p-2 space-y-1">
-                      {searchResults.map(movie => (
+                      {searchResults.map((movie) => (
                         <button
                           key={movie.id}
                           onClick={() => handleAddMovie(movie.id)}
                           className="w-full p-3 hover:bg-[#3C4450] transition-colors cursor-pointer text-left rounded-lg"
                         >
                           <div className="font-bold text-white">
-                            {movie.title} <span className="text-sm text-gray-400 font-normal">
-                              ({movie.release_date ? new Date(movie.release_date).getFullYear() : 'N/A'})
+                            {movie.title}{" "}
+                            <span className="text-sm text-gray-400 font-normal">
+                              (
+                              {movie.release_date
+                                ? new Date(movie.release_date).getFullYear()
+                                : "N/A"}
+                              )
                             </span>
                           </div>
                         </button>

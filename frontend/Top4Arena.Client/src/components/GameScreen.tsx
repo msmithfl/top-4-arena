@@ -1,23 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import { useAuth } from '@clerk/clerk-react';
-import PlayerCard from './MovieCard';
-import BossCardDisplay from './BossCard';
-import GameSidebar from './GameSidebar';
-import MobileGameInfo from './MobileGameInfo';
-import type { MovieCard, BossCard } from '../types';
-import { fetchPopularMovies, fetchMovieDetails } from '../utils/tmdbApi';
-import { enhanceMovie } from '../utils/enhanceMovie';
-import { calculateBattle } from '../utils/battleCalc';
-import PickTopFilms from './PickTopFilms';
-import DeckPopup from './DeckPopup';
-import ShopScreen from './ShopScreen';
-import GameOverScreen from './GameOverScreen';
+import React, { useState, useEffect } from "react";
+import { useAuth } from "@clerk/clerk-react";
+import PlayerCard from "./MovieCard";
+import BossCardDisplay from "./BossCard";
+import GameSidebar from "./GameSidebar";
+import MobileGameInfo from "./MobileGameInfo";
+import type { MovieCard, BossCard } from "../types";
+import { fetchPopularMovies, fetchMovieDetails } from "../utils/tmdbApi";
+import { enhanceMovie } from "../utils/enhanceMovie";
+import { calculateBattle } from "../utils/battleCalc";
+import PickTopFilms from "./PickTopFilms";
+import DeckPopup from "./DeckPopup";
+import ShopScreen from "./ShopScreen";
+import GameOverScreen from "./GameOverScreen";
 // import InstructionsButton from './InstructionsButton';
 // import EndGameButton from './EndGameButton';
-import { PREBUILT_BOSSES } from '../data/prebuiltBosses';
-import { createPrebuiltBossCard } from '../utils/bossCard';
-import spinnerImg from '../assets/imgs/top4-spinner.png';
-import { track } from '@vercel/analytics';
+import { PREBUILT_BOSSES } from "../data/prebuiltBosses";
+import { createPrebuiltBossCard } from "../utils/bossCard";
+import spinnerImg from "../assets/imgs/top4-spinner.png";
+import { track } from "@vercel/analytics";
 import { FaTrashAlt } from "react-icons/fa";
 
 let bossCycle: number[] = [];
@@ -40,8 +40,8 @@ const getRandomBoss = () => {
 
 const GameScreen: React.FC = () => {
   const { getToken, isSignedIn } = useAuth();
-  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5157';
-  
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5157";
+
   const [collectionDeck, setCollectionDeck] = useState<MovieCard[]>([]); // Full collection for viewing
   const [playDeck, setPlayDeck] = useState<MovieCard[]>([]); // Shuffled deck for drawing
   const [discardPile, setDiscardPile] = useState<MovieCard[]>([]); // Cards that have been used
@@ -54,7 +54,9 @@ const GameScreen: React.FC = () => {
   const [turn, setTurn] = useState(1);
   const [hasDiscarded, setHasDiscarded] = useState(false);
   const [battleLog, setBattleLog] = useState<string[]>([]);
-  const [gameState, setGameState] = useState<'playing' | 'won' | 'lost' | 'shop'>('playing');
+  const [gameState, setGameState] = useState<
+    "playing" | "won" | "lost" | "shop"
+  >("playing");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [pickedMovies, setPickedMovies] = useState<MovieCard[] | null>(null);
@@ -62,7 +64,7 @@ const GameScreen: React.FC = () => {
   const [isAttacking, setIsAttacking] = useState(false);
   const [tickets, setTickets] = useState(0);
   const [gameId, setGameId] = useState<string | null>(null);
-  
+
   // Game stats tracking
   const [gameStats, setGameStats] = useState({
     cardPlayCount: {} as Record<number, number>, // cardId -> play count
@@ -76,63 +78,62 @@ const GameScreen: React.FC = () => {
 
   const unlockAward = async (awardId: string) => {
     if (!isSignedIn || !gameId) return;
-    
+
     try {
       const token = await getToken();
 
       await fetch(`${API_URL}/api/users/awards/unlock`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ awardId })
+        body: JSON.stringify({ awardId }),
       });
-    }
-    catch (err) {
-      console.error('Failed to unlock award:', err);
+    } catch (err) {
+      console.error("Failed to unlock award:", err);
     }
   };
-  
+
   const updateUserStats = async (finalRound: number) => {
     // Guests can't submit scores
     if (!isSignedIn || !gameId) {
-      console.log('Guest user - score not saved to leaderboard');
+      console.log("Guest user - score not saved to leaderboard");
       return;
     }
-    
+
     try {
       const token = await getToken();
       const response = await fetch(`${API_URL}/api/leaderboard/submit`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           gameId: gameId,
           round: finalRound,
-          highestCombo: gameStats.bestHand.score
-        })
+          highestCombo: gameStats.bestHand.score,
+        }),
       });
-      
+
       const data = await response.json();
-      
+
       // Optional: Show message to guest users
       if (data.message) {
         console.log(data.message); // "Sign in to save your score to the leaderboard!"
       }
     } catch (err) {
-      console.error('Failed to update leaderboard:', err);
+      console.error("Failed to update leaderboard:", err);
     }
   };
-  
+
   useEffect(() => {
     // Don't initialize until we have picked movies
     if (!pickedMovies) return;
-    
+
     let isMounted = true;
-    
+
     const initializeGame = async () => {
       try {
         setIsLoading(true);
@@ -140,22 +141,22 @@ const GameScreen: React.FC = () => {
 
         // Get game token (works for both guests and authenticated users)
         let gameIdFromServer = `guest-${Date.now()}`; // Fallback for guests
-        
+
         try {
           const token = isSignedIn ? await getToken() : null;
           const initResponse = await fetch(`${API_URL}/api/game/init`, {
-            method: 'POST',
-            headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+            method: "POST",
+            headers: token ? { Authorization: `Bearer ${token}` } : {},
           });
-          
+
           if (initResponse.ok) {
             const { gameId } = await initResponse.json();
             gameIdFromServer = gameId;
           }
         } catch (initErr) {
-          console.log('Playing as guest - scores will not be saved');
+          console.log("Playing as guest - scores will not be saved");
         }
-        
+
         setGameId(gameIdFromServer);
 
         // Fetch deck from random page (1-100) for variety
@@ -165,19 +166,19 @@ const GameScreen: React.FC = () => {
         if (!isMounted) return;
 
         if (deckMovies.length < 10) {
-          throw new Error('Not enough movies fetched');
+          throw new Error("Not enough movies fetched");
         }
 
         // Enhance picked movies and add them to the deck first
         const enhancedPicked = pickedMovies.map(enhanceMovie);
 
         // Get IDs of picked movies to avoid duplicates
-        const pickedIds = new Set(enhancedPicked.map(card => card.id));
+        const pickedIds = new Set(enhancedPicked.map((card) => card.id));
 
         // Filter out any duplicates and fetch details for the 10 random movies
-        const uniqueDeckMovies = deckMovies.filter(m => !pickedIds.has(m.id));
+        const uniqueDeckMovies = deckMovies.filter((m) => !pickedIds.has(m.id));
         const randomDetails = await Promise.all(
-          uniqueDeckMovies.slice(0, 10).map(m => fetchMovieDetails(m.id))
+          uniqueDeckMovies.slice(0, 10).map((m) => fetchMovieDetails(m.id))
         );
         const enhancedRandom = randomDetails.map(enhanceMovie);
 
@@ -188,35 +189,41 @@ const GameScreen: React.FC = () => {
         setCollectionDeck(enhancedDeck);
 
         // Play deck (for drawing) - shuffled
-        const shuffledPlayDeck = [...enhancedDeck].sort(() => Math.random() - 0.5);
-        
+        const shuffledPlayDeck = [...enhancedDeck].sort(
+          () => Math.random() - 0.5
+        );
+
         // Draw initial hand from play deck
         const initialHand = shuffledPlayDeck.slice(0, 7);
         const remainingPlayDeck = shuffledPlayDeck.slice(7);
-        
+
         setHand(initialHand);
         setPlayDeck(remainingPlayDeck);
         setDiscardPile([]);
 
         // Set boss from prebuilt list with TMDB data
         const rawBoss = getRandomBoss();
-        const bossCard = await createPrebuiltBossCard(rawBoss, fetchMovieDetails, 1);
+        const bossCard = await createPrebuiltBossCard(
+          rawBoss,
+          fetchMovieDetails,
+          1
+        );
         setBoss(bossCard);
         setBossHP(bossCard.maxHP);
 
         setIsLoading(false);
 
-        track('game_started');
+        track("game_started");
       } catch (err) {
         if (!isMounted) return;
-        console.error('Failed to initialize game:', err);
-        setError(err instanceof Error ? err.message : 'Failed to load movies');
+        console.error("Failed to initialize game:", err);
+        setError(err instanceof Error ? err.message : "Failed to load movies");
         setIsLoading(false);
       }
     };
-    
+
     initializeGame();
-    
+
     return () => {
       isMounted = false;
     };
@@ -224,10 +231,10 @@ const GameScreen: React.FC = () => {
 
   const toggleCardSelection = (cardId: number) => {
     if (isAttacking) return;
-    
-    setSelectedCards(prev => {
+
+    setSelectedCards((prev) => {
       if (prev.includes(cardId)) {
-        return prev.filter(id => id !== cardId);
+        return prev.filter((id) => id !== cardId);
       }
       if (prev.length < 4) {
         return [...prev, cardId];
@@ -239,26 +246,44 @@ const GameScreen: React.FC = () => {
   const handleDiscard = () => {
     if (hasDiscarded) return;
 
-    const discardedCards = hand.filter(card => selectedCards.includes(card.id));
-    const remainingHand = hand.filter(card => !selectedCards.includes(card.id));
+    const discardedCards = hand.filter((card) =>
+      selectedCards.includes(card.id)
+    );
+    const remainingHand = hand.filter(
+      (card) => !selectedCards.includes(card.id)
+    );
     const cardsNeeded = 7 - remainingHand.length;
-    
+
     const updatedDiscardPile = [...discardPile, ...discardedCards];
-    const result = drawCards(cardsNeeded, remainingHand, playDeck, updatedDiscardPile);
+    const result = drawCards(
+      cardsNeeded,
+      remainingHand,
+      playDeck,
+      updatedDiscardPile
+    );
 
     setHand(result.updatedHand);
     setPlayDeck(result.updatedPlayDeck);
     setDiscardPile(result.updatedDiscardPile);
     setSelectedCards([]);
     setHasDiscarded(true);
-    setBattleLog(prev => [...prev, `🗑️ Discarded ${cardsNeeded} cards`, '---']);
+    setBattleLog((prev) => [
+      ...prev,
+      `🗑️ Discarded ${cardsNeeded} cards`,
+      "---",
+    ]);
   };
 
-  const drawCards = (cardsNeeded: number, currentHand: MovieCard[], currentPlayDeck: MovieCard[], currentDiscardPile: MovieCard[]) => {
+  const drawCards = (
+    cardsNeeded: number,
+    currentHand: MovieCard[],
+    currentPlayDeck: MovieCard[],
+    currentDiscardPile: MovieCard[]
+  ) => {
     let updatedHand = [...currentHand];
     let updatedPlayDeck = [...currentPlayDeck];
     let updatedDiscardPile = [...currentDiscardPile];
-    
+
     // Draw cards one by one, reshuffling discard pile only when play deck is empty
     for (let i = 0; i < cardsNeeded; i++) {
       if (updatedPlayDeck.length > 0) {
@@ -267,11 +292,16 @@ const GameScreen: React.FC = () => {
         updatedPlayDeck = updatedPlayDeck.slice(1);
       } else if (updatedDiscardPile.length > 0) {
         // Play deck empty, reshuffle discard pile
-        const shuffledDiscard = [...updatedDiscardPile].sort(() => Math.random() - 0.5);
+        const shuffledDiscard = [...updatedDiscardPile].sort(
+          () => Math.random() - 0.5
+        );
         updatedPlayDeck = shuffledDiscard;
         updatedDiscardPile = [];
-        setBattleLog(prev => [...prev, '♻️ Reshuffled discard pile back into play deck!']);
-        
+        setBattleLog((prev) => [
+          ...prev,
+          "♻️ Reshuffled discard pile back into play deck!",
+        ]);
+
         // Draw from newly shuffled deck
         if (updatedPlayDeck.length > 0) {
           updatedHand.push(updatedPlayDeck[0]);
@@ -282,35 +312,37 @@ const GameScreen: React.FC = () => {
         break;
       }
     }
-    
+
     return { updatedHand, updatedPlayDeck, updatedDiscardPile };
   };
 
   const handleAttack = () => {
-    const playedCards = hand.filter(card => selectedCards.includes(card.id));
+    const playedCards = hand.filter((card) => selectedCards.includes(card.id));
     if (playedCards.length === 0 || isAttacking) return;
 
     setIsAttacking(true);
 
     const result = calculateBattle(playedCards);
     let playerDamage = result.damage;
-    
+
     // Track stats
-    setGameStats(prev => {
+    setGameStats((prev) => {
       const newCardPlayCount = { ...prev.cardPlayCount };
       const newGenrePlayCount = { ...prev.genrePlayCount };
-      
-      playedCards.forEach(card => {
+
+      playedCards.forEach((card) => {
         newCardPlayCount[card.id] = (newCardPlayCount[card.id] || 0) + 1;
-        card.genres.slice(0, 2).forEach(genre => {
-          newGenrePlayCount[genre.name] = (newGenrePlayCount[genre.name] || 0) + 1;
+        card.genres.slice(0, 2).forEach((genre) => {
+          newGenrePlayCount[genre.name] =
+            (newGenrePlayCount[genre.name] || 0) + 1;
         });
       });
-      
-      const newBestHand = playerDamage > prev.bestHand.score
-        ? { cards: playedCards, score: playerDamage }
-        : prev.bestHand;
-      
+
+      const newBestHand =
+        playerDamage > prev.bestHand.score
+          ? { cards: playedCards, score: playerDamage }
+          : prev.bestHand;
+
       return {
         ...prev,
         cardPlayCount: newCardPlayCount,
@@ -319,80 +351,91 @@ const GameScreen: React.FC = () => {
         bestHand: newBestHand,
       };
     });
-    
+
     // PHASE 1: Player attacks boss
     const newBossHP = Math.max(0, bossHP - playerDamage);
     setBossHP(newBossHP);
-    
+
     // Add played cards to discard pile
-    setDiscardPile(prev => [...prev, ...playedCards]);
-    
+    setDiscardPile((prev) => [...prev, ...playedCards]);
+
     // Check if boss is defeated - if so, skip counter-attack and go to shop
     if (newBossHP === 0) {
       setIsAttacking(false);
       setTimeout(() => {
         // Track round completion
         if (round === 1) {
-          track('completed_round_1');
+          track("completed_round_1");
         }
         if (round === 9) {
-          unlockAward('round-10');
+          unlockAward("round-10");
         }
         if (round === 24) {
-          unlockAward('round-25');
+          unlockAward("round-25");
         }
         if (round === 49) {
-          unlockAward('round-50');
-        }
-        else if (round === 10) {
-          track('completed_round_10');
+          unlockAward("round-50");
+        } else if (round === 10) {
+          track("completed_round_10");
         }
 
-        setGameState('shop');
+        setGameState("shop");
         setDiscardPile([]);
-        setTickets(prev => prev + 1); // Award ticket for victory
-        setGameStats(prev => ({ ...prev, totalTicketsEarned: prev.totalTicketsEarned + 1 }));
+        setTickets((prev) => prev + 1); // Award ticket for victory
+        setGameStats((prev) => ({
+          ...prev,
+          totalTicketsEarned: prev.totalTicketsEarned + 1,
+        }));
       }, 1500);
       return;
     }
-    
+
     // PHASE 2: Boss counter-attacks (delayed)
     setTimeout(() => {
       // Boss counter-attacks with ability
       // const abilityResult = boss!.ability.effect(turn, boss!.baseDamage);
       // let bossDamage = abilityResult.damage;
       let bossDamage = boss?.baseDamage ?? 0;
-      
+
       // Apply defense ignore
       // const effectiveDefense = Math.round(result.defense * (1 - boss!.defenseIgnore));
       const damageTaken = Math.max(0, bossDamage - result.defense);
-      
-      let newPlayerHP = Math.round(Math.min(maxPlayerHP, Math.max(0, playerHP - damageTaken)));
-      
+
+      let newPlayerHP = Math.round(
+        Math.min(maxPlayerHP, Math.max(0, playerHP - damageTaken))
+      );
+
       setPlayerHP(newPlayerHP);
-      
+
       // Check if player died - if so, skip hand refill and show loss screen
       if (newPlayerHP <= 0) {
-        setGameStats(prev => ({ ...prev, defeatedBy: boss!.title }));
+        setGameStats((prev) => ({ ...prev, defeatedBy: boss!.title }));
         updateUserStats(round);
         setTimeout(() => {
           setIsAttacking(false);
-          setGameState('lost');
+          setGameState("lost");
 
-          track('game_completed', { round, defeatedBy: boss!.title });
+          track("game_completed", { round, defeatedBy: boss!.title });
         }, 1000);
         return;
       }
-      
+
       // Short delay before refilling hand
       setTimeout(() => {
         // Remove played cards and refill hand to 7 cards
-        const remainingHand = hand.filter(card => !selectedCards.includes(card.id));
+        const remainingHand = hand.filter(
+          (card) => !selectedCards.includes(card.id)
+        );
         const cardsNeeded = 7 - remainingHand.length;
-        
+
         const updatedDiscardPile = [...discardPile, ...playedCards];
-        const result = drawCards(cardsNeeded, remainingHand, playDeck, updatedDiscardPile);
-        
+        const result = drawCards(
+          cardsNeeded,
+          remainingHand,
+          playDeck,
+          updatedDiscardPile
+        );
+
         setHand(result.updatedHand);
         setPlayDeck(result.updatedPlayDeck);
         setDiscardPile(result.updatedDiscardPile);
@@ -404,26 +447,32 @@ const GameScreen: React.FC = () => {
     }, 1000); // 1 second delay between player attack and boss counter-attack
   };
 
-  const handleShopAction = (updatedDeck: MovieCard[], actionType: 'new-card' | 'upgrade') => {
+  const handleShopAction = (
+    updatedDeck: MovieCard[],
+    actionType: "new-card" | "upgrade"
+  ) => {
     // Track stats
-    if (actionType === 'upgrade') {
-      setGameStats(prev => ({ ...prev, cardsUpgraded: prev.cardsUpgraded + 1 }));
+    if (actionType === "upgrade") {
+      setGameStats((prev) => ({
+        ...prev,
+        cardsUpgraded: prev.cardsUpgraded + 1,
+      }));
     }
-    
+
     // Spend ticket and advance to next round
-    setTickets(prev => prev - 1);
+    setTickets((prev) => prev - 1);
     resetRound(updatedDeck);
   };
-  
+
   // Build set of all card IDs (initial picks + current deck) to pass to shop
   const existingCardIds = React.useMemo(() => {
-    const ids = new Set(collectionDeck.map(card => card.id));
+    const ids = new Set(collectionDeck.map((card) => card.id));
     if (pickedMovies) {
-      pickedMovies.forEach(card => ids.add(card.id));
+      pickedMovies.forEach((card) => ids.add(card.id));
     }
     return ids;
   }, [collectionDeck, pickedMovies]);
-  
+
   const resetRound = async (newDeck?: MovieCard[]) => {
     setIsLoading(true);
     setError(null);
@@ -431,16 +480,20 @@ const GameScreen: React.FC = () => {
       // Set boss from prebuilt list with TMDB data
       const rawBoss = getRandomBoss();
       const nextRound = round + 1;
-      const bossCard = await createPrebuiltBossCard(rawBoss, fetchMovieDetails, nextRound);
-      
+      const bossCard = await createPrebuiltBossCard(
+        rawBoss,
+        fetchMovieDetails,
+        nextRound
+      );
+
       // Use the passed deck or current collection deck
       const deckToUse = newDeck || collectionDeck;
-      
+
       // Shuffle for play deck and draw new hand
       const shuffledPlayDeck = [...deckToUse].sort(() => Math.random() - 0.5);
       const initialHand = shuffledPlayDeck.slice(0, 7);
       const remainingPlayDeck = shuffledPlayDeck.slice(7);
-      
+
       // Set all boss/game state first
       setBoss(bossCard);
       setBossHP(bossCard.maxHP);
@@ -449,19 +502,19 @@ const GameScreen: React.FC = () => {
       setSelectedCards([]);
       setHasDiscarded(false);
       setBattleLog([]);
-      setRound(prev => prev + 1);
+      setRound((prev) => prev + 1);
       setCollectionDeck(deckToUse);
       setPlayDeck(remainingPlayDeck);
       setHand(initialHand);
       setDiscardPile([]);
       setIsLoading(false);
-      
+
       // Wait for all state updates to flush, then change game state
       setTimeout(() => {
-        setGameState('playing');
+        setGameState("playing");
       }, 0);
     } catch (err) {
-      setError('Failed to load new boss.');
+      setError("Failed to load new boss.");
       setIsLoading(false);
     }
   };
@@ -474,10 +527,10 @@ const GameScreen: React.FC = () => {
     return (
       <div className="h-dvh bg-[#14181C] text-white flex items-center justify-center">
         <div className="text-center">
-          <img 
-            src={spinnerImg} 
-            alt="Loading" 
-            className="w-20 h-20 animate-spin mx-auto mb-4" 
+          <img
+            src={spinnerImg}
+            alt="Loading"
+            className="w-20 h-20 animate-spin mx-auto mb-4"
           />
           <h2 className="text-2xl font-bold">Loading Movies...</h2>
           <p className="text-gray-400 mt-2">Fetching from TMDB</p>
@@ -485,7 +538,7 @@ const GameScreen: React.FC = () => {
       </div>
     );
   }
-  
+
   if (error) {
     return (
       <div className="h-dvh bg-[#14181C] text-white flex items-center justify-center">
@@ -493,7 +546,7 @@ const GameScreen: React.FC = () => {
           <div className="text-red-500 text-6xl mb-4">❌</div>
           <h2 className="text-2xl font-bold mb-2">Error Loading Game</h2>
           <p className="text-gray-400 mb-4">{error}</p>
-          <button 
+          <button
             onClick={() => window.location.reload()}
             className="bg-linear-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 px-6 py-3 rounded-lg font-bold cursor-pointer"
           >
@@ -503,7 +556,7 @@ const GameScreen: React.FC = () => {
       </div>
     );
   }
-  
+
   if (!boss) return <div className="p-8">Loading...</div>;
 
   return (
@@ -526,9 +579,8 @@ const GameScreen: React.FC = () => {
 
         {/* Main Content */}
         <div className="flex-1 overflow-y-auto mx-3 py-3 h-full flex flex-col justify-between lg:justify-start">
-        
-        {/* Mobile Top Bar - Round/Turn and Buttons */}
-        {/* <div className="lg:hidden flex gap-2 mb-3 items-center justify-around">
+          {/* Mobile Top Bar - Round/Turn and Buttons */}
+          {/* <div className="lg:hidden flex gap-2 mb-3 items-center justify-around">
           <div className="w-3/5 px-2 py-1 bg-gray-800 bg-opacity-50 border-2 rounded-lg border-gray-600 flex gap-6 items-center justify-center">
             <div className="flex items-center gap-2">
               <p className="text-lg text-gray-400">Round</p>
@@ -543,157 +595,163 @@ const GameScreen: React.FC = () => {
           <InstructionsButton onClick={() => track('opened_instructions')} />
           <EndGameButton />
         </div> */}
-        
-        {/* Shop Screen - shows after victory */}
-        {gameState === 'shop' && (
-          <ShopScreen 
-            deck={collectionDeck} 
-            discardPile={discardPile} 
-            round={round} 
-            existingCardIds={existingCardIds}
-            tickets={tickets}
-            onShopAction={handleShopAction}
-          />
-        )}
 
-        {/* Loss Screen */}
-        {gameState === 'lost' && boss && (
-          <GameOverScreen 
-            round={round}
+          {/* Shop Screen - shows after victory */}
+          {gameState === "shop" && (
+            <ShopScreen
+              deck={collectionDeck}
+              discardPile={discardPile}
+              round={round}
+              existingCardIds={existingCardIds}
+              tickets={tickets}
+              onShopAction={handleShopAction}
+            />
+          )}
+
+          {/* Loss Screen */}
+          {gameState === "lost" && boss && (
+            <GameOverScreen
+              round={round}
+              boss={boss}
+              collectionDeck={collectionDeck}
+              gameStats={gameStats}
+            />
+          )}
+
+          {/* Boss Section */}
+          <BossCardDisplay
+            key={`${boss.id}-${round}`}
             boss={boss}
-            collectionDeck={collectionDeck}
-            gameStats={gameStats}
+            bossHP={bossHP}
           />
-        )}
 
-        {/* Boss Section */}
-        <BossCardDisplay key={`${boss.id}-${round}`} boss={boss} bossHP={bossHP} />
-
-        {/* Spacer to push content to bottom - click to deselect */}
-        <div 
-          className="hidden lg:flex lg:flex-1 cursor-pointer" 
-          onClick={() => {
-            if (selectedCards.length > 0) {
-              setSelectedCards([]);
-            }
-          }}
-        ></div>
+          {/* Spacer to push content to bottom - click to deselect */}
+          <div
+            className="hidden lg:flex lg:flex-1 cursor-pointer"
+            onClick={() => {
+              if (selectedCards.length > 0) {
+                setSelectedCards([]);
+              }
+            }}
+          ></div>
 
           {/* Action Buttons and Hand - Fixed to Bottom */}
           <div className="mt-2 lg:mt-auto space-y-3 mx-auto max-w-[95%] pb-[env(safe-area-inset-bottom)]">
-          
-          {/* Desktop: Deck popup in top right */}
-          <div className="hidden lg:flex justify-end">
-            <div 
-              className="flex-1 cursor-pointer"
-              onClick={() => {
-                if (selectedCards.length > 0) {
-                  setSelectedCards([]);
-                }
-              }}
-            ></div>
-            <DeckPopup deck={collectionDeck} discardPile={discardPile} />
-          </div>
-          
-
-          {/* Hand */}
-          <div className="mb-3 lg:mb-4">
-            {/* Mobile: 3 cards on top row centered, 4 cards on bottom row */}
-            <div className="lg:hidden space-y-2">
-              <div className="grid grid-cols-8 gap-1">
-                <div></div>
-                {hand.slice(0, 3).map(card => (
-                  <div key={card.id} className="col-span-2">
-                    <PlayerCard
-                      card={card}
-                      isSelected={selectedCards.includes(card.id)}
-                      onSelect={toggleCardSelection}
-                      isDisabled={isAttacking}
-                      small={true}
-                    />
-                  </div>
-                ))}
-                <div></div>
-              </div>
-              <div className="grid grid-cols-8 gap-1">
-                {hand.slice(3, 7).map(card => (
-                  <div key={card.id} className="col-span-2">
-                    <PlayerCard
-                      card={card}
-                      isSelected={selectedCards.includes(card.id)}
-                      onSelect={toggleCardSelection}
-                      isDisabled={isAttacking}
-                      small={true}
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
-            
-            {/* Desktop: all 7 cards in one row */}
-            <div className="hidden lg:block">
-              <div className="grid grid-cols-7 gap-2">
-                {hand.map(card => (
-                  <PlayerCard
-                    key={card.id}
-                    card={card}
-                    isSelected={selectedCards.includes(card.id)}
-                    onSelect={toggleCardSelection}
-                    isDisabled={isAttacking}
-                  />
-                ))}
-              </div>
-            </div>
-          </div>
-          {/* Action Buttons */}
-          <div className="flex gap-4">
-            <button
-              onClick={handleAttack}
-              disabled={selectedCards.length === 0 || isAttacking}
-              className={`lg:flex-1 w-3/5 lg:w-auto cursor-pointer lg:px-6 lg:py-4 rounded-full font-bold lg:text-xl flex items-center justify-center gap-2 shadow-lg transition-all
-                bg-linear-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700
-                ${(selectedCards.length === 0 || isAttacking)
-                  ? 'disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed'
-                  : 'transform'
-                }`
-              }
-            >
-              ATTACK
-            </button>
-            <button
-              onClick={handleDiscard}
-              disabled={hasDiscarded || selectedCards.length === 0}
-              className={`lg:px-8 w-1/5 lg:w-auto cursor-pointer rounded-lg font-bold text-xl flex items-center justify-center gap-2 shadow-lg transition-all
-                bg-linear-to-r from-yellow-600 to-orange-600 hover:from-yellow-700 hover:to-orange-700
-                ${(hasDiscarded || selectedCards.length === 0)
-                  ? 'disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed'
-                  : 'transform'
-                }`
-              }
-            >
-              <span className="hidden lg:inline">DISCARD {hasDiscarded ? '(Used)' : ''}</span>
-              <span className="lg:hidden"><FaTrashAlt className='w-4 h-4' /></span>
-            </button>
-            <div className="w-1/5 lg:hidden flex items-center justify-center">
+            {/* Desktop: Deck popup in top right */}
+            <div className="hidden lg:flex justify-end">
+              <div
+                className="flex-1 cursor-pointer"
+                onClick={() => {
+                  if (selectedCards.length > 0) {
+                    setSelectedCards([]);
+                  }
+                }}
+              ></div>
               <DeckPopup deck={collectionDeck} discardPile={discardPile} />
             </div>
-          </div>
 
-          {/* Mobile Game Info - ATK/DEF and Health */}
-          <div className="lg:hidden">
-            <MobileGameInfo
-              selectedCards={selectedCards}
-              hand={hand}
-              boss={boss}
-              calculateBattle={calculateBattle}
-              playerHP={playerHP}
-              maxPlayerHP={maxPlayerHP}
-            />
+            {/* Hand */}
+            <div className="mb-3 lg:mb-4">
+              {/* Mobile: 3 cards on top row centered, 4 cards on bottom row */}
+              <div className="lg:hidden space-y-2">
+                <div className="grid grid-cols-8 gap-1">
+                  <div></div>
+                  {hand.slice(0, 3).map((card) => (
+                    <div key={card.id} className="col-span-2">
+                      <PlayerCard
+                        card={card}
+                        isSelected={selectedCards.includes(card.id)}
+                        onSelect={toggleCardSelection}
+                        isDisabled={isAttacking}
+                        small={true}
+                      />
+                    </div>
+                  ))}
+                  <div></div>
+                </div>
+                <div className="grid grid-cols-8 gap-1">
+                  {hand.slice(3, 7).map((card) => (
+                    <div key={card.id} className="col-span-2">
+                      <PlayerCard
+                        card={card}
+                        isSelected={selectedCards.includes(card.id)}
+                        onSelect={toggleCardSelection}
+                        isDisabled={isAttacking}
+                        small={true}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Desktop: all 7 cards in one row */}
+              <div className="hidden lg:block">
+                <div className="grid grid-cols-7 gap-2">
+                  {hand.map((card) => (
+                    <PlayerCard
+                      key={card.id}
+                      card={card}
+                      isSelected={selectedCards.includes(card.id)}
+                      onSelect={toggleCardSelection}
+                      isDisabled={isAttacking}
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
+            {/* Action Buttons */}
+            <div className="flex gap-4">
+              <button
+                onClick={handleAttack}
+                disabled={selectedCards.length === 0 || isAttacking}
+                className={`lg:flex-1 w-3/5 lg:w-auto cursor-pointer lg:px-6 lg:py-4 rounded-full font-bold lg:text-xl flex items-center justify-center gap-2 shadow-lg transition-all
+                bg-linear-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700
+                ${
+                  selectedCards.length === 0 || isAttacking
+                    ? "disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed"
+                    : "transform"
+                }`}
+              >
+                ATTACK
+              </button>
+              <button
+                onClick={handleDiscard}
+                disabled={hasDiscarded || selectedCards.length === 0}
+                className={`lg:px-8 w-1/5 lg:w-auto cursor-pointer rounded-lg font-bold text-xl flex items-center justify-center gap-2 shadow-lg transition-all
+                bg-linear-to-r from-yellow-600 to-orange-600 hover:from-yellow-700 hover:to-orange-700
+                ${
+                  hasDiscarded || selectedCards.length === 0
+                    ? "disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed"
+                    : "transform"
+                }`}
+              >
+                <span className="hidden lg:inline">
+                  DISCARD {hasDiscarded ? "(Used)" : ""}
+                </span>
+                <span className="lg:hidden">
+                  <FaTrashAlt className="w-4 h-4" />
+                </span>
+              </button>
+              <div className="w-1/5 lg:hidden flex items-center justify-center">
+                <DeckPopup deck={collectionDeck} discardPile={discardPile} />
+              </div>
+            </div>
+
+            {/* Mobile Game Info - ATK/DEF and Health */}
+            <div className="lg:hidden">
+              <MobileGameInfo
+                selectedCards={selectedCards}
+                hand={hand}
+                boss={boss}
+                calculateBattle={calculateBattle}
+                playerHP={playerHP}
+                maxPlayerHP={maxPlayerHP}
+              />
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
   );
 };
 

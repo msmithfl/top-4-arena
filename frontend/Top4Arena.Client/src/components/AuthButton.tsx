@@ -19,33 +19,35 @@ const AuthButton = () => {
   return (
     <div className="z-10">
       <SignedOut>
-        <button 
-          onClick={() => navigate('/sign-in')}
+        <button
+          onClick={() => navigate("/sign-in")}
           className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-full transition-all duration-200 cursor-pointer"
         >
           Sign In
         </button>
       </SignedOut>
-      
+
       <SignedIn>
         <div className="flex items-center gap-3 mt-2 mr-2 ml-2">
           <button
-            onClick={() => navigate('/profile')}
+            onClick={() => navigate("/profile")}
             className="text-white pb-2 pr-2 font-semibold hover:text-gray-400 transition-colors cursor-pointer"
           >
             {user?.username || user?.firstName || "User"}
           </button>
           <div className="scale-150 origin-center">
-            <UserButton 
-              afterSignOutUrl="/"
-            >
-            <UserButton.MenuItems>
-              <UserButton.Action
-                label="View Profile"
-                labelIcon={<span><FaUserAstronaut /></span>}
-                onClick={() => navigate('/profile')}
-              />
-            </UserButton.MenuItems>
+            <UserButton afterSignOutUrl="/">
+              <UserButton.MenuItems>
+                <UserButton.Action
+                  label="View Profile"
+                  labelIcon={
+                    <span>
+                      <FaUserAstronaut />
+                    </span>
+                  }
+                  onClick={() => navigate("/profile")}
+                />
+              </UserButton.MenuItems>
             </UserButton>
           </div>
         </div>

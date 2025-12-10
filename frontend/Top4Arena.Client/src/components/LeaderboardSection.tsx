@@ -1,26 +1,36 @@
-import { GiLaurelsTrophy } from 'react-icons/gi';
-import { useEffect, useState } from 'react';
-import { AWARDS } from '../data/userAwards';
+import { GiLaurelsTrophy } from "react-icons/gi";
+import { useEffect, useState } from "react";
+import { AWARDS } from "../data/userAwards";
 
 const LeaderboardSection = () => {
-  const [leaderboardData, setLeaderboardData] = useState<Array<{ username: string; bestRun: number }>>([]);
+  const [leaderboardData, setLeaderboardData] = useState<
+    Array<{ username: string; bestRun: number }>
+  >([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [timePeriod, setTimePeriod] = useState<'all-time' | 'weekly' | 'daily'>('daily');
-  const [selectedAwardHover, setSelectedAwardHover] = useState<{awardId: string, awardTitle: string, description: string} | null>(null);
+  const [timePeriod, setTimePeriod] = useState<"all-time" | "weekly" | "daily">(
+    "daily"
+  );
+  const [selectedAwardHover, setSelectedAwardHover] = useState<{
+    awardId: string;
+    awardTitle: string;
+    description: string;
+  } | null>(null);
 
-  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5157';
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5157";
 
   useEffect(() => {
     const fetchLeaderboard = async () => {
       setIsLoading(true);
       try {
-        const response = await fetch(`${API_URL}/api/leaderboard?period=${timePeriod}`);
+        const response = await fetch(
+          `${API_URL}/api/leaderboard?period=${timePeriod}`
+        );
         if (response.ok) {
           const data = await response.json();
           setLeaderboardData(data);
         }
       } catch (err) {
-        console.error('Failed to load leaderboard:', err);
+        console.error("Failed to load leaderboard:", err);
       } finally {
         setIsLoading(false);
       }
@@ -37,16 +47,23 @@ const LeaderboardSection = () => {
   };
 
   return (
-    <div id="leaderboard-section" className="w-full px-6 pb-6 pt-4 bg-[#14181C]">
+    <div
+      id="leaderboard-section"
+      className="w-full px-6 pb-6 pt-4 bg-[#14181C]"
+    >
       <div className="max-w-5xl mx-auto">
         <div className="flex flex-col lg:flex-row justify-between gap-6">
           {/* Leaderboard - 3/4 width */}
           <div className="w-full lg:w-3/5">
             <div className="flex items-center gap-4 mb-6">
               <h2 className="text-3xl md:text-4xl font-bold">Leaderboards</h2>
-              <select 
+              <select
                 value={timePeriod}
-                onChange={(e) => setTimePeriod(e.target.value as 'all-time' | 'weekly' | 'daily')}
+                onChange={(e) =>
+                  setTimePeriod(
+                    e.target.value as "all-time" | "weekly" | "daily"
+                  )
+                }
                 className="bg-[#2C3440] border border-white/10 text-white rounded-lg px-2 py-2 font-bold cursor-pointer hover:bg-[#3C4450] transition-colors"
               >
                 <option value="daily">Last 24 Hours</option>
@@ -65,7 +82,9 @@ const LeaderboardSection = () => {
                 </div>
                 <div className="flex gap-6">
                   <div className="w-24 text-right md:text-left">
-                    <p className="text-white/50 text-xs font-bold pr-4 md:pr-0">ROUND</p>
+                    <p className="text-white/50 text-xs font-bold pr-4 md:pr-0">
+                      ROUND
+                    </p>
                   </div>
                 </div>
               </div>
@@ -73,12 +92,14 @@ const LeaderboardSection = () => {
 
             <div className="space-y-2 max-h-[400px] md:max-h-[1200px] overflow-y-auto scrollbar-thin pr-4 md:pr-0">
               {isLoading ? (
-                <div className="text-center py-8 text-white/50 min-h-[400px]">Loading leaderboard...</div>
+                <div className="text-center py-8 text-white/50 min-h-[400px]">
+                  Loading leaderboard...
+                </div>
               ) : (
                 [...Array(15)].map((_, index) => {
                   const player = leaderboardData[index];
                   const rank = index + 1;
-                  
+
                   return (
                     <div
                       key={rank}
@@ -86,19 +107,27 @@ const LeaderboardSection = () => {
                     >
                       <div className="flex items-center gap-4">
                         {/* Rank */}
-                        <div className={`flex justify-center gap-2 w-9 md:w-26 ${player ? getRankColor(rank) : 'text-white/70'} font-bold text-xl`}>
+                        <div
+                          className={`flex justify-center gap-2 w-9 md:w-26 ${
+                            player ? getRankColor(rank) : "text-white/70"
+                          } font-bold text-xl`}
+                        >
                           <span>{rank}</span>
                         </div>
 
                         {/* Username */}
                         <div className="flex-1">
-                          <p className="text-white md:text-lg">{player ? player.username : '-'}</p>
+                          <p className="text-white md:text-lg">
+                            {player ? player.username : "-"}
+                          </p>
                         </div>
 
                         {/* Round */}
                         <div className="flex gap-6 text-right md:text-left">
                           <div className="w-24">
-                            <p className="text-white text-lg">{player ? player.bestRun : '-'}</p>
+                            <p className="text-white text-lg">
+                              {player ? player.bestRun : "-"}
+                            </p>
                           </div>
                         </div>
                       </div>
@@ -115,19 +144,19 @@ const LeaderboardSection = () => {
               <h2 className="text-lg font-bold">AWARDS</h2>
             </div>
             <div className="h-px bg-white/50 mb-3"></div>
-            
+
             {/* Fixed tooltip outside scroll container */}
             {/* Tooltip absolutely positioned above the hovered award */}
             {selectedAwardHover && (
               <div
                 className="absolute z-50 pointer-events-none"
                 style={{
-                  left: '50%',
+                  left: "50%",
                   top: 0,
-                  transform: 'translate(-50%, calc(-100% - 10px))',
-                  width: 'max-content',
-                  minWidth: '180px',
-                  maxWidth: '260px',
+                  transform: "translate(-50%, calc(-100% - 10px))",
+                  width: "max-content",
+                  minWidth: "180px",
+                  maxWidth: "260px",
                 }}
               >
                 <div className="bg-black/95 border border-white/20 rounded-lg p-3 shadow-xl whitespace-nowrap">
@@ -140,7 +169,7 @@ const LeaderboardSection = () => {
                 </div>
               </div>
             )}
-            
+
             <div className="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-2 gap-4 max-h-full">
               {AWARDS.map((award) => {
                 return (
@@ -154,11 +183,11 @@ const LeaderboardSection = () => {
                       <div
                         className="absolute z-50 pointer-events-none"
                         style={{
-                          left: '50%',
+                          left: "50%",
                           top: 0,
-                          transform: 'translate(-50%, calc(-100% - 10px))',
-                          width: 'max-content',
-                          maxWidth: '260px',
+                          transform: "translate(-50%, calc(-100% - 10px))",
+                          width: "max-content",
+                          maxWidth: "260px",
                         }}
                       >
                         <div className="bg-black/95 border border-white/20 rounded-lg p-3 shadow-xl whitespace-nowrap">

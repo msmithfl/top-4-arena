@@ -1,7 +1,10 @@
 @import "tailwindcss";
 
-h1, h2, h3, button {
-  font-family: 'Exo', sans-serif;
+h1,
+h2,
+h3,
+button {
+  font-family: "Exo", sans-serif;
 }
 
 /* Custom scrollbar styles */

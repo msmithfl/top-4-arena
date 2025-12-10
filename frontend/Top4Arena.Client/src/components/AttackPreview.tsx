@@ -1,6 +1,6 @@
-import React from 'react';
+import React from "react";
 //import { Swords } from 'lucide-react';
-import type { MovieCard, BossCard, BattleResult } from '../types';
+import type { MovieCard, BossCard, BattleResult } from "../types";
 
 interface AttackPreviewProps {
   selectedCards: number[];
@@ -13,17 +13,17 @@ const AttackPreview: React.FC<AttackPreviewProps> = ({
   selectedCards,
   hand,
   boss,
-  calculateBattle
+  calculateBattle,
 }) => {
-  const playedCards = hand.filter(card => selectedCards.includes(card.id));
+  const playedCards = hand.filter((card) => selectedCards.includes(card.id));
   const result = selectedCards.length > 0 ? calculateBattle(playedCards) : null;
 
   let damage = result ? result.damage : 0;
   if (boss && result) {
-    if (boss.ability.name === 'EMOTIONAL WEIGHT') {
+    if (boss.ability.name === "EMOTIONAL WEIGHT") {
       damage = Math.round(damage * 0.7);
     }
-    if (boss.ability.name === 'TECH SHIELD') {
+    if (boss.ability.name === "TECH SHIELD") {
       damage = Math.max(0, damage - 1500);
     }
   }
@@ -37,13 +37,13 @@ const AttackPreview: React.FC<AttackPreviewProps> = ({
         <div className="flex flex-col justify-between items-center w-1/2">
           <span className="text-xl text-gray-300">ATK</span>
           <span className="text-3xl font-bold text-red-400 text-center">
-            {selectedCards.length > 0 ? damage : '0'}
+            {selectedCards.length > 0 ? damage : "0"}
           </span>
         </div>
         <div className="flex flex-col justify-between items-center w-1/2">
           <span className="text-xl text-gray-300">DEF</span>
           <span className="text-3xl font-bold text-blue-400 text-center">
-            {selectedCards.length > 0 ? defense : '0'}
+            {selectedCards.length > 0 ? defense : "0"}
           </span>
         </div>
       </div>
@@ -52,13 +52,18 @@ const AttackPreview: React.FC<AttackPreviewProps> = ({
           {synergies.length > 0 ? (
             <div className="grid grid-cols-2 gap-2">
               {synergies.map((syn, i) => (
-                <div key={i} className="text-xs text-yellow-300 bg-yellow-900/30 border border-yellow-600/50 rounded px-2 py-1 text-center">
+                <div
+                  key={i}
+                  className="text-xs text-yellow-300 bg-yellow-900/30 border border-yellow-600/50 rounded px-2 py-1 text-center"
+                >
                   {syn}
                 </div>
               ))}
             </div>
           ) : (
-            <div className="text-sm text-gray-500 italic text-center">NO SYNERGIES</div>
+            <div className="text-sm text-gray-500 italic text-center">
+              NO SYNERGIES
+            </div>
           )}
         </div>
       </div>

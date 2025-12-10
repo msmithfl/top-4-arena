@@ -36,7 +36,7 @@ export const AWARDS = [
   },
   {
     awardId: "tarantino-hand",
-    awardTitle: "Foot Fetishist", 
+    awardTitle: "Foot Fetishist",
     description: "???" // Play a full Tarantino hand.
   },
   {

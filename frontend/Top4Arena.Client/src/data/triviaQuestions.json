@@ -6,11 +6,7 @@
       "category": "Entertainment: Film",
       "question": "Who played Thanos in Avengers: Infinity War and Avengers: End Game?",
       "correct_answer": "Josh Brolin",
-      "incorrect_answers": [
-        "Tom Hiddleston",
-        "Adam Sandler",
-        "Sean Gunn"
-      ]
+      "incorrect_answers": ["Tom Hiddleston", "Adam Sandler", "Sean Gunn"]
     },
     {
       "type": "multiple",
@@ -18,11 +14,7 @@
       "category": "Entertainment: Film",
       "question": "Which film has been critically regarded as the best film of all time?",
       "correct_answer": "Citizen Kane",
-      "incorrect_answers": [
-        "Avatar",
-        "The Godfather Part II",
-        "The Room"
-      ]
+      "incorrect_answers": ["Avatar", "The Godfather Part II", "The Room"]
     },
     {
       "type": "multiple",
@@ -30,11 +22,7 @@
       "category": "Entertainment: Film",
       "question": "&quot;The first rule is: you don&#039;t talk about it&quot; is a reference to which movie?",
       "correct_answer": "Fight Club",
-      "incorrect_answers": [
-        "The Island",
-        "Unthinkable",
-        "American Pie"
-      ]
+      "incorrect_answers": ["The Island", "Unthinkable", "American Pie"]
     },
     {
       "type": "multiple",
@@ -42,11 +30,7 @@
       "category": "Entertainment: Film",
       "question": "In &quot;Mean Girls&quot;, who has breasts that tell when it&#039;s raining?",
       "correct_answer": "Karen Smith",
-      "incorrect_answers": [
-        "Gretchen Weiners",
-        "Janice Ian",
-        "Cady Heron"
-      ]
+      "incorrect_answers": ["Gretchen Weiners", "Janice Ian", "Cady Heron"]
     },
     {
       "type": "multiple",
@@ -54,11 +38,7 @@
       "category": "Entertainment: Film",
       "question": "This movie contains the quote, &quot;Houston, we have a problem.&quot;",
       "correct_answer": "Apollo 13",
-      "incorrect_answers": [
-        "The Right Stuff",
-        "Capricorn One",
-        "Marooned"
-      ]
+      "incorrect_answers": ["The Right Stuff", "Capricorn One", "Marooned"]
     },
     {
       "type": "multiple",
@@ -66,11 +46,7 @@
       "category": "Entertainment: Film",
       "question": "Who plays Alice in the Resident Evil movies?",
       "correct_answer": "Milla Jovovich",
-      "incorrect_answers": [
-        "Madison Derpe",
-        "Milla Johnson",
-        "Kim Demp"
-      ]
+      "incorrect_answers": ["Madison Derpe", "Milla Johnson", "Kim Demp"]
     },
     {
       "type": "multiple",
@@ -78,11 +54,7 @@
       "category": "Entertainment: Film",
       "question": "Which actress danced the twist with John Travolta in &#039;Pulp Fiction&#039;?",
       "correct_answer": "Uma Thurman",
-      "incorrect_answers": [
-        "Kathy Griffin",
-        "Pam Grier",
-        "Bridget Fonda"
-      ]
+      "incorrect_answers": ["Kathy Griffin", "Pam Grier", "Bridget Fonda"]
     },
     {
       "type": "multiple",
@@ -90,11 +62,7 @@
       "category": "Entertainment: Film",
       "question": "What is the name of the island that &quot;Jurassic Park&quot; is built on?",
       "correct_answer": "Isla Nublar",
-      "incorrect_answers": [
-        "Isla Sorna",
-        "Isla Muerta",
-        "Isla Pena"
-      ]
+      "incorrect_answers": ["Isla Sorna", "Isla Muerta", "Isla Pena"]
     },
     {
       "type": "multiple",
@@ -102,11 +70,7 @@
       "category": "Entertainment: Film",
       "question": "What was Bruce Campbell&#039;s iconic one-liner after getting a chainsaw hand in Evil Dead 2?",
       "correct_answer": "Groovy.",
-      "incorrect_answers": [
-        "Gnarly.",
-        "Perfect.",
-        "Nice."
-      ]
+      "incorrect_answers": ["Gnarly.", "Perfect.", "Nice."]
     },
     {
       "type": "multiple",
@@ -114,11 +78,7 @@
       "category": "Entertainment: Film",
       "question": "In the movie &quot;Spaceballs&quot;, what are the Spaceballs attempting to steal from Planet Druidia?",
       "correct_answer": "Air",
-      "incorrect_answers": [
-        "The Schwartz",
-        "Princess Lonestar",
-        "Meatballs"
-      ]
+      "incorrect_answers": ["The Schwartz", "Princess Lonestar", "Meatballs"]
     },
     {
       "type": "multiple",
@@ -126,11 +86,7 @@
       "category": "Entertainment: Film",
       "question": "In &quot;Jurassic World&quot;, what is the name of the dinosaur that is a genetic hybrid?",
       "correct_answer": "Indominus Rex",
-      "incorrect_answers": [
-        "Mosasaurus",
-        "Pteranodon",
-        "Tyrannosaurus Rex "
-      ]
+      "incorrect_answers": ["Mosasaurus", "Pteranodon", "Tyrannosaurus Rex "]
     },
     {
       "type": "multiple",
@@ -138,11 +94,7 @@
       "category": "Entertainment: Film",
       "question": "Which of the following was not one of &quot;The Magnificent Seven&quot;?",
       "correct_answer": "Clint Eastwood",
-      "incorrect_answers": [
-        "Steve McQueen",
-        "Charles Bronson",
-        "Robert Vaughn"
-      ]
+      "incorrect_answers": ["Steve McQueen", "Charles Bronson", "Robert Vaughn"]
     },
     {
       "type": "multiple",
@@ -150,11 +102,7 @@
       "category": "Entertainment: Film",
       "question": "Who plays Jack Burton in the movie &quot;Big Trouble in Little China?&quot;",
       "correct_answer": "Kurt Russell",
-      "incorrect_answers": [
-        "Patrick Swayze",
-        "John Cusack",
-        "Harrison Ford"
-      ]
+      "incorrect_answers": ["Patrick Swayze", "John Cusack", "Harrison Ford"]
     },
     {
       "type": "multiple",
@@ -162,11 +110,7 @@
       "category": "Entertainment: Film",
       "question": "At the end of the 2001 film &quot;Rat Race&quot;, whose concert do the contestants crash?",
       "correct_answer": "Smash Mouth",
-      "incorrect_answers": [
-        "Bowling for Soup",
-        "Sum 41",
-        "Linkin Park"
-      ]
+      "incorrect_answers": ["Bowling for Soup", "Sum 41", "Linkin Park"]
     },
     {
       "type": "multiple",
@@ -186,11 +130,7 @@
       "category": "Entertainment: Film",
       "question": "Which of these films is NOT set in Los Angeles?",
       "correct_answer": "RoboCop",
-      "incorrect_answers": [
-        "Blade Runner",
-        "The Terminator",
-        "Predator 2"
-      ]
+      "incorrect_answers": ["Blade Runner", "The Terminator", "Predator 2"]
     },
     {
       "type": "multiple",
@@ -210,11 +150,7 @@
       "category": "Entertainment: Film",
       "question": "7-Eleven stores were temporarily converted into Kwik E-marts to promote the release of what movie?",
       "correct_answer": "The Simpsons Movie",
-      "incorrect_answers": [
-        "Spider-Man 3",
-        "Shrek the Third",
-        "Ratatouille"
-      ]
+      "incorrect_answers": ["Spider-Man 3", "Shrek the Third", "Ratatouille"]
     },
     {
       "type": "multiple",
@@ -222,11 +158,7 @@
       "category": "Entertainment: Film",
       "question": "Where does the original Friday The 13th movie take place?",
       "correct_answer": "Camp Crystal Lake",
-      "incorrect_answers": [
-        "Packanack",
-        "Higgins Haven",
-        "Camp Forest Green"
-      ]
+      "incorrect_answers": ["Packanack", "Higgins Haven", "Camp Forest Green"]
     },
     {
       "type": "multiple",
@@ -258,11 +190,7 @@
       "category": "Entertainment: Film",
       "question": "Who played Deputy Marshal Samuel Gerard in the 1993 film &quot;The Fugitive&quot;?",
       "correct_answer": "Tommy Lee Jones",
-      "incorrect_answers": [
-        "Harrison Ford",
-        "Harvey Keitel",
-        "Martin Landau"
-      ]
+      "incorrect_answers": ["Harrison Ford", "Harvey Keitel", "Martin Landau"]
     },
     {
       "type": "multiple",
@@ -270,11 +198,7 @@
       "category": "Entertainment: Film",
       "question": "What is the name of the fictional retro-mod band starring Austin Powers as the lead vocalist?",
       "correct_answer": "Ming Tea",
-      "incorrect_answers": [
-        "Cough Fi",
-        "Spear Mint",
-        "Mister E"
-      ]
+      "incorrect_answers": ["Cough Fi", "Spear Mint", "Mister E"]
     },
     {
       "type": "multiple",
@@ -282,11 +206,7 @@
       "category": "Entertainment: Film",
       "question": "For the film &quot;Raiders of The Lost Ark&quot;, what was Harrison Ford sick with during the filming of the Cairo chase?",
       "correct_answer": "Dysentery",
-      "incorrect_answers": [
-        "Anemia",
-        "Constipation",
-        "Acid Reflux "
-      ]
+      "incorrect_answers": ["Anemia", "Constipation", "Acid Reflux "]
     },
     {
       "type": "multiple",
@@ -318,11 +238,7 @@
       "category": "Entertainment: Film",
       "question": "In the Lord of the Rings: The Two Towers, where are the party of orcs taking the hobbits?",
       "correct_answer": "Isengard",
-      "incorrect_answers": [
-        "Rivendell",
-        "Mordor",
-        "Moria"
-      ]
+      "incorrect_answers": ["Rivendell", "Mordor", "Moria"]
     },
     {
       "type": "multiple",
@@ -330,11 +246,7 @@
       "category": "Entertainment: Film",
       "question": "What was Dorothy&#039;s surname in &#039;The Wizard Of Oz&#039;?",
       "correct_answer": "Gale",
-      "incorrect_answers": [
-        "Perkins",
-        "Day",
-        "Parker"
-      ]
+      "incorrect_answers": ["Perkins", "Day", "Parker"]
     },
     {
       "type": "multiple",
@@ -342,11 +254,7 @@
       "category": "Entertainment: Film",
       "question": "In the movie &quot;Cast Away&quot; the main protagonist&#039;s best friend while on the island is named",
       "correct_answer": "Wilson",
-      "incorrect_answers": [
-        "Carson",
-        "Jackson",
-        "Willy"
-      ]
+      "incorrect_answers": ["Carson", "Jackson", "Willy"]
     },
     {
       "type": "multiple",
@@ -354,11 +262,7 @@
       "category": "Entertainment: Film",
       "question": "In the movie Gremlins, after what time of day should you not feed Mogwai?",
       "correct_answer": "Midnight",
-      "incorrect_answers": [
-        "Evening",
-        "Morning",
-        "Afternoon"
-      ]
+      "incorrect_answers": ["Evening", "Morning", "Afternoon"]
     },
     {
       "type": "multiple",
@@ -366,11 +270,7 @@
       "category": "Entertainment: Film",
       "question": "What superhero has been played in film by actors Michael Keaton, Val Kilmer, George Clooney and Christian Bale?",
       "correct_answer": "Batman",
-      "incorrect_answers": [
-        "Superman",
-        "Iron Man",
-        "Spiderman"
-      ]
+      "incorrect_answers": ["Superman", "Iron Man", "Spiderman"]
     },
     {
       "type": "multiple",
@@ -378,11 +278,7 @@
       "category": "Entertainment: Film",
       "question": "Which James Bond film had the theme song written and performed by English singer-songwriter Adele?",
       "correct_answer": "Skyfall",
-      "incorrect_answers": [
-        "Casino Royale",
-        "Quantum Solace",
-        "Spectre"
-      ]
+      "incorrect_answers": ["Casino Royale", "Quantum Solace", "Spectre"]
     },
     {
       "type": "multiple",
@@ -390,11 +286,7 @@
       "category": "Entertainment: Film",
       "question": "What is the oldest Disney film?",
       "correct_answer": "Snow White and the Seven Dwarfs",
-      "incorrect_answers": [
-        "Pinocchio",
-        "Dumbo",
-        "Fantasia"
-      ]
+      "incorrect_answers": ["Pinocchio", "Dumbo", "Fantasia"]
     },
     {
       "type": "multiple",
@@ -402,11 +294,7 @@
       "category": "Entertainment: Film",
       "question": "In the Super Mario Bros. Movie (2023), who plays Toad?",
       "correct_answer": "Keegan-Michael Key",
-      "incorrect_answers": [
-        "Seth Rogan",
-        "Charlie Day",
-        "Jack Black"
-      ]
+      "incorrect_answers": ["Seth Rogan", "Charlie Day", "Jack Black"]
     },
     {
       "type": "multiple",
@@ -414,11 +302,7 @@
       "category": "Entertainment: Film",
       "question": "Which of the following movies was not based on a novel by Stephen King? ",
       "correct_answer": "The Thing",
-      "incorrect_answers": [
-        "Carrie",
-        "Misery",
-        "The Green Mile"
-      ]
+      "incorrect_answers": ["Carrie", "Misery", "The Green Mile"]
     },
     {
       "type": "multiple",
@@ -438,11 +322,7 @@
       "category": "Entertainment: Film",
       "question": "Which of these movies did Jeff Bridges not star in?",
       "correct_answer": "The Hateful Eight",
-      "incorrect_answers": [
-        "Tron: Legacy",
-        "The Giver",
-        "True Grit"
-      ]
+      "incorrect_answers": ["Tron: Legacy", "The Giver", "True Grit"]
     },
     {
       "type": "multiple",
@@ -450,11 +330,7 @@
       "category": "Entertainment: Film",
       "question": "The Queen song `A Kind Of Magic` is featured in which 1986 film?",
       "correct_answer": "Highlander",
-      "incorrect_answers": [
-        "Flash Gordon",
-        "Labyrinth",
-        "Howard the Duck"
-      ]
+      "incorrect_answers": ["Flash Gordon", "Labyrinth", "Howard the Duck"]
     },
     {
       "type": "multiple",
@@ -462,11 +338,7 @@
       "category": "Entertainment: Film",
       "question": "In &quot;ALF&quot;, what was ALF&#039;s real name?",
       "correct_answer": "Gordon Shumway",
-      "incorrect_answers": [
-        "Gordon Milipp",
-        "Gordon Foster",
-        "Gordon von Gam"
-      ]
+      "incorrect_answers": ["Gordon Milipp", "Gordon Foster", "Gordon von Gam"]
     },
     {
       "type": "multiple",
@@ -474,11 +346,7 @@
       "category": "Entertainment: Film",
       "question": "The 2016 Disney animated film &#039;Moana&#039; is based on which culture?",
       "correct_answer": "Polynesian",
-      "incorrect_answers": [
-        "Native American",
-        "Japanese",
-        "Nordic"
-      ]
+      "incorrect_answers": ["Native American", "Japanese", "Nordic"]
     },
     {
       "type": "multiple",
@@ -498,11 +366,7 @@
       "category": "Entertainment: Film",
       "question": "Which of these actors/actresses is NOT a part of the cast for the 2016 movie &quot;Suicide Squad&quot;?",
       "correct_answer": "Scarlett Johansson",
-      "incorrect_answers": [
-        "Jared Leto",
-        "Will Smith",
-        "Margot Robbie"
-      ]
+      "incorrect_answers": ["Jared Leto", "Will Smith", "Margot Robbie"]
     },
     {
       "type": "multiple",
@@ -510,11 +374,7 @@
       "category": "Entertainment: Film",
       "question": "Which of these actors does NOT appear in the 1998 movie &quot;Saving Private Ryan&quot;?",
       "correct_answer": "Ralph Fiennes",
-      "incorrect_answers": [
-        "Tom Hanks",
-        "Vin Diesel",
-        "Matt Damon"
-      ]
+      "incorrect_answers": ["Tom Hanks", "Vin Diesel", "Matt Damon"]
     },
     {
       "type": "multiple",
@@ -522,11 +382,7 @@
       "category": "Entertainment: Film",
       "question": "Daniel Radcliffe became a global star in the film industry due to his performance in which film franchise?",
       "correct_answer": "Harry Potter",
-      "incorrect_answers": [
-        "Ted",
-        "Spy Kids",
-        "Pirates of the Caribbean "
-      ]
+      "incorrect_answers": ["Ted", "Spy Kids", "Pirates of the Caribbean "]
     },
     {
       "type": "multiple",
@@ -534,11 +390,7 @@
       "category": "Entertainment: Film",
       "question": "Which movie contains the quote, &quot;Say hello to my little friend!&quot;?",
       "correct_answer": "Scarface",
-      "incorrect_answers": [
-        "Reservoir Dogs",
-        "Heat",
-        "Goodfellas"
-      ]
+      "incorrect_answers": ["Reservoir Dogs", "Heat", "Goodfellas"]
     },
     {
       "type": "multiple",
@@ -558,11 +410,7 @@
       "category": "Entertainment: Film",
       "question": "Who is frozen at the end of the movie &quot;Goldeneye&quot;?",
       "correct_answer": "Boris Grishenko",
-      "incorrect_answers": [
-        "James Bond",
-        "Natalya Simonova",
-        "Alec Travelyan"
-      ]
+      "incorrect_answers": ["James Bond", "Natalya Simonova", "Alec Travelyan"]
     },
     {
       "type": "multiple",
@@ -582,11 +430,7 @@
       "category": "Entertainment: Film",
       "question": "Who played the female lead in the 1933 film &quot;King Kong&quot;?",
       "correct_answer": "Fay Wray",
-      "incorrect_answers": [
-        "Jean Harlow",
-        "Vivien Leigh",
-        "Mae West"
-      ]
+      "incorrect_answers": ["Jean Harlow", "Vivien Leigh", "Mae West"]
     },
     {
       "type": "multiple",
@@ -594,11 +438,7 @@
       "category": "Entertainment: Film",
       "question": "When was the movie &#039;Con Air&#039; released?",
       "correct_answer": "1997",
-      "incorrect_answers": [
-        "1985",
-        "1999",
-        "1990"
-      ]
+      "incorrect_answers": ["1985", "1999", "1990"]
     },
     {
       "type": "multiple",
@@ -618,11 +458,7 @@
       "category": "Entertainment: Film",
       "question": "Which retired American football quarterback played himself in &#039;Ace Ventura: Pet Detective&#039; and &#039;Little Nicky&#039;?",
       "correct_answer": "Dan Marino",
-      "incorrect_answers": [
-        "John Elway",
-        "Tom Brady",
-        "Joe Montana"
-      ]
+      "incorrect_answers": ["John Elway", "Tom Brady", "Joe Montana"]
     },
     {
       "type": "multiple",
@@ -642,11 +478,7 @@
       "category": "Entertainment: Film",
       "question": "What is the name of James Dean&#039;s character in the 1955 movie &quot;Rebel Without a Cause&quot;?",
       "correct_answer": "Jim Stark",
-      "incorrect_answers": [
-        "Ned Stark",
-        "Jim Kane",
-        "Frank Stark"
-      ]
+      "incorrect_answers": ["Ned Stark", "Jim Kane", "Frank Stark"]
     },
     {
       "type": "multiple",
@@ -678,11 +510,7 @@
       "category": "Entertainment: Film",
       "question": "Which actor plays the role of the main antagonist in the 2011 movie &quot;Tower Heist?&quot;",
       "correct_answer": "Alan Alda",
-      "incorrect_answers": [
-        "Eddie Murphy",
-        "Alec Baldwin",
-        "Kevin Nealon"
-      ]
+      "incorrect_answers": ["Eddie Murphy", "Alec Baldwin", "Kevin Nealon"]
     },
     {
       "type": "multiple",
@@ -714,11 +542,7 @@
       "category": "Entertainment: Film",
       "question": "In the Friday The 13th series, what is Jason&#039;s mother&#039;s first name?",
       "correct_answer": "Pamela",
-      "incorrect_answers": [
-        "Mary",
-        "Christine",
-        "Angeline"
-      ]
+      "incorrect_answers": ["Mary", "Christine", "Angeline"]
     },
     {
       "type": "multiple",
@@ -738,11 +562,7 @@
       "category": "Entertainment: Film",
       "question": "Who played Sgt. Gordon Elias in &#039;Platoon&#039; (1986)?",
       "correct_answer": "Willem Dafoe",
-      "incorrect_answers": [
-        "Charlie Sheen",
-        "Matt Damon",
-        "Johnny Depp"
-      ]
+      "incorrect_answers": ["Charlie Sheen", "Matt Damon", "Johnny Depp"]
     },
     {
       "type": "multiple",
@@ -750,11 +570,7 @@
       "category": "Entertainment: Film",
       "question": "In the 2010 Nightmare on Elm Street reboot, who played Freddy Kruger?",
       "correct_answer": "Jackie Earle Haley",
-      "incorrect_answers": [
-        "Tyler Mane",
-        "Derek Mears",
-        "Gunnar Hansen"
-      ]
+      "incorrect_answers": ["Tyler Mane", "Derek Mears", "Gunnar Hansen"]
     },
     {
       "type": "multiple",
@@ -762,11 +578,7 @@
       "category": "Entertainment: Film",
       "question": "What is the name of the robot in the 1951 science fiction film classic &#039;The Day the Earth Stood Still&#039;?",
       "correct_answer": "Gort",
-      "incorrect_answers": [
-        "Robby",
-        "Colossus",
-        "Box"
-      ]
+      "incorrect_answers": ["Robby", "Colossus", "Box"]
     },
     {
       "type": "multiple",
@@ -774,11 +586,7 @@
       "category": "Entertainment: Film",
       "question": "Which former Star Trek actor directed Three Men and a Baby (1987)?",
       "correct_answer": "Leonard Nimoy",
-      "incorrect_answers": [
-        "William Shatner",
-        "George Takei",
-        "James Doohan"
-      ]
+      "incorrect_answers": ["William Shatner", "George Takei", "James Doohan"]
     },
     {
       "type": "multiple",
@@ -786,11 +594,7 @@
       "category": "Entertainment: Film",
       "question": "Which star actor was in &quot;Top Gun&quot;, &quot;Jerry Maguire&quot; and &quot;Born on the Fourth of July&quot;?",
       "correct_answer": "Tom Cruise",
-      "incorrect_answers": [
-        "Kelly McGillis",
-        "John Travolta",
-        "George Clooney"
-      ]
+      "incorrect_answers": ["Kelly McGillis", "John Travolta", "George Clooney"]
     },
     {
       "type": "multiple",
@@ -798,11 +602,7 @@
       "category": "Entertainment: Film",
       "question": "What year did the James Cameron film &quot;Titanic&quot; come out in theaters?",
       "correct_answer": "1997",
-      "incorrect_answers": [
-        "1996",
-        "1998",
-        "1999"
-      ]
+      "incorrect_answers": ["1996", "1998", "1999"]
     },
     {
       "type": "multiple",
@@ -810,11 +610,7 @@
       "category": "Entertainment: Film",
       "question": "Which iconic character is featured in movies such as &quot;The Enforcer&quot;, &quot;Sudden Impact&quot;, and &quot;The Dead Pool&quot;?",
       "correct_answer": "Dirty Harry",
-      "incorrect_answers": [
-        "Indiana Jones",
-        "James Bond",
-        "Harry Potter"
-      ]
+      "incorrect_answers": ["Indiana Jones", "James Bond", "Harry Potter"]
     },
     {
       "type": "multiple",
@@ -822,11 +618,7 @@
       "category": "Entertainment: Film",
       "question": "In the 1984 movie &quot;The Terminator&quot;, what model number is the Terminator portrayed by Arnold Schwarzenegger?",
       "correct_answer": "T-800",
-      "incorrect_answers": [
-        "I-950",
-        "T-888",
-        "T-1000"
-      ]
+      "incorrect_answers": ["I-950", "T-888", "T-1000"]
     },
     {
       "type": "multiple",
@@ -834,11 +626,7 @@
       "category": "Entertainment: Film",
       "question": "What is Lilo&#039;s last name from Lilo and Stitch?",
       "correct_answer": "Pelekai",
-      "incorrect_answers": [
-        "Anoaʻi",
-        "Kealoha",
-        "Kuʻulei"
-      ]
+      "incorrect_answers": ["Anoaʻi", "Kealoha", "Kuʻulei"]
     },
     {
       "type": "multiple",
@@ -846,11 +634,7 @@
       "category": "Entertainment: Film",
       "question": "Which famous singer was portrayed by actor Kevin Spacey in the 2004 biographical film &quot;Beyond the Sea&quot;?",
       "correct_answer": "Bobby Darin",
-      "incorrect_answers": [
-        "Louis Armstrong",
-        "Frank Sinatra",
-        "Dean Martin"
-      ]
+      "incorrect_answers": ["Louis Armstrong", "Frank Sinatra", "Dean Martin"]
     },
     {
       "type": "multiple",
@@ -858,11 +642,7 @@
       "category": "Entertainment: Film",
       "question": "What is the name of the dog that played Toto in the 1939 film &quot;The Wizard of Oz&quot;?",
       "correct_answer": "Terry",
-      "incorrect_answers": [
-        "Tommy",
-        "Teddy",
-        "Toto"
-      ]
+      "incorrect_answers": ["Tommy", "Teddy", "Toto"]
     },
     {
       "type": "multiple",
@@ -870,11 +650,7 @@
       "category": "Entertainment: Film",
       "question": "Who did the score to the original Blade Runner?",
       "correct_answer": "Vangelis",
-      "incorrect_answers": [
-        "Kitaro",
-        "Yanni",
-        "Enya"
-      ]
+      "incorrect_answers": ["Kitaro", "Yanni", "Enya"]
     },
     {
       "type": "multiple",
@@ -882,11 +658,7 @@
       "category": "Entertainment: Film",
       "question": "Which of the following films was NOT directed by Quentin Tarantino?",
       "correct_answer": "From Dusk till Dawn",
-      "incorrect_answers": [
-        "Jackie Brown",
-        "Pulp Fiction",
-        "Reservoir Dogs"
-      ]
+      "incorrect_answers": ["Jackie Brown", "Pulp Fiction", "Reservoir Dogs"]
     },
     {
       "type": "multiple",
@@ -894,11 +666,7 @@
       "category": "Entertainment: Film",
       "question": "What was Marilyn Monroe`s character&#039;s first name in the film &quot;Some Like It Hot&quot;?",
       "correct_answer": "Sugar",
-      "incorrect_answers": [
-        "Honey",
-        "Caramel",
-        "Candy"
-      ]
+      "incorrect_answers": ["Honey", "Caramel", "Candy"]
     },
     {
       "type": "multiple",
@@ -930,11 +698,7 @@
       "category": "Entertainment: Film",
       "question": "What is the correct spelling of the protagonist of the book in The NeverEnding Story (1984)?",
       "correct_answer": "Atreyu",
-      "incorrect_answers": [
-        "Atrayu",
-        "Atraiyu",
-        "Atraeyu"
-      ]
+      "incorrect_answers": ["Atrayu", "Atraiyu", "Atraeyu"]
     },
     {
       "type": "multiple",
@@ -942,11 +706,7 @@
       "category": "Entertainment: Film",
       "question": "In the 2014 film &quot;Birdman&quot;, what is the primary instrument in the score?",
       "correct_answer": "Drums",
-      "incorrect_answers": [
-        "Saxophone",
-        "Violin",
-        "Actual Live Birds Singing"
-      ]
+      "incorrect_answers": ["Saxophone", "Violin", "Actual Live Birds Singing"]
     },
     {
       "type": "multiple",
@@ -954,11 +714,7 @@
       "category": "Entertainment: Film",
       "question": "Which of the following James Bond villains is not affiliated with the SPECTRE organization?",
       "correct_answer": "Auric Goldfinger",
-      "incorrect_answers": [
-        "Dr. Julius No",
-        "Rosa Klebb",
-        "Emilio Largo"
-      ]
+      "incorrect_answers": ["Dr. Julius No", "Rosa Klebb", "Emilio Largo"]
     },
     {
       "type": "multiple",
@@ -966,11 +722,7 @@
       "category": "Entertainment: Film",
       "question": "In the 1971 film &quot;Willy Wonka &amp; the Chocolate Factory&quot;, who played Willy Wonka?",
       "correct_answer": "Gene Wilder",
-      "incorrect_answers": [
-        "Shia LeBouf",
-        "Peter Ostrum",
-        "Johnny Depp"
-      ]
+      "incorrect_answers": ["Shia LeBouf", "Peter Ostrum", "Johnny Depp"]
     },
     {
       "type": "multiple",
@@ -990,11 +742,7 @@
       "category": "Entertainment: Film",
       "question": "Which musical artist had a prominent role in the 2017 film &quot;Kingsman: The Golden Circle&quot;?",
       "correct_answer": "Elton John",
-      "incorrect_answers": [
-        "Lady Gaga",
-        "Rihanna",
-        "Justin Bieber"
-      ]
+      "incorrect_answers": ["Lady Gaga", "Rihanna", "Justin Bieber"]
     },
     {
       "type": "multiple",
@@ -1014,11 +762,7 @@
       "category": "Entertainment: Film",
       "question": "What year did the movie &quot;Napoleon Dynamite&quot; come out?",
       "correct_answer": "2004",
-      "incorrect_answers": [
-        "2002",
-        "2003",
-        "2005"
-      ]
+      "incorrect_answers": ["2002", "2003", "2005"]
     },
     {
       "type": "multiple",
@@ -1026,11 +770,7 @@
       "category": "Entertainment: Film",
       "question": "Who played Baron Victor Frankestein in the 1957 Hammer horror film &quot;The Curse of Frankenstein&quot;?",
       "correct_answer": "Peter Cushing",
-      "incorrect_answers": [
-        "Boris Karloff",
-        "Vincent Price",
-        "Lon Chaney Jr."
-      ]
+      "incorrect_answers": ["Boris Karloff", "Vincent Price", "Lon Chaney Jr."]
     },
     {
       "type": "multiple",
@@ -1062,11 +802,7 @@
       "category": "Entertainment: Film",
       "question": "Which stand-up comedian voiced the talking parrot &quot;Iago&quot; in Disney&#039;s 1992 adaptation of Aladdin?",
       "correct_answer": "Gilbert Gottfried",
-      "incorrect_answers": [
-        "Robin Williams",
-        "Pauly Shore",
-        "Jonathan Freeman"
-      ]
+      "incorrect_answers": ["Robin Williams", "Pauly Shore", "Jonathan Freeman"]
     },
     {
       "type": "multiple",
@@ -1074,11 +810,7 @@
       "category": "Entertainment: Film",
       "question": "In what year was the first Transformers movie released?",
       "correct_answer": "1986",
-      "incorrect_answers": [
-        "2007",
-        "1984",
-        "2009"
-      ]
+      "incorrect_answers": ["2007", "1984", "2009"]
     },
     {
       "type": "multiple",
@@ -1086,11 +818,7 @@
       "category": "Entertainment: Film",
       "question": "In which 1973 film does Yul Brynner play a robotic cowboy who malfunctions and goes on a killing spree?",
       "correct_answer": "Westworld",
-      "incorrect_answers": [
-        "Runaway",
-        "Android",
-        "The Terminators"
-      ]
+      "incorrect_answers": ["Runaway", "Android", "The Terminators"]
     },
     {
       "type": "multiple",
@@ -1098,11 +826,7 @@
       "category": "Entertainment: Film",
       "question": "What type of cheese, loved by Wallace and Gromit, had it&#039;s sale prices rise after their successful short films?",
       "correct_answer": "Wensleydale",
-      "incorrect_answers": [
-        "Cheddar",
-        "Moon Cheese",
-        "Edam"
-      ]
+      "incorrect_answers": ["Cheddar", "Moon Cheese", "Edam"]
     },
     {
       "type": "multiple",
@@ -1110,11 +834,7 @@
       "category": "Entertainment: Film",
       "question": "In Finding Nemo, what was the name of Nemo&#039;s mom?",
       "correct_answer": "Coral",
-      "incorrect_answers": [
-        "Sandy",
-        "Pearl",
-        "Shelly"
-      ]
+      "incorrect_answers": ["Sandy", "Pearl", "Shelly"]
     },
     {
       "type": "multiple",
@@ -1122,11 +842,7 @@
       "category": "Entertainment: Film",
       "question": "Who directed the movie &quot;Alien&quot;?",
       "correct_answer": "Ridley Scott",
-      "incorrect_answers": [
-        "Christopher Nolan",
-        "Michael Bay",
-        "James Cameron"
-      ]
+      "incorrect_answers": ["Christopher Nolan", "Michael Bay", "James Cameron"]
     },
     {
       "type": "multiple",
@@ -1134,11 +850,7 @@
       "category": "Entertainment: Film",
       "question": "Who was the director of &quot;Scott Pilgrim vs. the World (2010)&quot;?",
       "correct_answer": "Edgar Wright",
-      "incorrect_answers": [
-        "Phil Lord",
-        "Chris Miller",
-        "Seth Rogan"
-      ]
+      "incorrect_answers": ["Phil Lord", "Chris Miller", "Seth Rogan"]
     },
     {
       "type": "multiple",
@@ -1182,11 +894,7 @@
       "category": "Entertainment: Film",
       "question": "In the film &quot;Requiem for a Dream&quot;, what drug does Jared Leto&#039;s character get addicted to?",
       "correct_answer": "Heroin",
-      "incorrect_answers": [
-        "Cocaine",
-        "Marijuana",
-        "Oxycodone"
-      ]
+      "incorrect_answers": ["Cocaine", "Marijuana", "Oxycodone"]
     },
     {
       "type": "multiple",
@@ -1194,11 +902,7 @@
       "category": "Entertainment: Film",
       "question": "What mutated animals act as monsters in the movie &#039;Night of the Lepus&#039;?",
       "correct_answer": "Rabbits",
-      "incorrect_answers": [
-        "Dogs",
-        "Rats",
-        "Bats"
-      ]
+      "incorrect_answers": ["Dogs", "Rats", "Bats"]
     },
     {
       "type": "multiple",
@@ -1206,11 +910,7 @@
       "category": "Entertainment: Film",
       "question": "In the Friday The 13th series, what year did Jason drown in?",
       "correct_answer": "1957",
-      "incorrect_answers": [
-        "1955",
-        "1953",
-        "1959"
-      ]
+      "incorrect_answers": ["1955", "1953", "1959"]
     },
     {
       "type": "multiple",
@@ -1242,11 +942,7 @@
       "category": "Entertainment: Film",
       "question": "In the 1976 film &#039;Taxi Driver&#039;, how many guns did Travis buy from the salesman?",
       "correct_answer": "4",
-      "incorrect_answers": [
-        "2",
-        "6",
-        "1"
-      ]
+      "incorrect_answers": ["2", "6", "1"]
     },
     {
       "type": "multiple",
@@ -1254,11 +950,7 @@
       "category": "Entertainment: Film",
       "question": "The film Mad Max: Fury Road features the Dies Irae  from which composer&#039;s requiem?",
       "correct_answer": "Verdi",
-      "incorrect_answers": [
-        "Mozart",
-        "Berlioz",
-        "Brahms"
-      ]
+      "incorrect_answers": ["Mozart", "Berlioz", "Brahms"]
     },
     {
       "type": "multiple",
@@ -1326,11 +1018,7 @@
       "category": "Entertainment: Film",
       "question": "What did Alfred Hitchcock use as blood in the film &quot;Psycho&quot;? ",
       "correct_answer": "Chocolate syrup",
-      "incorrect_answers": [
-        "Ketchup",
-        "Red food coloring",
-        "Maple syrup"
-      ]
+      "incorrect_answers": ["Ketchup", "Red food coloring", "Maple syrup"]
     },
     {
       "type": "multiple",
@@ -1338,11 +1026,7 @@
       "category": "Entertainment: Film",
       "question": "In the &quot;Jurassic Park&quot; universe, when did &quot;Jurassic Park: San Diego&quot; begin construction?",
       "correct_answer": "1985",
-      "incorrect_answers": [
-        "1988",
-        "1986",
-        "1993"
-      ]
+      "incorrect_answers": ["1988", "1986", "1993"]
     },
     {
       "type": "multiple",
@@ -1362,11 +1046,7 @@
       "category": "Entertainment: Film",
       "question": "In what year does Jurassic World open in the &quot;Jurassic Park&quot; universe?",
       "correct_answer": "2005",
-      "incorrect_answers": [
-        "2007",
-        "2015",
-        "2020"
-      ]
+      "incorrect_answers": ["2007", "2015", "2020"]
     },
     {
       "type": "multiple",
@@ -1386,11 +1066,7 @@
       "category": "Entertainment: Film",
       "question": "Which singer is portrayed by Bruce Campbell in the 2002 film &#039;Bubba Ho-Tep&#039;?",
       "correct_answer": "Elvis Presley",
-      "incorrect_answers": [
-        "Johnny Cash",
-        "Hank Williams, Sr.",
-        "Buddy Holly"
-      ]
+      "incorrect_answers": ["Johnny Cash", "Hank Williams, Sr.", "Buddy Holly"]
     },
     {
       "type": "multiple",
@@ -1422,11 +1098,7 @@
       "category": "Entertainment: Film",
       "question": "In what year was the first Indian movie submitted for an Oscar?",
       "correct_answer": "1957",
-      "incorrect_answers": [
-        "1962",
-        "1938",
-        "1954"
-      ]
+      "incorrect_answers": ["1962", "1938", "1954"]
     },
     {
       "type": "multiple",
@@ -1446,11 +1118,7 @@
       "category": "Entertainment: Film",
       "question": "In what year did Clint Eastwood star as Inspector Harry Callahan in the film &quot;Dirty Harry&quot;?",
       "correct_answer": "1971",
-      "incorrect_answers": [
-        "1975",
-        "1983",
-        "1969"
-      ]
+      "incorrect_answers": ["1975", "1983", "1969"]
     },
     {
       "type": "multiple",
@@ -1494,11 +1162,7 @@
       "category": "Entertainment: Film",
       "question": "Which was the first of Alfred Hitchcock&#039;s movies to be filmed in colour?",
       "correct_answer": "Rope",
-      "incorrect_answers": [
-        "Psycho",
-        "Vertigo",
-        "Rebecca"
-      ]
+      "incorrect_answers": ["Psycho", "Vertigo", "Rebecca"]
     },
     {
       "type": "multiple",
@@ -1506,11 +1170,7 @@
       "category": "Entertainment: Film",
       "question": "How old was Laurence Fishburne when Francis Ford Coppola cast him in Apocalypse Now (1979)? ",
       "correct_answer": "14",
-      "incorrect_answers": [
-        "16",
-        "18",
-        "20"
-      ]
+      "incorrect_answers": ["16", "18", "20"]
     },
     {
       "type": "multiple",
@@ -1530,11 +1190,7 @@
       "category": "Entertainment: Film",
       "question": "In the film &quot;Harry Potter and the Order of The Phoenix&quot;, why was Harry Potter&#039;s scream, after Sirius Black died, muted?",
       "correct_answer": "Too Agonizing",
-      "incorrect_answers": [
-        "Too Loud",
-        "Too Harsh",
-        "Too Violent"
-      ]
+      "incorrect_answers": ["Too Loud", "Too Harsh", "Too Violent"]
     },
     {
       "type": "multiple",
@@ -1542,11 +1198,7 @@
       "category": "Entertainment: Film",
       "question": "Which boxer was famous for striking the gong in the introduction to J. Arthur Rank films?",
       "correct_answer": "Bombardier Billy Wells",
-      "incorrect_answers": [
-        "Freddie Mills",
-        "Terry Spinks",
-        "Don Cockell"
-      ]
+      "incorrect_answers": ["Freddie Mills", "Terry Spinks", "Don Cockell"]
     },
     {
       "type": "multiple",
@@ -1554,11 +1206,7 @@
       "category": "Entertainment: Film",
       "question": "What was the wifi password given to Stephen Strange in Doctor Strange?",
       "correct_answer": "Shambala",
-      "incorrect_answers": [
-        "Peace",
-        "Ancient",
-        "Chakra"
-      ]
+      "incorrect_answers": ["Peace", "Ancient", "Chakra"]
     },
     {
       "type": "multiple",
@@ -1578,11 +1226,7 @@
       "category": "Entertainment: Film",
       "question": "In the &quot;Jurassic Park&quot; universe, what was the first dinosaur cloned by InGen in 1986?",
       "correct_answer": "Velociraptor",
-      "incorrect_answers": [
-        "Triceratops",
-        "Troodon",
-        "Brachiosaurus"
-      ]
+      "incorrect_answers": ["Triceratops", "Troodon", "Brachiosaurus"]
     },
     {
       "type": "multiple",
@@ -1590,11 +1234,7 @@
       "category": "Entertainment: Film",
       "question": "What was Humphrey Bogart&#039;s middle name?",
       "correct_answer": "DeForest",
-      "incorrect_answers": [
-        "DeWinter",
-        "Steven",
-        "Bryce"
-      ]
+      "incorrect_answers": ["DeWinter", "Steven", "Bryce"]
     },
     {
       "type": "multiple",
@@ -1602,11 +1242,7 @@
       "category": "Entertainment: Film",
       "question": "What is the name of the supercomputer located in the control room in &quot;Jurassic Park&quot; (1993)?",
       "correct_answer": "Thinking Machines CM-5",
-      "incorrect_answers": [
-        "Cray X-MP",
-        "Cray XK7",
-        "IBM Blue Gene/Q"
-      ]
+      "incorrect_answers": ["Cray X-MP", "Cray XK7", "IBM Blue Gene/Q"]
     },
     {
       "type": "multiple",
@@ -1626,11 +1262,7 @@
       "category": "Entertainment: Film",
       "question": "Which of the following films was directed by Ivan Reitman, written by Gary Ross, featured Kevin Kline, and was released in 1993?",
       "correct_answer": "Dave",
-      "incorrect_answers": [
-        "John",
-        "Will",
-        "Carl"
-      ]
+      "incorrect_answers": ["John", "Will", "Carl"]
     },
     {
       "type": "multiple",
@@ -1638,11 +1270,7 @@
       "category": "Entertainment: Film",
       "question": "Before &quot;Jurassic Park III&quot; was finalized and the Spinosaurus was chosen, which dinosaur was going to be the star?",
       "correct_answer": "Baryonyx",
-      "incorrect_answers": [
-        "Tyrannosaurus Rex",
-        "Velociraptor",
-        "Suchomimus"
-      ]
+      "incorrect_answers": ["Tyrannosaurus Rex", "Velociraptor", "Suchomimus"]
     },
     {
       "type": "multiple",
@@ -1650,11 +1278,7 @@
       "category": "Entertainment: Film",
       "question": "What was the name of the actor who played Leatherface in the 1974 horror film, The Texas Chainsaw Massacre?",
       "correct_answer": "Gunnar Hansen",
-      "incorrect_answers": [
-        "Edwin Neal",
-        "John Dugan",
-        "Joe Bill Hogan"
-      ]
+      "incorrect_answers": ["Edwin Neal", "John Dugan", "Joe Bill Hogan"]
     },
     {
       "type": "multiple",
@@ -1674,11 +1298,7 @@
       "category": "Entertainment: Film",
       "question": "In what Disney movie can you spot the character &quot;Pac-Man&quot; in if you look closely enough in some scenes?",
       "correct_answer": "Tron",
-      "incorrect_answers": [
-        "Big Hero 6",
-        "Fantasia",
-        "Monsters, Inc."
-      ]
+      "incorrect_answers": ["Big Hero 6", "Fantasia", "Monsters, Inc."]
     }
   ]
 }
