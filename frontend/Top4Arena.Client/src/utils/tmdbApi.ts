@@ -1,6 +1,6 @@
 import type { Movie } from '../types';
 
-const TMDB_API_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmODZmYTE3MzcwNzRmMzY3NzkwNzc1Y2Q1NTQwNmExYyIsIm5iZiI6MTY4NzYyNzAzOC40MDEsInN1YiI6IjY0OTcyNTFlYjM0NDA5MDBhZDUyNTY4YSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.YA8K57yrPNiM_UwefPB6Bv2t8fZdY_v1GD9AS3rRrU0';
+const TMDB_API_TOKEN = import.meta.env.VITE_TMDB_API_TOKEN;
 const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
 
 // TMDB API Functions
