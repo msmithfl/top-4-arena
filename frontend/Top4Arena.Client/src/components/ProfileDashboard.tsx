@@ -2,7 +2,7 @@ import { useUser, useAuth } from "@clerk/clerk-react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, X, Search, Plus, Edit2 } from "lucide-react";
 import { GiLaurelsTrophy } from "react-icons/gi";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { fetchMovieDetails } from "../utils/tmdbApi";
 import Footer from "./Footer";
 import spinnerImg from '../assets/imgs/top4-spinner.png';
@@ -32,22 +32,6 @@ const ProfileDashboard = () => {
   const [duplicateError, setDuplicateError] = useState<string | null>(null);
   const [userAwards, setUserAwards] = useState<string[]>([]);
   const [selectedAwardHover, setSelectedAwardHover] = useState<{awardId: string, awardTitle: string, description: string} | null>(null);
-  const [tooltipPosition, setTooltipPosition] = useState<{top: number, left: number} | null>(null);
-  const hoveredElementRef = useRef<HTMLDivElement | null>(null);
-  // Keep tooltip positioned next to hovered award, even on scroll
-  useEffect(() => {
-    const updateTooltipPosition = () => {
-      if (hoveredElementRef.current && selectedAwardHover) {
-        const rect = hoveredElementRef.current.getBoundingClientRect();
-        setTooltipPosition({
-          top: rect.top,
-          left: rect.left + rect.width / 2
-        });
-      }
-    };
-    window.addEventListener('scroll', updateTooltipPosition, true);
-    return () => window.removeEventListener('scroll', updateTooltipPosition, true);
-  }, [selectedAwardHover]);
 
   const TMDB_API_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmODZmYTE3MzcwNzRmMzY3NzkwNzc1Y2Q1NTQwNmExYyIsIm5iZiI6MTY4NzYyNzAzOC40MDEsInN1YiI6IjY0OTcyNTFlYjM0NDA5MDBhZDUyNTY4YSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.YA8K57yrPNiM_UwefPB6Bv2t8fZdY_v1GD9AS3rRrU0';
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5157';
