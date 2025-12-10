@@ -134,7 +134,7 @@ public static class LeaderboardEndpoints
             }
 
             // Flag suspicious submissions
-            if (request.Round > 100)
+            if (request.Round > 80)
             {
                 Console.WriteLine($"FLAGGED: User {user.Username} (ID: {userId}) submitted suspicious score - Round: {request.Round}, Combo: {request.HighestCombo}");
                 return Results.BadRequest(new { error = "Invalid score submission" });
