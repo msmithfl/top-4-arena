@@ -1,5 +1,5 @@
 import { GiLaurelsTrophy } from 'react-icons/gi';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { AWARDS } from '../data/userAwards';
 
 const LeaderboardSection = () => {
@@ -8,6 +8,7 @@ const LeaderboardSection = () => {
   const [timePeriod, setTimePeriod] = useState<'all-time' | 'weekly' | 'daily'>('daily');
   const [selectedAwardHover, setSelectedAwardHover] = useState<{awardId: string, awardTitle: string, description: string} | null>(null);
   const [tooltipPosition, setTooltipPosition] = useState<{top: number, left: number} | null>(null);
+  const hoveredElementRef = useRef<HTMLDivElement | null>(null);
 
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5157';
 
@@ -29,6 +30,22 @@ const LeaderboardSection = () => {
 
     fetchLeaderboard();
   }, [timePeriod]);
+
+  // Update tooltip position on scroll
+  useEffect(() => {
+    const updateTooltipPosition = () => {
+      if (hoveredElementRef.current && selectedAwardHover) {
+        const rect = hoveredElementRef.current.getBoundingClientRect();
+        setTooltipPosition({
+          top: rect.top,
+          left: rect.left
+        });
+      }
+    };
+
+    window.addEventListener('scroll', updateTooltipPosition, true); // Capture phase to catch all scrolls
+    return () => window.removeEventListener('scroll', updateTooltipPosition, true);
+  }, [selectedAwardHover]);
 
   const getRankColor = (rank: number) => {
     if (rank === 1) return "text-yellow-400";
@@ -114,7 +131,6 @@ const LeaderboardSection = () => {
           <div className="lg:col-span-1">
             <div className="flex items-center justify-between mb-1">
               <h2 className="text-lg font-bold">AWARDS</h2>
-              {/* <span className="text-white/50 md:mr-5">{AWARDS.length}</span> */}
             </div>
             <div className="md:w-11/12 h-px bg-white/50 mb-3"></div>
             
@@ -144,9 +160,15 @@ const LeaderboardSection = () => {
                 return (
                   <div
                     key={award.awardId}
+                    ref={(el) => {
+                      if (selectedAwardHover?.awardId === award.awardId) {
+                        hoveredElementRef.current = el;
+                      }
+                    }}
                     className="backdrop-blur-sm p-6 rounded-lg border bg-white/10 border-white/20 flex items-center justify-center aspect-square transition-all cursor-pointer hover:bg-white/15"
                     onMouseEnter={(e) => {
                       setSelectedAwardHover(award);
+                      hoveredElementRef.current = e.currentTarget;
                       const rect = e.currentTarget.getBoundingClientRect();
                       setTooltipPosition({
                         top: rect.top,
@@ -156,6 +178,7 @@ const LeaderboardSection = () => {
                     onMouseLeave={() => {
                       setSelectedAwardHover(null);
                       setTooltipPosition(null);
+                      hoveredElementRef.current = null;
                     }}
                   >
                     <GiLaurelsTrophy className="w-12 h-12 text-yellow-400" />
