@@ -2,7 +2,7 @@ import { useUser, useAuth } from "@clerk/clerk-react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, X, Search, Plus, Edit2 } from "lucide-react";
 import { GiLaurelsTrophy } from "react-icons/gi";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { fetchMovieDetails } from "../utils/tmdbApi";
 import Footer from "./Footer";
 import spinnerImg from '../assets/imgs/top4-spinner.png';
@@ -32,22 +32,6 @@ const ProfileDashboard = () => {
   const [duplicateError, setDuplicateError] = useState<string | null>(null);
   const [userAwards, setUserAwards] = useState<string[]>([]);
   const [selectedAwardHover, setSelectedAwardHover] = useState<{awardId: string, awardTitle: string, description: string} | null>(null);
-  const [tooltipPosition, setTooltipPosition] = useState<{top: number, left: number} | null>(null);
-  const hoveredElementRef = useRef<HTMLDivElement | null>(null);
-  // Keep tooltip positioned next to hovered award, even on scroll
-  useEffect(() => {
-    const updateTooltipPosition = () => {
-      if (hoveredElementRef.current && selectedAwardHover) {
-        const rect = hoveredElementRef.current.getBoundingClientRect();
-        setTooltipPosition({
-          top: rect.top,
-          left: rect.left + rect.width / 2
-        });
-      }
-    };
-    window.addEventListener('scroll', updateTooltipPosition, true);
-    return () => window.removeEventListener('scroll', updateTooltipPosition, true);
-  }, [selectedAwardHover]);
 
   const TMDB_API_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmODZmYTE3MzcwNzRmMzY3NzkwNzc1Y2Q1NTQwNmExYyIsIm5iZiI6MTY4NzYyNzAzOC40MDEsInN1YiI6IjY0OTcyNTFlYjM0NDA5MDBhZDUyNTY4YSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.YA8K57yrPNiM_UwefPB6Bv2t8fZdY_v1GD9AS3rRrU0';
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5157';
@@ -441,14 +425,17 @@ const loadUserAwards = async () => {
               </span>
             </div>
             <div className="h-px bg-white/50 mb-3"></div>
-            {/* Fixed tooltip outside scroll container */}
-            {selectedAwardHover && tooltipPosition && (
-              <div 
-                className="fixed z-50 pointer-events-none"
+            {/* Tooltip absolutely positioned above the hovered award */}
+            {selectedAwardHover && (
+              <div
+                className="absolute z-50 pointer-events-none"
                 style={{
-                  top: `${tooltipPosition.top}px`,
-                  left: `${tooltipPosition.left}px`,
-                  transform: 'translate(-50%, calc(-100% - 10px))'
+                  left: '50%',
+                  top: 0,
+                  transform: 'translate(-50%, calc(-100% - 10px))',
+                  width: 'max-content',
+                  minWidth: '180px',
+                  maxWidth: '260px',
                 }}
               >
                 <div className="bg-black/95 border border-white/20 rounded-lg p-3 shadow-xl whitespace-nowrap">
@@ -467,33 +454,37 @@ const loadUserAwards = async () => {
                 return (
                   <div
                     key={award.awardId}
-                    ref={el => {
-                      if (selectedAwardHover?.awardId === award.awardId) {
-                        hoveredElementRef.current = el;
-                      }
-                    }}
-                    className={`backdrop-blur-sm p-6 rounded-lg border flex items-center justify-center aspect-square transition-all cursor-pointer ${
+                    className={`relative backdrop-blur-sm p-6 rounded-lg border flex items-center justify-center aspect-square transition-all cursor-pointer ${
                       isUnlocked
                         ? 'bg-yellow-500/20 border-yellow-400/50 hover:bg-yellow-500/30'
                         : 'bg-white/10 border-white/20 grayscale opacity-50 hover:opacity-70'
                     }`}
-                    onMouseEnter={e => {
-                      setSelectedAwardHover(award);
-                      hoveredElementRef.current = e.currentTarget;
-                      const rect = e.currentTarget.getBoundingClientRect();
-                      setTooltipPosition({
-                        top: rect.top,
-                        left: rect.left + rect.width / 2
-                      });
-                    }}
-                    onMouseLeave={() => {
-                      setSelectedAwardHover(null);
-                      setTooltipPosition(null);
-                      hoveredElementRef.current = null;
-                    }}
+                    onMouseEnter={() => setSelectedAwardHover(award)}
+                    onMouseLeave={() => setSelectedAwardHover(null)}
                   >
+                    {selectedAwardHover?.awardId === award.awardId && (
+                      <div
+                        className="absolute z-50 pointer-events-none"
+                        style={{
+                          left: '50%',
+                          top: 0,
+                          transform: 'translate(-50%, calc(-100% - 10px))',
+                          width: 'max-content',
+                          maxWidth: '260px',
+                        }}
+                      >
+                        <div className="bg-black/95 border border-white/20 rounded-lg p-3 shadow-xl whitespace-nowrap">
+                          <p className="text-sm font-bold text-white">
+                            {award.awardTitle}
+                          </p>
+                          <p className="text-xs text-white/70 mt-1">
+                            {award.description}
+                          </p>
+                        </div>
+                      </div>
+                    )}
                     <GiLaurelsTrophy 
-                      className={`w-12 h-12 ${
+                      className={`w-16 h-16 md:w-20 md:h-20 ${
                         isUnlocked ? 'text-yellow-400' : 'text-gray-500'
                       }`} 
                     />
