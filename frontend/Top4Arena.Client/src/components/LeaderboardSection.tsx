@@ -155,7 +155,7 @@ const LeaderboardSection = () => {
               </div>
             )}
             
-            <div className="grid grid-cols-3 md:grid-cols-2 gap-4 max-h-[220px] md:max-h-[400px] overflow-y-auto scrollbar-thin pr-4">
+            <div className="grid grid-cols-3 md:grid-cols-2 gap-4 max-h-full overflow-y-auto scrollbar-thin pr-4">
               {AWARDS.map((award) => {
                 return (
                   <div
