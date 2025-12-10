@@ -1,5 +1,5 @@
-import React from 'react';
-import { Film } from 'lucide-react';
+import React from "react";
+import { Film } from "lucide-react";
 
 interface BattleLogProps {
   battleLog: string[];
@@ -14,10 +14,21 @@ const BattleLog: React.FC<BattleLogProps> = ({ battleLog }) => {
       </h3>
       <div className="space-y-1 text-sm font-mono overflow-y-auto flex-1 scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800 hover:scrollbar-thumb-gray-500">
         {battleLog.length === 0 && (
-          <div className="text-gray-500 italic">Battle log will appear here...</div>
+          <div className="text-gray-500 italic">
+            Battle log will appear here...
+          </div>
         )}
         {battleLog.map((log, i) => (
-          <div key={i} className={log.startsWith('---') ? 'border-t border-gray-700 my-2' : log.startsWith('⚔️') ? 'font-bold text-yellow-400 mt-3' : ''}>
+          <div
+            key={i}
+            className={
+              log.startsWith("---")
+                ? "border-t border-gray-700 my-2"
+                : log.startsWith("⚔️")
+                ? "font-bold text-yellow-400 mt-3"
+                : ""
+            }
+          >
             {log}
           </div>
         ))}

@@ -1,6 +1,6 @@
-import React from 'react';
-import { Skull, Zap, Heart } from 'lucide-react';
-import type { BossCard } from '../types';
+import React from "react";
+import { Skull, Zap, Heart } from "lucide-react";
+import type { BossCard } from "../types";
 
 interface BossCardProps {
   boss: BossCard;
@@ -13,7 +13,7 @@ const BossCardComponent: React.FC<BossCardProps> = ({ boss, bossHP }) => {
       <div className="flex flex-col lg:flex-row items-start lg:gap-6">
         {/* Poster - Left Column on Desktop */}
         <div className="relative shrink-0 hidden lg:block">
-          <img 
+          <img
             src={`https://image.tmdb.org/t/p/w200${boss.poster_path}`}
             alt={boss.title}
             className="w-40 h-60 object-cover rounded-lg shadow-lg border-2 border-red-400"
@@ -26,7 +26,7 @@ const BossCardComponent: React.FC<BossCardProps> = ({ boss, bossHP }) => {
         {/* Mobile: poster and info side by side */}
         <div className="flex lg:hidden items-start gap-6 w-full">
           <div className="relative shrink-0">
-            <img 
+            <img
               src={`https://image.tmdb.org/t/p/w200${boss.poster_path}`}
               alt={boss.title}
               className="w-24 object-cover rounded-lg shadow-lg border-2 border-red-400"
@@ -43,11 +43,16 @@ const BossCardComponent: React.FC<BossCardProps> = ({ boss, bossHP }) => {
               <Zap className="w-5 h-5" />
               <span className="text-sm font-bold">{boss.ability.name}</span>
             </div>
-            <p className="text-xs text-gray-300 italic">{boss.ability.description}</p>
+            <p className="text-xs text-gray-300 italic">
+              {boss.ability.description}
+            </p>
             <div className="flex gap-2 mt-2">
-              {boss.genres.slice(0, 2).map(g => (
-                <span key={g.id} className="px-3 py-1 bg-red-700 rounded-full text-sm font-bold">
-                  {g.name === 'Science Fiction' ? 'Sci-Fi' : g.name}
+              {boss.genres.slice(0, 2).map((g) => (
+                <span
+                  key={g.id}
+                  className="px-3 py-1 bg-red-700 rounded-full text-sm font-bold"
+                >
+                  {g.name === "Science Fiction" ? "Sci-Fi" : g.name}
                 </span>
               ))}
             </div>
@@ -56,7 +61,7 @@ const BossCardComponent: React.FC<BossCardProps> = ({ boss, bossHP }) => {
               <Heart className="w-6 h-6 text-red-400 shrink-0" />
               <div className="flex-1 relative">
                 <div className="w-full bg-gray-800 rounded-full h-6 border-2 border-red-400">
-                  <div 
+                  <div
                     className="bg-linear-to-r from-red-600 to-orange-500 h-full rounded-full transition-all shadow-lg"
                     style={{ width: `${(bossHP / boss.maxHP) * 100}%` }}
                   />
@@ -82,11 +87,16 @@ const BossCardComponent: React.FC<BossCardProps> = ({ boss, bossHP }) => {
                 <Zap className="w-5 h-5" />
                 <span className="text-lg font-bold">{boss.ability.name}</span>
               </div>
-              <p className="text-sm text-gray-300 italic">{boss.ability.description}</p>
+              <p className="text-sm text-gray-300 italic">
+                {boss.ability.description}
+              </p>
               <div className="flex gap-2 mt-2">
-                {boss.genres.slice(0, 2).map(g => (
-                  <span key={g.id} className="px-3 py-1 bg-red-700 rounded-full text-sm font-bold">
-                    {g.name === 'Science Fiction' ? 'Sci-Fi' : g.name}
+                {boss.genres.slice(0, 2).map((g) => (
+                  <span
+                    key={g.id}
+                    className="px-3 py-1 bg-red-700 rounded-full text-sm font-bold"
+                  >
+                    {g.name === "Science Fiction" ? "Sci-Fi" : g.name}
                   </span>
                 ))}
               </div>
@@ -97,13 +107,15 @@ const BossCardComponent: React.FC<BossCardProps> = ({ boss, bossHP }) => {
           <div className="space-y-2 mt-auto">
             <div className="flex justify-between text-sm font-bold">
               <span></span>
-              <div className='flex gap-2 items-center flex-nowrap whitespace-nowrap'>
+              <div className="flex gap-2 items-center flex-nowrap whitespace-nowrap">
                 <Heart className="w-8 h-8 text-red-400 shrink-0" />
-                <span className="text-xl">{bossHP} / {boss.maxHP}</span>
+                <span className="text-xl">
+                  {bossHP} / {boss.maxHP}
+                </span>
               </div>
             </div>
             <div className="w-full bg-gray-800 rounded-full h-6 border-2 border-red-400">
-              <div 
+              <div
                 className="bg-linear-to-r from-red-600 to-orange-500 h-full rounded-full transition-all shadow-lg"
                 style={{ width: `${(bossHP / boss.maxHP) * 100}%` }}
               />

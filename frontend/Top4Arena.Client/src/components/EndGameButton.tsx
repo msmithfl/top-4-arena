@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { HiOutlineBackspace } from "react-icons/hi2";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 const EndGameButton: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -8,7 +8,7 @@ const EndGameButton: React.FC = () => {
 
   const handleEndGame = () => {
     setIsOpen(false);
-    navigate('/');
+    navigate("/");
   };
 
   return (
@@ -31,9 +31,12 @@ const EndGameButton: React.FC = () => {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="p-6 space-y-4">
-              <h2 className="text-2xl font-bold text-white">End Current Game?</h2>
+              <h2 className="text-2xl font-bold text-white">
+                End Current Game?
+              </h2>
               <p className="text-gray-300">
-                Are you sure you want to end this run and return to the main menu?
+                Are you sure you want to end this run and return to the main
+                menu?
               </p>
               <div className="flex gap-3 justify-end">
                 <button
@@ -58,4 +61,3 @@ const EndGameButton: React.FC = () => {
 };
 
 export default EndGameButton;
-

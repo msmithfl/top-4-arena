@@ -7,9 +7,9 @@ const SignUpPage = () => {
     <div className="min-h-dvh bg-[#14181C] text-white flex flex-col items-center justify-center p-4">
       {/* Logo in top left corner */}
       <Link to="/">
-        <img 
-          src="/favicon-top4.png" 
-          alt="Top 4 Arena Logo" 
+        <img
+          src="/favicon-top4.png"
+          alt="Top 4 Arena Logo"
           className="absolute top-4 left-4 w-16 h-16 z-10"
         />
       </Link>
@@ -25,7 +25,7 @@ const SignUpPage = () => {
 
       {/* Clerk Sign Up Component */}
       <div className="w-full max-w-md">
-        <SignUp 
+        <SignUp
           routing="path"
           path="/sign-up"
           signInUrl="/sign-in"
@@ -33,8 +33,8 @@ const SignUpPage = () => {
           appearance={{
             elements: {
               rootBox: "mx-auto",
-              card: "bg-white/10 backdrop-blur-sm border border-white/20"
-            }
+              card: "bg-white/10 backdrop-blur-sm border border-white/20",
+            },
           }}
         />
       </div>

@@ -24,7 +24,10 @@ export interface MovieCard extends Movie {
 export interface BossAbility {
   name: string;
   description: string;
-  effect: (turn: number, damage: number) => { damage: number; heal: number; message: string };
+  effect: (
+    turn: number,
+    damage: number
+  ) => { damage: number; heal: number; message: string };
 }
 
 export interface BossCard extends MovieCard {
@@ -41,7 +44,10 @@ export interface PrebuiltBoss {
   ability: {
     name: string;
     description: string;
-    effect: (turn: number, baseDamage: number) => { damage: number; heal?: number; message?: string };
+    effect: (
+      turn: number,
+      baseDamage: number
+    ) => { damage: number; heal?: number; message?: string };
   };
 }
 
