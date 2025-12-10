@@ -19,8 +19,8 @@ public static class LeaderboardEndpoints
             if (period == "daily" || period == "weekly")
             {
                 DateTime periodStart = period == "daily"
-                    ? DateTime.UtcNow.Date.AddDays(-1)
-                    : DateTime.UtcNow.Date.AddDays(-7);
+                    ? DateTime.UtcNow.AddDays(-1)
+                    : DateTime.UtcNow.AddDays(-7);
 
                 // Get best round per user in the period
                 var leaderboard = await db.GameSessions
