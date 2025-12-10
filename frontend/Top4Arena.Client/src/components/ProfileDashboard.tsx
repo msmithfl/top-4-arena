@@ -467,7 +467,7 @@ const ProfileDashboard = () => {
                       className={`relative backdrop-blur-sm p-6 rounded-lg border flex items-center justify-center aspect-square transition-all cursor-pointer ${
                         isUnlocked
                           ? "bg-yellow-500/20 border-yellow-400/50 hover:bg-yellow-500/30"
-                          : "bg-white/10 border-white/20 grayscale opacity-50 hover:opacity-70"
+                          : "bg-white/10 opacity-50 hover:bg-white/15 hover:opacity-100 border-white/20 grayscale"
                       }`}
                       onMouseEnter={() => setSelectedAwardHover(award)}
                       onMouseLeave={() => setSelectedAwardHover(null)}
@@ -495,7 +495,7 @@ const ProfileDashboard = () => {
                       )}
                       <GiLaurelsTrophy
                         className={`w-16 h-16 md:w-20 md:h-20 ${
-                          isUnlocked ? "text-yellow-400" : "text-gray-500"
+                          isUnlocked ? "text-yellow-400" : "text-gray-600"
                         }`}
                       />
                     </div>
