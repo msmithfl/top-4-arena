@@ -117,6 +117,10 @@ namespace Top4Arena.Api.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("text");
 
+                    b.PrimitiveCollection<string[]>("AwardIds")
+                        .IsRequired()
+                        .HasColumnType("text[]");
+
                     b.Property<int>("BestRun")
                         .HasColumnType("integer");
 
