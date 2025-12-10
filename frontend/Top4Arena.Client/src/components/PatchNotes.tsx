@@ -1,4 +1,4 @@
-import { X } from 'lucide-react';
+import { X } from "lucide-react";
 
 interface PatchNotesProps {
   isOpen: boolean;
@@ -6,33 +6,37 @@ interface PatchNotesProps {
   version: string;
 }
 
-const PatchNotes: React.FC<PatchNotesProps> = ({ isOpen, onClose, version }) => {
+const PatchNotes: React.FC<PatchNotesProps> = ({
+  isOpen,
+  onClose,
+  version,
+}) => {
   if (!isOpen) return null;
 
   const patchNotes = {
-    '0.2.0': {
-      title: 'Version 0.2.0 - User Profiles & Leaderboards',
-      date: 'December 7, 2024',
+    "0.2.0": {
+      title: "Version 0.2.0 - User Profiles & Leaderboards",
+      date: "December 7, 2024",
       features: [
-        'Added user authentication with Clerk',
-        'User profile dashboard with statistics tracking',
-        'Track Best Run, Total Games, and Highest Combo',
-        'Save your Top 4 movie preset for quick game starts',
-        'Toggle to use your preset as default in Pick Top 4 screen',
-        'Dedicated sign-in and sign-up pages',
-        'Auto-save functionality for user presets'
+        "Added user authentication with Clerk",
+        "User profile dashboard with statistics tracking",
+        "Track Best Run, Total Games, and Highest Combo",
+        "Save your Top 4 movie preset for quick game starts",
+        "Toggle to use your preset as default in Pick Top 4 screen",
+        "Dedicated sign-in and sign-up pages",
+        "Auto-save functionality for user presets",
       ],
       improvements: [
-        'Improved header layout with unified component',
-        'Better mobile responsiveness for authentication flows',
-        'Enhanced database schema with user stats tracking'
+        "Improved header layout with unified component",
+        "Better mobile responsiveness for authentication flows",
+        "Enhanced database schema with user stats tracking",
       ],
       bugFixes: [
-        'Fixed auto-save race condition causing preset data loss',
-        'Fixed toggle switch not saving default preset preference',
-        'Improved CORS configuration for production deployment'
-      ]
-    }
+        "Fixed auto-save race condition causing preset data loss",
+        "Fixed toggle switch not saving default preset preference",
+        "Improved CORS configuration for production deployment",
+      ],
+    },
   };
 
   const notes = patchNotes[version as keyof typeof patchNotes];

@@ -1,4 +1,4 @@
-import { Smile, Mail } from 'lucide-react';
+import { Smile, Mail } from "lucide-react";
 import { FaYoutube, FaDiscord } from "react-icons/fa";
 
 interface FooterProps {
@@ -47,8 +47,11 @@ const Footer = ({ onFeedbackClick }: FooterProps) => {
             </a>
           </div>
         </div>
-        <div className='mb-2 md:mb-0'>
-          <p className='text-center text-xs text-gray-400'>This product uses the TMDb API but is not endorsed or certified by TMDb.</p>
+        <div className="mb-2 md:mb-0">
+          <p className="text-center text-xs text-gray-400">
+            This product uses the TMDb API but is not endorsed or certified by
+            TMDb.
+          </p>
         </div>
       </div>
     </footer>
