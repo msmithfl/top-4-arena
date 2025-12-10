@@ -324,7 +324,7 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
             {[0, 1, 2, 3].map(idx => (
             <div
                 key={idx}
-                className="bg-[#2C3440] border border-white/10 rounded-lg flex flex-col items-center justify-center overflow-hidden relative w-[70px] h-[105px] lg:w-[130px] lg:h-[210px]"
+                className="bg-[#2C3440] border border-white/10 rounded-lg flex flex-col items-center justify-center overflow-hidden relative w-[70px] h-[105px] md:w-[130px] md:h-[210px]"
             >
                 {picked[idx] ? (
                 <>

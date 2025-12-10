@@ -498,7 +498,7 @@ const loadUserAwards = async () => {
           {/* Movie Selection Modal */}
           {selectedSlot !== null && (
             <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
-              <div className="w-full max-w-md relative">
+              <div className="w-full max-w-md relative mb-64">
                 <div className="bg-[#2C3440] rounded-lg flex flex-col">
                   {/* Modal Header */}
                   <div className="flex items-center justify-between p-4 border-b border-white/10">
