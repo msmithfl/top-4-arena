@@ -1,10 +1,13 @@
 import { GiLaurelsTrophy } from 'react-icons/gi';
 import { useEffect, useState } from 'react';
+import { AWARDS } from '../data/userAwards';
 
 const LeaderboardSection = () => {
   const [leaderboardData, setLeaderboardData] = useState<Array<{ username: string; bestRun: number }>>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [timePeriod, setTimePeriod] = useState<'all-time' | 'weekly' | 'daily'>('daily');
+  const [selectedAwardHover, setSelectedAwardHover] = useState<{awardId: string, awardTitle: string, description: string} | null>(null);
+  const [tooltipPosition, setTooltipPosition] = useState<{top: number, left: number} | null>(null);
 
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5157';
 
@@ -85,9 +88,6 @@ const LeaderboardSection = () => {
                       <div className="flex items-center gap-4">
                         {/* Rank */}
                         <div className={`flex justify-center gap-2 w-9 md:w-26 ${player ? getRankColor(rank) : 'text-white/70'} font-bold text-xl`}>
-                          {rank === 1}
-                          {rank === 2}
-                          {rank === 3}
                           <span>{rank}</span>
                         </div>
 
@@ -113,18 +113,55 @@ const LeaderboardSection = () => {
           {/* Awards - 1/4 width */}
           <div className="lg:col-span-1">
             <div className="flex items-center justify-between mb-1">
-              <h3 className="text-lg font-bold">AWARDS</h3>
+              <h2 className="text-lg font-bold">AWARDS</h2>
+              {/* <span className="text-white/50 md:mr-5">{AWARDS.length}</span> */}
             </div>
-            <div className="h-px bg-white/50 mb-3"></div>
-            <div className="grid grid-cols-3 md:grid-cols-2 gap-4 max-h-[220px] md:max-h-[1200px] overflow-y-auto scrollbar-thin pr-4 md:pr-0">
-              {[...Array(12)].map((_, index) => (
-                <div
-                  key={index}
-                  className="bg-white/10 p-6 rounded-lg border border-white/20 flex items-center justify-center aspect-square hover:bg-white/15 transition-colors relative isolate"
-                >
-                  <GiLaurelsTrophy className="w-14 h-12 text-yellow-400" />
+            <div className="md:w-11/12 h-px bg-white/50 mb-3"></div>
+            
+            {/* Fixed tooltip outside scroll container */}
+            {selectedAwardHover && tooltipPosition && (
+              <div 
+                className="fixed z-50 pointer-events-none"
+                style={{
+                  top: `${tooltipPosition.top}px`,
+                  left: `${tooltipPosition.left}px`,
+                  transform: 'translate(0, calc(-100% - 10px))'
+                }}
+              >
+                <div className="bg-black/95 border border-white/20 rounded-lg p-3 shadow-xl whitespace-nowrap">
+                  <p className="text-sm font-bold text-white">
+                    {selectedAwardHover.awardTitle}
+                  </p>
+                  <p className="text-xs text-white/70 mt-1">
+                    {selectedAwardHover.description}
+                  </p>
                 </div>
-              ))}
+              </div>
+            )}
+            
+            <div className="grid grid-cols-3 md:grid-cols-2 gap-4 max-h-[220px] md:max-h-[400px] overflow-y-auto scrollbar-thin pr-4">
+              {AWARDS.map((award) => {
+                return (
+                  <div
+                    key={award.awardId}
+                    className="backdrop-blur-sm p-6 rounded-lg border bg-white/10 border-white/20 flex items-center justify-center aspect-square transition-all cursor-pointer hover:bg-white/15"
+                    onMouseEnter={(e) => {
+                      setSelectedAwardHover(award);
+                      const rect = e.currentTarget.getBoundingClientRect();
+                      setTooltipPosition({
+                        top: rect.top,
+                        left: rect.left
+                      });
+                    }}
+                    onMouseLeave={() => {
+                      setSelectedAwardHover(null);
+                      setTooltipPosition(null);
+                    }}
+                  >
+                    <GiLaurelsTrophy className="w-12 h-12 text-yellow-400" />
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
