@@ -34,32 +34,38 @@ export const AWARDS = [
   {
     awardId: "comeback-hit",
     awardTitle: "Deus Ex Machina", 
-    description: "???" // Defeat a boss with your health below 500.
+    description: "???",
+    hiddenDescription: "Defeat a boss with your health below 500."
   },
   {
     awardId: "tarantino-hand",
     awardTitle: "Foot Fetishist",
-    description: "???" // Play a full Tarantino hand.
+    description: "???",
+    hiddenDescription: "Play a hand with only Tarantino films."
   },
   {
     awardId: "splatty-tomato",
     awardTitle: "Splatty Tomato", 
-    description: "???" // Play 4 films with a rating below 5.0
+    description: "???",
+    hiddenDescription: "Play a hand with all film ratings below 5.0."
   },
   {
     awardId: "all-different-genre",
     awardTitle: "Eclectic Taste",
-    description: "???" // Play a hand with all different genres.
+    description: "???",
+    hiddenDescription: "Play a hand with each card from a different genre."
   },
   {
     awardId: "film-bro-rushmore",
     awardTitle: "Film Bro Rushmore", 
-    description: "???" // Play a hand with one of each: Tarantino, Nolan, Fincher, Aronofsky, Scorsese, PTA
+    description: "???", 
+    hiddenDescription: "Play a hand with one of each: Tarantino, Nolan, Fincher, PTA"
   },
   {
     awardId: "pure-comedy",
     awardTitle: "Yuk It Up!", 
-    description: "???" // Play a pure comedy hand.
+    description: "???",
+    hiddenDescription: "Play a pure comedy hand."
   },
 ];
 

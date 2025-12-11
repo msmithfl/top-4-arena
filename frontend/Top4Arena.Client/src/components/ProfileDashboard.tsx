@@ -487,8 +487,10 @@ const ProfileDashboard = () => {
                             <p className="text-sm font-bold text-white">
                               {award.awardTitle}
                             </p>
-                            <p className="text-xs text-white/70 mt-1">
-                              {award.description}
+                            <p className="text-xs text-white/70 mt-1 text-wrap">
+                              {isUnlocked && award.hiddenDescription
+                                ? award.hiddenDescription
+                                : award.description}
                             </p>
                           </div>
                         </div>
