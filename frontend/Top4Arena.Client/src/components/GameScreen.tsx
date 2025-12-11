@@ -19,6 +19,7 @@ import { createPrebuiltBossCard } from "../utils/bossCard";
 import spinnerImg from "../assets/imgs/top4-spinner.png";
 import { track } from "@vercel/analytics";
 import { FaTrashAlt } from "react-icons/fa";
+import { isHandAllSpecificMovies, isHandBelowVoteAverage, isHandFilmBroRushmore, isHandNoDamage, isHandPureComedy, tarantinoIds } from "../data/userAwards";
 
 let bossCycle: number[] = [];
 let startingPlayerHealth = 4000;
@@ -322,8 +323,30 @@ const GameScreen: React.FC = () => {
 
     setIsAttacking(true);
 
+    if (isHandAllSpecificMovies(playedCards, tarantinoIds))
+    {
+      unlockAward("tarantino-hand");
+    }
+    if (isHandBelowVoteAverage(playedCards, 5))
+    {
+      unlockAward("splatty-tomato");
+    }
+    if (isHandPureComedy(playedCards))
+    {
+      unlockAward("pure-comedy");
+    }
+    if (isHandFilmBroRushmore(playedCards))
+    {
+      unlockAward("film-bro-rushmore");
+    }
+    
     const result = calculateBattle(playedCards);
     let playerDamage = result.damage;
+    
+    if (isHandNoDamage(playedCards, playerDamage))
+    {
+      unlockAward("all-different-genre");
+    }
 
     // Track stats
     setGameStats((prev) => {
@@ -356,6 +379,13 @@ const GameScreen: React.FC = () => {
     const newBossHP = Math.max(0, bossHP - playerDamage);
     setBossHP(newBossHP);
 
+    if (playerDamage > 50000) {
+      unlockAward("50k-hit");
+    }
+    else if (playerDamage > 50000) {
+      unlockAward("100k-hit");
+    }
+
     // Add played cards to discard pile
     setDiscardPile((prev) => [...prev, ...playedCards]);
 
@@ -377,6 +407,12 @@ const GameScreen: React.FC = () => {
           unlockAward("round-50");
         } else if (round === 10) {
           track("completed_round_10");
+        }
+        if (turn === 1) {
+          unlockAward("one-shot-boss");
+        }
+        if (playerHP < 500) {
+          unlockAward("comeback-hit");
         }
 
         setGameState("shop");
