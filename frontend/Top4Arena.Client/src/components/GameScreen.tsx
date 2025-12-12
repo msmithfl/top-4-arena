@@ -80,9 +80,15 @@ const GameScreen: React.FC = () => {
   // At the top of the component, add a queue for awards
   const [awardQueue, setAwardQueue] = useState<string[]>([]);
 
-  // Modify unlockAward to batch awards
+  // Add state to track unlocked awards in the current session
+  const [unlockedAwards, setUnlockedAwards] = useState<Set<string>>(new Set());
+
+  // Modify unlockAward to check if already unlocked
   const unlockAward = async (awardId: string) => {
     if (!isSignedIn || !gameId) return;
+    
+    // Don't add if already unlocked in this session
+    if (unlockedAwards.has(awardId)) return;
 
     setAwardQueue(prev => [...prev, awardId]);
   };
@@ -96,7 +102,7 @@ const GameScreen: React.FC = () => {
         const token = await getToken();
 
         // Send all awards at once
-        await fetch(`${API_URL}/api/users/awards/unlock-batch`, {
+        const response = await fetch(`${API_URL}/api/users/awards/unlock-batch`, {
           method: "POST",
           headers: {
             Authorization: `Bearer ${token}`,
@@ -105,18 +111,31 @@ const GameScreen: React.FC = () => {
           body: JSON.stringify({ awardIds: awardQueue }),
         });
 
-        // Show popups for each award
-        for (const awardId of awardQueue) {
-          const award = AWARDS.find(a => a.awardId === awardId);
-          if (award) {
-            setAwardPopup({ 
-              awardId, 
-              awardTitle: award.awardTitle, 
-              description: award.hiddenDescription || award.description 
-            });
-            await new Promise(resolve => setTimeout(resolve, 5000));
+        const data = await response.json();
+
+        // Track newly unlocked awards
+        if (data.newlyUnlocked && data.newlyUnlocked.length > 0) {
+          // Add to unlocked set
+          setUnlockedAwards(prev => {
+            const newSet = new Set(prev);
+            data.newlyUnlocked.forEach((id: string) => newSet.add(id));
+            return newSet;
+          });
+
+          // Show popups only for newly unlocked awards
+          for (const awardId of data.newlyUnlocked) {
+            const award = AWARDS.find(a => a.awardId === awardId);
+            if (award) {
+              setAwardPopup({ 
+                awardId, 
+                awardTitle: award.awardTitle, 
+                description: award.hiddenDescription || award.description 
+              });
+              await new Promise(resolve => setTimeout(resolve, 5000));
+            }
           }
         }
+        
         setAwardPopup(null);
 
         // Clear the queue
@@ -124,6 +143,7 @@ const GameScreen: React.FC = () => {
       } catch (err) {
         console.error("Failed to unlock awards:", err);
         setAwardQueue([]); // Clear queue even on error to prevent infinite retry
+        setAwardPopup(null);
       }
     };
 
@@ -357,30 +377,8 @@ const GameScreen: React.FC = () => {
 
     setIsAttacking(true);
 
-    if (isHandAllSpecificMovies(playedCards, tarantinoIds))
-    {
-      unlockAward("tarantino-hand");
-    }
-    if (isHandBelowVoteAverage(playedCards, 6))
-    {
-      unlockAward("splatty-tomato");
-    }
-    if (isHandPureComedy(playedCards))
-    {
-      unlockAward("pure-comedy");
-    }
-    if (isHandFilmBroRushmore(playedCards))
-    {
-      unlockAward("film-bro-rushmore");
-    }
-
     const result = calculateBattle(playedCards);
     let playerDamage = result.damage;
-    
-    if (isHandNoDamage(playedCards, playerDamage))
-    {
-      unlockAward("all-different-genre");
-    }
 
     // Track stats
     setGameStats((prev) => {
@@ -418,6 +416,26 @@ const GameScreen: React.FC = () => {
     }
     else if (playerDamage > 100000) {
       unlockAward("100k-hit");
+    }
+    if (isHandNoDamage(playedCards, playerDamage))
+    {
+      unlockAward("all-different-genre");
+    }
+    if (isHandAllSpecificMovies(playedCards, tarantinoIds))
+    {
+      unlockAward("tarantino-hand");
+    }
+    if (isHandBelowVoteAverage(playedCards, 6))
+    {
+      unlockAward("splatty-tomato");
+    }
+    if (isHandPureComedy(playedCards))
+    {
+      unlockAward("pure-comedy");
+    }
+    if (isHandFilmBroRushmore(playedCards))
+    {
+      unlockAward("film-bro-rushmore");
     }
 
     // Add played cards to discard pile
