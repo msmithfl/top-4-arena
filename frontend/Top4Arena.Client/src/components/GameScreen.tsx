@@ -414,7 +414,7 @@ const GameScreen: React.FC = () => {
     if (playerDamage > 50000) {
       unlockAward("50k-hit");
     }
-    else if (playerDamage > 100000) {
+    if (playerDamage > 100000) {
       unlockAward("100k-hit");
     }
     if (isHandNoDamage(playedCards, playerDamage))
