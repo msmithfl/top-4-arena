@@ -16,20 +16,35 @@ public static class WebhookEndpoints
             using var reader = new StreamReader(context.Request.Body);
             var payload = await reader.ReadToEndAsync();
 
+            Console.WriteLine($"Received webhook payload: {payload}");
+
             try
             {
                 var webhookData = JsonSerializer.Deserialize<JsonElement>(payload);
                 var eventType = webhookData.GetProperty("type").GetString();
+
+                Console.WriteLine($"Event type: {eventType}");
 
                 if (eventType == "user.created")
                 {
                     var data = webhookData.GetProperty("data");
                     var userId = data.GetProperty("id").GetString()!;
                     
-                    // Check if user already exists (prevent duplicates)
-                    var existingUser = await db.Users.FindAsync(userId);
+                    // Get email first
+                    var emailAddresses = data.GetProperty("email_addresses");
+                    var primaryEmail = "";
+                    if (emailAddresses.GetArrayLength() > 0)
+                    {
+                        primaryEmail = emailAddresses[0].GetProperty("email_address").GetString()!;
+                    }
+                    
+                    // Check if user already exists by ID OR email (prevent duplicates)
+                    var existingUser = await db.Users
+                        .FirstOrDefaultAsync(u => u.Id == userId || u.Email == primaryEmail);
+                    
                     if (existingUser != null)
                     {
+                        Console.WriteLine($"User already exists - ID: {existingUser.Id}, Email: {existingUser.Email}");
                         return Results.Ok(new { received = true, message = "User already exists" });
                     }
                     
@@ -37,14 +52,6 @@ public static class WebhookEndpoints
                     var firstName = data.TryGetProperty("first_name", out var fn) ? fn.GetString() : null;
                     var lastName = data.TryGetProperty("last_name", out var ln) ? ln.GetString() : null;
                     var username = data.GetProperty("username").GetString();
-                    
-                    // Get email
-                    var emailAddresses = data.GetProperty("email_addresses");
-                    var primaryEmail = "";
-                    if (emailAddresses.GetArrayLength() > 0)
-                    {
-                        primaryEmail = emailAddresses[0].GetProperty("email_address").GetString()!;
-                    }
 
                     var user = new User
                     {
@@ -58,6 +65,8 @@ public static class WebhookEndpoints
 
                     db.Users.Add(user);
                     await db.SaveChangesAsync();
+                    
+                    Console.WriteLine($"Created new user - ID: {userId}, Email: {primaryEmail}");
                 }
                 else if (eventType == "user.updated")
                 {
@@ -86,6 +95,12 @@ public static class WebhookEndpoints
                         }
                         
                         await db.SaveChangesAsync();
+                        
+                        Console.WriteLine($"Updated user - ID: {userId}");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"User not found for update - ID: {userId}");
                     }
                 }
                 else if (eventType == "user.deleted")
@@ -98,6 +113,12 @@ public static class WebhookEndpoints
                     {
                         db.Users.Remove(user);
                         await db.SaveChangesAsync();
+                        
+                        Console.WriteLine($"Deleted user - ID: {userId}");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"User not found for deletion - ID: {userId}");
                     }
                 }
 
@@ -105,6 +126,8 @@ public static class WebhookEndpoints
             }
             catch (Exception ex)
             {
+                Console.WriteLine($"Webhook error: {ex.Message}");
+                Console.WriteLine($"Stack trace: {ex.StackTrace}");
                 return Results.BadRequest(new { error = ex.Message });
             }
         });
