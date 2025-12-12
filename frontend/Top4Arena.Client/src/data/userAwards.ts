@@ -47,7 +47,7 @@ export const AWARDS = [
     awardId: "splatty-tomato",
     awardTitle: "Splatty Tomato", 
     description: "???",
-    hiddenDescription: "Play a hand with all film ratings below 5.0."
+    hiddenDescription: "Play a hand with all film ratings below 6.0."
   },
   {
     awardId: "all-different-genre",
