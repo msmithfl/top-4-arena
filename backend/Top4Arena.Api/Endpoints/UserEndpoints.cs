@@ -126,8 +126,49 @@ public static class UserEndpoints
             });
         })
         .WithName("UnlockAward");
+
+        // NEW: Unlock multiple awards at once
+        group.MapPost("/awards/unlock-batch", async (
+            HttpContext context, 
+            AppDbContext db, 
+            UnlockAwardBatchRequest request
+        ) =>
+        {
+            var userId = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            
+            if (string.IsNullOrEmpty(userId))
+                return Results.Unauthorized();
+
+            var user = await db.Users.FindAsync(userId);
+            
+            if (user == null)
+                return Results.NotFound(new { error = "User not found" });
+
+            // Get unique new awards that aren't already unlocked
+            var newAwards = request.AwardIds
+                .Distinct()
+                .Where(id => !user.AwardIds.Contains(id))
+                .ToArray();
+
+            if (newAwards.Length == 0)
+            {
+                return Results.Ok(new { message = "All awards already unlocked" });
+            }
+
+            // Add all new awards to array
+            user.AwardIds = user.AwardIds.Concat(newAwards).ToArray();
+            await db.SaveChangesAsync();
+
+            return Results.Ok(new { 
+                message = $"{newAwards.Length} award(s) unlocked!",
+                awardIds = user.AwardIds,
+                newlyUnlocked = newAwards
+            });
+        })
+        .WithName("UnlockAwardBatch");
     }
 }
 
 public record GameStatsRequest(int Round, int HighestCombo);
 public record UnlockAwardRequest(string AwardId);
+public record UnlockAwardBatchRequest(string[] AwardIds);

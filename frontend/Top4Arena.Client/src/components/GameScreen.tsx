@@ -12,13 +12,13 @@ import PickTopFilms from "./PickTopFilms";
 import DeckPopup from "./DeckPopup";
 import ShopScreen from "./ShopScreen";
 import GameOverScreen from "./GameOverScreen";
-// import InstructionsButton from './InstructionsButton';
-// import EndGameButton from './EndGameButton';
 import { PREBUILT_BOSSES } from "../data/prebuiltBosses";
 import { createPrebuiltBossCard } from "../utils/bossCard";
 import spinnerImg from "../assets/imgs/top4-spinner.png";
 import { track } from "@vercel/analytics";
 import { FaTrashAlt } from "react-icons/fa";
+import { AWARDS, isHandAllSpecificMovies, isHandBelowVoteAverage, isHandFilmBroRushmore, isHandNoDamage, isHandPureComedy, tarantinoIds } from "../data/userAwards";
+import { GiLaurelsTrophy } from "react-icons/gi";
 
 let bossCycle: number[] = [];
 let startingPlayerHealth = 4000;
@@ -64,6 +64,7 @@ const GameScreen: React.FC = () => {
   const [isAttacking, setIsAttacking] = useState(false);
   const [tickets, setTickets] = useState(0);
   const [gameId, setGameId] = useState<string | null>(null);
+  const [awardPopup, setAwardPopup] = useState<{ awardId: string; awardTitle: string; description: string } | null>(null);
 
   // Game stats tracking
   const [gameStats, setGameStats] = useState({
@@ -76,24 +77,78 @@ const GameScreen: React.FC = () => {
     defeatedBy: null as string | null,
   });
 
+  // At the top of the component, add a queue for awards
+  const [awardQueue, setAwardQueue] = useState<string[]>([]);
+
+  // Add state to track unlocked awards in the current session
+  const [unlockedAwards, setUnlockedAwards] = useState<Set<string>>(new Set());
+
+  // Modify unlockAward to check if already unlocked
   const unlockAward = async (awardId: string) => {
     if (!isSignedIn || !gameId) return;
+    
+    // Don't add if already unlocked in this session
+    if (unlockedAwards.has(awardId)) return;
 
-    try {
-      const token = await getToken();
-
-      await fetch(`${API_URL}/api/users/awards/unlock`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ awardId }),
-      });
-    } catch (err) {
-      console.error("Failed to unlock award:", err);
-    }
+    setAwardQueue(prev => [...prev, awardId]);
   };
+
+  // Add useEffect to process award queue
+  useEffect(() => {
+    if (awardQueue.length === 0 || !isSignedIn) return;
+
+    const processAwards = async () => {
+      try {
+        const token = await getToken();
+
+        // Send all awards at once
+        const response = await fetch(`${API_URL}/api/users/awards/unlock-batch`, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ awardIds: awardQueue }),
+        });
+
+        const data = await response.json();
+
+        // Track newly unlocked awards
+        if (data.newlyUnlocked && data.newlyUnlocked.length > 0) {
+          // Add to unlocked set
+          setUnlockedAwards(prev => {
+            const newSet = new Set(prev);
+            data.newlyUnlocked.forEach((id: string) => newSet.add(id));
+            return newSet;
+          });
+
+          // Show popups only for newly unlocked awards
+          for (const awardId of data.newlyUnlocked) {
+            const award = AWARDS.find(a => a.awardId === awardId);
+            if (award) {
+              setAwardPopup({ 
+                awardId, 
+                awardTitle: award.awardTitle, 
+                description: award.hiddenDescription || award.description 
+              });
+              await new Promise(resolve => setTimeout(resolve, 5000));
+            }
+          }
+        }
+        
+        setAwardPopup(null);
+
+        // Clear the queue
+        setAwardQueue([]);
+      } catch (err) {
+        console.error("Failed to unlock awards:", err);
+        setAwardQueue([]); // Clear queue even on error to prevent infinite retry
+        setAwardPopup(null);
+      }
+    };
+
+    processAwards();
+  }, [awardQueue, isSignedIn, getToken]);
 
   const updateUserStats = async (finalRound: number) => {
     // Guests can't submit scores
@@ -356,6 +411,33 @@ const GameScreen: React.FC = () => {
     const newBossHP = Math.max(0, bossHP - playerDamage);
     setBossHP(newBossHP);
 
+    if (playerDamage > 5000) {
+      unlockAward("50k-hit");
+    }
+    else if (playerDamage > 100000) {
+      unlockAward("100k-hit");
+    }
+    if (isHandNoDamage(playedCards, playerDamage))
+    {
+      unlockAward("all-different-genre");
+    }
+    if (isHandAllSpecificMovies(playedCards, tarantinoIds))
+    {
+      unlockAward("tarantino-hand");
+    }
+    if (isHandBelowVoteAverage(playedCards, 6))
+    {
+      unlockAward("splatty-tomato");
+    }
+    if (isHandPureComedy(playedCards))
+    {
+      unlockAward("pure-comedy");
+    }
+    if (isHandFilmBroRushmore(playedCards))
+    {
+      unlockAward("film-bro-rushmore");
+    }
+
     // Add played cards to discard pile
     setDiscardPile((prev) => [...prev, ...playedCards]);
 
@@ -377,6 +459,12 @@ const GameScreen: React.FC = () => {
           unlockAward("round-50");
         } else if (round === 10) {
           track("completed_round_10");
+        }
+        if (turn === 1) {
+          unlockAward("one-shot-boss");
+        }
+        if (playerHP < 500) {
+          unlockAward("comeback-hit");
         }
 
         setGameState("shop");
@@ -560,8 +648,24 @@ const GameScreen: React.FC = () => {
   if (!boss) return <div className="p-8">Loading...</div>;
 
   return (
-    <div className="h-dvh bg-[#14181C] text-white overflow-hidden">
-      <div className="flex max-w-full mx-auto h-full">
+    <>
+      {/* Award Unlocked Popup */}
+      {awardPopup && (
+        <div
+          style={{ zIndex: 9999 }}
+          className="fixed top-6 left-1/2 transform -translate-x-1/2 bg-yellow-500/20 border-yellow-400/50 text-white px-8 py-4 rounded-xl shadow-2xl border-4 animate-fade-in-out"
+        >
+          <div className="flex gap-4">
+            <GiLaurelsTrophy className="w-16 h-16 md:w-20 md:h-20 text-yellow-400"/>
+            <div className="flex flex-col justify-center">
+              <p className="font-bold">{awardPopup.awardTitle}</p>
+              <p>{awardPopup.description}</p>
+            </div>
+          </div>
+        </div>
+      )}
+      <div className="h-dvh bg-[#14181C] text-white overflow-hidden">
+        <div className="flex max-w-full mx-auto h-full">
         {/* Left Sidebar - Player Stats */}
         <div className="hidden lg:block">
           <GameSidebar
@@ -579,23 +683,7 @@ const GameScreen: React.FC = () => {
 
         {/* Main Content */}
         <div className="flex-1 overflow-y-auto mx-3 py-3 h-full flex flex-col justify-between lg:justify-start">
-          {/* Mobile Top Bar - Round/Turn and Buttons */}
-          {/* <div className="lg:hidden flex gap-2 mb-3 items-center justify-around">
-          <div className="w-3/5 px-2 py-1 bg-gray-800 bg-opacity-50 border-2 rounded-lg border-gray-600 flex gap-6 items-center justify-center">
-            <div className="flex items-center gap-2">
-              <p className="text-lg text-gray-400">Round</p>
-              <p className="text-xl font-bold text-blue-400">{round}</p>
-            </div>
-            <div className="w-px h-6 bg-gray-600"></div>
-            <div className="flex items-center gap-2">
-              <p className="text-lg text-gray-400">Turn</p>
-              <p className="text-xl font-bold text-yellow-400">{turn}</p>
-            </div>
-          </div>
-          <InstructionsButton onClick={() => track('opened_instructions')} />
-          <EndGameButton />
-        </div> */}
-
+        
           {/* Shop Screen - shows after victory */}
           {gameState === "shop" && (
             <ShopScreen
@@ -752,6 +840,7 @@ const GameScreen: React.FC = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 
