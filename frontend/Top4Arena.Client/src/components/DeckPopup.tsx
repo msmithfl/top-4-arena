@@ -1,8 +1,15 @@
-import React, { useState } from 'react';
-import { createPortal } from 'react-dom';
-import { Layers, Sword, Shield, ArrowUp, ChevronLeft, ChevronRight } from 'lucide-react';
-import type { MovieCard } from '../types';
-import MovieCardComponent from './MovieCard';
+import React, { useState } from "react";
+import { createPortal } from "react-dom";
+import {
+  Layers,
+  Sword,
+  Shield,
+  ArrowUp,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
+import type { MovieCard } from "../types";
+import MovieCardComponent from "./MovieCard";
 
 interface DeckPopupProps {
   deck: MovieCard[];
@@ -11,23 +18,27 @@ interface DeckPopupProps {
 
 const DeckPopup: React.FC<DeckPopupProps> = ({ deck, discardPile }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedCard, setSelectedCard] = useState<MovieCard | null>(deck.length > 0 ? deck[0] : null);
+  const [selectedCard, setSelectedCard] = useState<MovieCard | null>(
+    deck.length > 0 ? deck[0] : null
+  );
   const [showDescription, setShowDescription] = useState(false);
-  const [hoveredStat, setHoveredStat] = useState<'rating' | 'runtime' | 'release' | 'genres' | null>(null);
+  const [hoveredStat, setHoveredStat] = useState<
+    "rating" | "runtime" | "release" | "genres" | null
+  >(null);
 
-  const handleNavigateCard = (direction: 'prev' | 'next') => {
+  const handleNavigateCard = (direction: "prev" | "next") => {
     if (!selectedCard) return;
-    
-    const currentIndex = deck.findIndex(card => card.id === selectedCard.id);
+
+    const currentIndex = deck.findIndex((card) => card.id === selectedCard.id);
     if (currentIndex === -1) return;
-    
+
     let newIndex;
-    if (direction === 'next') {
+    if (direction === "next") {
       newIndex = (currentIndex + 1) % deck.length;
     } else {
       newIndex = currentIndex === 0 ? deck.length - 1 : currentIndex - 1;
     }
-    
+
     setSelectedCard(deck[newIndex]);
     setShowDescription(false);
   };
@@ -35,9 +46,9 @@ const DeckPopup: React.FC<DeckPopupProps> = ({ deck, discardPile }) => {
   // Calculate genre counts (only first 2 genres per film)
   const genreCounts = React.useMemo(() => {
     const counts: { [key: string]: number } = {};
-    deck.forEach(card => {
+    deck.forEach((card) => {
       if (Array.isArray(card.genres)) {
-        card.genres.slice(0, 2).forEach(genre => {
+        card.genres.slice(0, 2).forEach((genre) => {
           counts[genre.name] = (counts[genre.name] || 0) + 1;
         });
       }
@@ -47,7 +58,7 @@ const DeckPopup: React.FC<DeckPopupProps> = ({ deck, discardPile }) => {
   }, [deck]);
 
   const modalContent = isOpen ? (
-    <div 
+    <div
       className="fixed inset-0 bg-black/90 flex items-center justify-center z-100 p-2 lg:p-4"
       onClick={() => setIsOpen(false)}
     >
@@ -56,7 +67,7 @@ const DeckPopup: React.FC<DeckPopupProps> = ({ deck, discardPile }) => {
         onClick={(e) => e.stopPropagation()}
         style={{
           scrollbarColor: "#3b82f6 #1e293b",
-          scrollbarWidth: "auto"
+          scrollbarWidth: "auto",
         }}
       >
         <div className="flex flex-col lg:flex-row gap-6 px-4 lg:px-8 pb-8 pt-4 lg:pt-8 flex-1 overflow-hidden">
@@ -70,14 +81,21 @@ const DeckPopup: React.FC<DeckPopupProps> = ({ deck, discardPile }) => {
               </h3>
               <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-white/10">
                 <div className="space-y-2 overflow-y-auto max-h-[140px]">
-                  {genreCounts.filter(([, count]) => count > 1).map(([genre, count]) => (
-                    <div key={genre} className="flex justify-between items-center text-xs">
-                      <span className="text-gray-300 truncate">{genre === 'Science Fiction' ? 'Sci-Fi' : genre}</span>
-                      <span className="bg-blue-600 text-white px-1.5 py-0.5 rounded font-bold text-xs ml-1">
-                        {count}
-                      </span>
-                    </div>
-                  ))}
+                  {genreCounts
+                    .filter(([, count]) => count > 1)
+                    .map(([genre, count]) => (
+                      <div
+                        key={genre}
+                        className="flex justify-between items-center text-xs"
+                      >
+                        <span className="text-gray-300 truncate">
+                          {genre === "Science Fiction" ? "Sci-Fi" : genre}
+                        </span>
+                        <span className="bg-blue-600 text-white px-1.5 py-0.5 rounded font-bold text-xs ml-1">
+                          {count}
+                        </span>
+                      </div>
+                    ))}
                 </div>
               </div>
             </div>
@@ -90,44 +108,52 @@ const DeckPopup: React.FC<DeckPopupProps> = ({ deck, discardPile }) => {
                   <h4 className="text-sm font-bold text-white mb-1 text-center truncate">
                     {selectedCard.title}
                   </h4>
-                  
+
                   {/* Genres */}
                   <div className="mb-2">
                     <div className="flex flex-wrap gap-1 justify-center">
-                      {selectedCard.genres.slice(0, 2).map(genre => (
-                        <span 
-                          key={genre.id} 
+                      {selectedCard.genres.slice(0, 2).map((genre) => (
+                        <span
+                          key={genre.id}
                           className="text-xs px-1.5 py-0.5 bg-blue-600 rounded font-semibold text-white"
                         >
-                          {genre.name === 'Science Fiction' ? 'Sci-Fi' : genre.name}
+                          {genre.name === "Science Fiction"
+                            ? "Sci-Fi"
+                            : genre.name}
                         </span>
                       ))}
                     </div>
                   </div>
-                  
+
                   {/* Stats */}
                   <div className="space-y-1">
                     <div className="flex justify-between items-center text-xs">
                       <span className="text-gray-400">Rating:</span>
                       <div className="flex items-center gap-1">
-                        <span className="text-red-400 font-bold">{(selectedCard.basePower / 100).toFixed(1)}</span>
-                        <Sword className='w-3 h-3 text-red-400' />
+                        <span className="text-red-400 font-bold">
+                          {(selectedCard.basePower / 100).toFixed(1)}
+                        </span>
+                        <Sword className="w-3 h-3 text-red-400" />
                       </div>
                     </div>
-                    
+
                     <div className="flex justify-between items-center text-xs">
                       <span className="text-gray-400">Runtime:</span>
                       <div className="flex items-center gap-1">
-                        <span className="text-blue-400 font-bold">{selectedCard.runtime}m</span>
-                        <Shield className='w-3 h-3 text-blue-400' />
+                        <span className="text-blue-400 font-bold">
+                          {selectedCard.runtime}m
+                        </span>
+                        <Shield className="w-3 h-3 text-blue-400" />
                       </div>
                     </div>
-                    
+
                     <div className="flex justify-between items-center text-xs">
                       <span className="text-gray-400">Release:</span>
                       <div className="flex items-center gap-1">
-                        <span className="text-green-400 font-bold">{selectedCard.release_date.split('-')[0]}</span>
-                        <ArrowUp className='w-3 h-3 text-green-400' />
+                        <span className="text-green-400 font-bold">
+                          {selectedCard.release_date.split("-")[0]}
+                        </span>
+                        <ArrowUp className="w-3 h-3 text-green-400" />
                       </div>
                     </div>
                   </div>
@@ -137,7 +163,7 @@ const DeckPopup: React.FC<DeckPopupProps> = ({ deck, discardPile }) => {
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleNavigateCard('prev');
+                        handleNavigateCard("prev");
                       }}
                       className="flex-1 bg-black/80 hover:bg-black/95 py-1 rounded flex items-center justify-center transition-all cursor-pointer"
                     >
@@ -146,7 +172,7 @@ const DeckPopup: React.FC<DeckPopupProps> = ({ deck, discardPile }) => {
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleNavigateCard('next');
+                        handleNavigateCard("next");
                       }}
                       className="flex-1 bg-black/80 hover:bg-black/95 py-1 rounded flex items-center justify-center transition-all cursor-pointer"
                     >
@@ -156,7 +182,9 @@ const DeckPopup: React.FC<DeckPopupProps> = ({ deck, discardPile }) => {
                 </div>
               ) : (
                 <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-white/10 flex items-center justify-center flex-1">
-                  <p className="text-gray-400 text-xs text-center">Select a card</p>
+                  <p className="text-gray-400 text-xs text-center">
+                    Select a card
+                  </p>
                 </div>
               )}
             </div>
@@ -170,47 +198,58 @@ const DeckPopup: React.FC<DeckPopupProps> = ({ deck, discardPile }) => {
             </h3>
             <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/10">
               <div className="space-y-2 overflow-y-auto max-h-[70vh]">
-                {genreCounts.filter(([, count]) => count > 1).map(([genre, count]) => (
-                  <div key={genre} className="flex justify-between items-center text-sm">
-                    <span className="text-gray-300">{genre === 'Science Fiction' ? 'Sci-Fi' : genre}</span>
-                    <span className="bg-blue-600 text-white px-2 py-1 rounded font-bold">
-                      {count}
-                    </span>
-                  </div>
-                ))}
+                {genreCounts
+                  .filter(([, count]) => count > 1)
+                  .map(([genre, count]) => (
+                    <div
+                      key={genre}
+                      className="flex justify-between items-center text-sm"
+                    >
+                      <span className="text-gray-300">
+                        {genre === "Science Fiction" ? "Sci-Fi" : genre}
+                      </span>
+                      <span className="bg-blue-600 text-white px-2 py-1 rounded font-bold">
+                        {count}
+                      </span>
+                    </div>
+                  ))}
               </div>
             </div>
           </div>
-          
+
           {/* Card Grid */}
           <div className="grid grid-cols-4 lg:grid-cols-4 lg:[@media(min-width:1600px)]:grid-cols-6 gap-2 flex-1 overflow-y-auto content-start px-2 pb-2 pt-4 min-h-[200px] max-h-[400px] lg:max-h-full">
-            {deck.map(card => (
-            <div 
-              key={card.id} 
-              className={`relative text-white cursor-pointer flex items-center justify-center ${
-                selectedCard?.id === card.id ? 'z-20' : 'z-0'
-              }`}
-              onClick={() => {
-                setSelectedCard(card);
-                setShowDescription(false);
-              }}
-            >
-              <MovieCardComponent
-                card={card}
-                isSelected={selectedCard?.id === card.id}
-                onSelect={() => {}}
-                isDisabled={true}
-                small={true}
-              />
-              {discardPile.some(discarded => discarded.id === card.id) && (
-                <div className={`absolute inset-0 bg-gray-900/80 rounded-lg z-10 flex items-center justify-center pointer-events-none transition-all transform ${
-                  selectedCard?.id === card.id ? 'scale-105 -translate-y-2' : ''
-                }`}>
+            {deck.map((card) => (
+              <div
+                key={card.id}
+                className={`relative text-white cursor-pointer flex items-center justify-center ${
+                  selectedCard?.id === card.id ? "z-20" : "z-0"
+                }`}
+                onClick={() => {
+                  setSelectedCard(card);
+                  setShowDescription(false);
+                }}
+              >
+                <MovieCardComponent
+                  card={card}
+                  isSelected={selectedCard?.id === card.id}
+                  onSelect={() => {}}
+                  isDisabled={true}
+                  small={true}
+                />
+                {discardPile.some((discarded) => discarded.id === card.id) && (
+                  <div
+                    className={`absolute inset-0 bg-gray-900/80 rounded-lg z-10 flex items-center justify-center pointer-events-none transition-all transform ${
+                      selectedCard?.id === card.id
+                        ? "scale-105 -translate-y-2"
+                        : ""
+                    }`}
+                  >
                     <span className="text-white text-xs font-bold"></span>
-                </div>
-              )}
-            </div>
-          ))}
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
 
           {/* Card Detail Section */}
@@ -224,7 +263,7 @@ const DeckPopup: React.FC<DeckPopupProps> = ({ deck, discardPile }) => {
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleNavigateCard('prev');
+                        handleNavigateCard("prev");
                       }}
                       className="w-8 bg-black/80 hover:bg-black/95 flex items-center justify-center transition-all cursor-pointer"
                     >
@@ -232,17 +271,21 @@ const DeckPopup: React.FC<DeckPopupProps> = ({ deck, discardPile }) => {
                     </button>
 
                     {/* Poster */}
-                    <div className="flex-1 relative cursor-pointer [@media(max-height:700px)]:max-w-44 [@media(max-height:700px)]:mx-auto" onClick={() => setShowDescription(!showDescription)}>
-                      <img 
+                    <div
+                      className="flex-1 relative cursor-pointer [@media(max-height:700px)]:max-w-44 [@media(max-height:700px)]:mx-auto"
+                      onClick={() => setShowDescription(!showDescription)}
+                    >
+                      <img
                         src={`https://image.tmdb.org/t/p/w300${selectedCard.poster_path}`}
                         alt={selectedCard.title}
                         className="w-full"
                       />
-                      
+
                       {showDescription && (
                         <div className="absolute inset-0 bg-black/80 p-2 flex items-center justify-center">
                           <p className="text-white text-sm leading-relaxed overflow-y-auto max-h-full">
-                            {selectedCard.overview || 'No description available.'}
+                            {selectedCard.overview ||
+                              "No description available."}
                           </p>
                         </div>
                       )}
@@ -252,96 +295,121 @@ const DeckPopup: React.FC<DeckPopupProps> = ({ deck, discardPile }) => {
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleNavigateCard('next');
+                        handleNavigateCard("next");
                       }}
                       className="w-8 bg-black/80 hover:bg-black/95 flex items-center justify-center transition-all cursor-pointer"
                     >
                       <ChevronRight className="w-5 h-5 text-white" />
                     </button>
                   </div>
-                  
+
                   {/* Title */}
                   <h4 className="text-lg font-bold text-white mb-1.5 text-center">
                     {selectedCard.title}
                   </h4>
-                  
+
                   {/* Genres */}
                   <div className="mb-3 relative">
                     <div className="flex flex-wrap gap-1 justify-center">
-                      {selectedCard.genres.slice(0, 2).map(genre => (
-                        <span 
-                          key={genre.id} 
+                      {selectedCard.genres.slice(0, 2).map((genre) => (
+                        <span
+                          key={genre.id}
                           className="text-xs px-2 py-1 bg-blue-600 rounded font-semibold text-white cursor-pointer"
-                          onMouseEnter={() => setHoveredStat('genres')}
+                          onMouseEnter={() => setHoveredStat("genres")}
                           onMouseLeave={() => setHoveredStat(null)}
                         >
-                          {genre.name === 'Science Fiction' ? 'Sci-Fi' : genre.name}
+                          {genre.name === "Science Fiction"
+                            ? "Sci-Fi"
+                            : genre.name}
                         </span>
                       ))}
                     </div>
-                    {hoveredStat === 'genres' && (
+                    {hoveredStat === "genres" && (
                       <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 z-50 w-64 p-2 bg-black/95 backdrop-blur-sm rounded-lg border border-white/20 shadow-xl pointer-events-none">
                         <p className="text-gray-300 text-xs leading-relaxed">
-                          Genres are used to create <span className="text-green-400 font-bold">SYNERGIES</span>, which multiply your damage.
+                          Genres are used to create{" "}
+                          <span className="text-green-400 font-bold">
+                            SYNERGIES
+                          </span>
+                          , which multiply your damage.
                         </p>
                       </div>
                     )}
                   </div>
-                  
+
                   {/* Stats */}
                   <div className="space-y-1.5">
-                    <div 
+                    <div
                       className="flex justify-between items-center text-sm cursor-pointer relative"
-                      onMouseEnter={() => setHoveredStat('rating')}
+                      onMouseEnter={() => setHoveredStat("rating")}
                       onMouseLeave={() => setHoveredStat(null)}
                     >
                       <span className="text-gray-400">Rating:</span>
                       <div className="flex items-center gap-1">
-                        <span className="text-red-400 font-bold">{(selectedCard.basePower / 100).toFixed(1)}</span>
-                        <Sword className='w-4 h-4 text-red-400' />
+                        <span className="text-red-400 font-bold">
+                          {(selectedCard.basePower / 100).toFixed(1)}
+                        </span>
+                        <Sword className="w-4 h-4 text-red-400" />
                       </div>
-                      {hoveredStat === 'rating' && (
+                      {hoveredStat === "rating" && (
                         <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 z-50 w-64 p-2 bg-black/95 backdrop-blur-sm rounded-lg border border-white/20 shadow-xl pointer-events-none">
                           <p className="text-gray-300 text-xs leading-relaxed">
-                            Your <span className="text-red-400 font-bold">ATTACK</span> is based on the film's TMDB (The Movie Database) rating.
+                            Your{" "}
+                            <span className="text-red-400 font-bold">
+                              ATTACK
+                            </span>{" "}
+                            is based on the film's TMDB (The Movie Database)
+                            rating.
                           </p>
                         </div>
                       )}
                     </div>
-                    
-                    <div 
+
+                    <div
                       className="flex justify-between items-center text-sm cursor-pointer relative"
-                      onMouseEnter={() => setHoveredStat('runtime')}
+                      onMouseEnter={() => setHoveredStat("runtime")}
                       onMouseLeave={() => setHoveredStat(null)}
                     >
                       <span className="text-gray-400">Runtime:</span>
                       <div className="flex items-center gap-1">
-                        <span className="text-blue-400 font-bold">{selectedCard.runtime}m</span>
-                        <Shield className='w-4 h-4 text-blue-400' />
+                        <span className="text-blue-400 font-bold">
+                          {selectedCard.runtime}m
+                        </span>
+                        <Shield className="w-4 h-4 text-blue-400" />
                       </div>
-                      {hoveredStat === 'runtime' && (
+                      {hoveredStat === "runtime" && (
                         <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 z-50 w-64 p-2 bg-black/95 backdrop-blur-sm rounded-lg border border-white/20 shadow-xl pointer-events-none">
                           <p className="text-gray-300 text-xs leading-relaxed">
-                            Your <span className="text-blue-400 font-bold">DEFENSE</span> is based on the film's runtime in minutes.
+                            Your{" "}
+                            <span className="text-blue-400 font-bold">
+                              DEFENSE
+                            </span>{" "}
+                            is based on the film's runtime in minutes.
                           </p>
                         </div>
                       )}
                     </div>
-                    
-                    <div 
+
+                    <div
                       className="flex justify-between items-center text-sm cursor-pointer relative"
-                      onMouseEnter={() => setHoveredStat('release')}
+                      onMouseEnter={() => setHoveredStat("release")}
                       onMouseLeave={() => setHoveredStat(null)}
                     >
                       <span className="text-gray-400">Release:</span>
                       <div className="flex items-center gap-1">
-                        <span className="text-green-400 font-bold">{selectedCard.release_date.split('-')[0]}</span>
-                        <ArrowUp className='w-4 h-4 text-green-400' />
+                        <span className="text-green-400 font-bold">
+                          {selectedCard.release_date.split("-")[0]}
+                        </span>
+                        <ArrowUp className="w-4 h-4 text-green-400" />
                       </div>
-                      {hoveredStat === 'release' && (
+                      {hoveredStat === "release" && (
                         <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 z-50 w-64 p-2 bg-black/95 backdrop-blur-sm rounded-lg border border-white/20 shadow-xl pointer-events-none">
                           <p className="text-gray-300 text-xs leading-relaxed">
-                            Release dates are used to create <span className="text-green-400 font-bold">SYNERGIES</span>, which multiply your damage.
+                            Release dates are used to create{" "}
+                            <span className="text-green-400 font-bold">
+                              SYNERGIES
+                            </span>
+                            , which multiply your damage.
                           </p>
                         </div>
                       )}
@@ -350,11 +418,12 @@ const DeckPopup: React.FC<DeckPopupProps> = ({ deck, discardPile }) => {
                 </div>
               ) : (
                 <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/10 h-full flex items-center justify-center">
-                  <p className="text-gray-400 text-center">Click a card to view details</p>
+                  <p className="text-gray-400 text-center">
+                    Click a card to view details
+                  </p>
                 </div>
               )}
             </div>
-
           </div>
         </div>
         <div className="px-5 pb-5">
@@ -372,7 +441,10 @@ const DeckPopup: React.FC<DeckPopupProps> = ({ deck, discardPile }) => {
   return (
     <>
       <button
-        onClick={() => {setIsOpen(true); setShowDescription(false);}}
+        onClick={() => {
+          setIsOpen(true);
+          setShowDescription(false);
+        }}
         className="lg:px-4 lg:py-2 rounded-lg font-bold flex items-center gap-2 transition-all cursor-pointer"
       >
         <Layers className="lg:w-7 lg:h-7 hover:scale-110 transition-all" />

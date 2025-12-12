@@ -1,96 +1,148 @@
-import React, { useState } from 'react';
-import { fetchMovieDetails, fetchPopularMovies } from '../utils/tmdbApi';
-import { Film, Shuffle, X, Layers } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import { CELEBRITY_TOP4S, ARCHETYPE_TOP4S } from '../data/prebuiltTop4Presets';
-import InstructionsButton from './InstructionsButton';
+import React, { useState, useEffect } from "react";
+import { useAuth } from "@clerk/clerk-react";
+import { fetchMovieDetails, fetchPopularMovies } from "../utils/tmdbApi";
+import { Film, Shuffle, X, Layers } from "lucide-react";
+import { CELEBRITY_TOP4S, ARCHETYPE_TOP4S } from "../data/prebuiltTop4Presets";
+import Header from "./Header";
+import InstructionsButton from "./InstructionsButton";
 
-const TMDB_API_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmODZmYTE3MzcwNzRmMzY3NzkwNzc1Y2Q1NTQwNmExYyIsIm5iZiI6MTY4NzYyNzAzOC40MDEsInN1YiI6IjY0OTcyNTFlYjM0NDA5MDBhZDUyNTY4YSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.YA8K57yrPNiM_UwefPB6Bv2t8fZdY_v1GD9AS3rRrU0';
+const TMDB_API_TOKEN =
+  "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmODZmYTE3MzcwNzRmMzY3NzkwNzc1Y2Q1NTQwNmExYyIsIm5iZiI6MTY4NzYyNzAzOC40MDEsInN1YiI6IjY0OTcyNTFlYjM0NDA5MDBhZDUyNTY4YSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.YA8K57yrPNiM_UwefPB6Bv2t8fZdY_v1GD9AS3rRrU0";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5157";
 
 interface PickTopFilmsProps {
   onComplete: (movies: any[]) => void;
 }
 
 const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
-  const [search, setSearch] = useState('');
+  const { getToken, isSignedIn } = useAuth();
+  const [search, setSearch] = useState("");
   const [picked, setPicked] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [duplicateError, setDuplicateError] = useState<string | null>(null);
   const [runtimeError, setRuntimeError] = useState<string | null>(null);
-  const [presetCategory, setPresetCategory] = useState<'celebrity' | 'archetype'>('celebrity');
+  const [presetCategory, setPresetCategory] = useState<
+    "celebrity" | "archetype"
+  >("celebrity");
   const [presetsOpen, setPresetsOpen] = useState(false);
   const [suggestions, setSuggestions] = useState<any[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const presetListRef = React.useRef<HTMLDivElement>(null);
   const searchTimeoutRef = React.useRef<number | null>(null);
 
+  // Load user's default preset on mount if signed in
+  useEffect(() => {
+    const loadDefaultPreset = async () => {
+      if (!isSignedIn) return;
+
+      try {
+        const token = await getToken();
+        const response = await fetch(`${API_URL}/api/users/me/top4`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+
+          // Only auto-fill if IsDefault is true and we have movie IDs
+          if (data.isDefault && data.movieIds && data.movieIds.length > 0) {
+            setLoading(true);
+            // Filter out 0s (empty slots) and fetch movie details
+            const validMovieIds = data.movieIds.filter(
+              (id: number) => id !== 0
+            );
+            if (validMovieIds.length > 0) {
+              const movieDetails = await Promise.all(
+                validMovieIds.map((id: number) => fetchMovieDetails(id))
+              );
+              setPicked(movieDetails);
+            }
+            setLoading(false);
+          }
+        }
+      } catch (err) {
+        console.error("Failed to load default preset:", err);
+      }
+    };
+
+    loadDefaultPreset();
+  }, [isSignedIn, getToken]);
+
   const handleSearchChange = (value: string) => {
     setSearch(value);
     setError(null);
     setDuplicateError(null);
     setRuntimeError(null);
-    
+
     // Clear previous timeout
     if (searchTimeoutRef.current) {
       clearTimeout(searchTimeoutRef.current);
     }
-    
+
     if (value.length < 2) {
       setSuggestions([]);
       setShowSuggestions(false);
       return;
     }
-    
+
     // Wait 300ms after user stops typing
     searchTimeoutRef.current = window.setTimeout(async () => {
       try {
         const res = await fetch(
-          `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(value)}&include_adult=false&language=en-US&page=1`,
+          `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(
+            value
+          )}&include_adult=false&language=en-US&page=1`,
           {
             headers: {
-              accept: 'application/json',
-              Authorization: `Bearer ${TMDB_API_TOKEN}`
-            }
+              accept: "application/json",
+              Authorization: `Bearer ${TMDB_API_TOKEN}`,
+            },
           }
         );
         const data = await res.json();
         setSuggestions(data.results?.slice(0, 5) || []);
         setShowSuggestions(true);
       } catch (err) {
-        console.error('Search failed:', err);
+        console.error("Search failed:", err);
       }
     }, 300);
   };
 
   const handleSelectSuggestion = async (movie: any) => {
-    if (picked.some(m => m.id === movie.id)) {
-      setDuplicateError('You already picked this movie!');
+    if (picked.some((m) => m.id === movie.id)) {
+      setDuplicateError(`"${movie.title}" is already in your Top 4.`);
+      setTimeout(() => setDuplicateError(null), 3000);
       setShowSuggestions(false);
       return;
     }
-    
+
     setLoading(true);
     setError(null);
     setDuplicateError(null);
     setRuntimeError(null);
     try {
       const details = await fetchMovieDetails(movie.id);
-      
+
       // Check if runtime is over 240 minutes
       if (details.runtime && details.runtime > 240) {
-        setRuntimeError(`"${details.title}" is too long (${details.runtime} min) for a starter. Please choose a film under 4 hours.`);
+        setRuntimeError(
+          `"${details.title}" is too long (${details.runtime} min) for a starter. Please choose a film under 4 hours.`
+        );
+        setTimeout(() => setRuntimeError(null), 3000);
         setShowSuggestions(false);
         setLoading(false);
         return;
       }
-      
+
       setPicked([...picked, details]);
-      setSearch('');
+      setSearch("");
       setSuggestions([]);
       setShowSuggestions(false);
     } catch (err) {
-      setError('Failed to load movie details.');
+      setError("Failed to load movie details.");
     }
     setLoading(false);
   };
@@ -113,8 +165,8 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
       const movies = await fetchPopularMovies(randomPage);
 
       // Filter out any movies already picked (by id)
-      const pickedIds = new Set(picked.map(m => m.id));
-      const availableMovies = movies.filter(m => !pickedIds.has(m.id));
+      const pickedIds = new Set(picked.map((m) => m.id));
+      const availableMovies = movies.filter((m) => !pickedIds.has(m.id));
 
       // Just take the first N available movies (they're already random from TMDB)
       const chosen = availableMovies.slice(0, emptySlots);
@@ -124,7 +176,7 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
 
       // Fetch full details only for the needed movies and log each response
       const details = await Promise.all(
-        chosen.map(async m => {
+        chosen.map(async (m) => {
           const detail = await fetchMovieDetails(m.id);
           //console.log(`[RandomPick] Details response for "${detail.title}":`, detail);
           return detail;
@@ -132,16 +184,16 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
       );
 
       setPicked([...picked, ...details]);
-      setSearch('');
+      setSearch("");
     } catch (err) {
-      setError('Failed to pick random movies.');
+      setError("Failed to pick random movies.");
     }
     setLoading(false);
   };
 
   const handlePresetSelect = async (presetId: string) => {
     const allPresets = [...CELEBRITY_TOP4S, ...ARCHETYPE_TOP4S];
-    const preset = allPresets.find(p => p.id === presetId);
+    const preset = allPresets.find((p) => p.id === presetId);
     if (!preset) return;
 
     setLoading(true);
@@ -149,13 +201,13 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
     setDuplicateError(null);
     try {
       const details = await Promise.all(
-        preset.movieIds.map(id => fetchMovieDetails(id))
+        preset.movieIds.map((id) => fetchMovieDetails(id))
       );
       setPicked(details);
-      setSearch('');
+      setSearch("");
       setPresetsOpen(false); // Close modal on mobile after selection
     } catch (err) {
-      setError('Failed to load preset.');
+      setError("Failed to load preset.");
     }
     setLoading(false);
   };
@@ -168,73 +220,75 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
     if (picked.length === 4) onComplete(picked);
   };
 
-    {error && <div className="text-red-400 mb-2 text-center">{error}</div>}
-    {duplicateError && <div className="text-yellow-400 mb-2 text-center">{duplicateError}</div>}
+  return (
+    <div className="min-h-dvh bg-[#14181C] text-white flex flex-col">
+      <Header />
 
-    return (
-      <div className="min-h-dvh bg-[#14181C] text-white flex items-center justify-center p-4">
-        {/* Logo in top left corner */}
-        <Link to="/">
-          <img 
-            src="/favicon-top4.png" 
-            alt="Top 4 Arena Logo" 
-            className="absolute top-4 left-4 w-16 h-16 z-10"
-          />
-        </Link>
-
-        {/* Instructions button in top right - mobile only */}
-        <div className="lg:hidden absolute top-4 right-4 z-10">
-          <InstructionsButton />
-        </div>
-        
+      {/* Main content - centered */}
+      <div className="flex-1 flex flex-col items-center justify-center px-4">
         <div className="max-w-3xl w-full text-center space-y-8 bg-white/10 backdrop-blur-sm p-8 rounded-lg border border-white/10 shadow-2xl relative">
-        
-        {/* Presets button - top right (desktop only) */}
-        <div className="hidden lg:block absolute right-4 top-4">
-          <button
-            onClick={() => setPresetsOpen(!presetsOpen)}
-            className={`bg-yellow-600 hover:bg-yellow-700 text-black font-bold px-4 py-2 rounded-lg transition-all cursor-pointer flex items-center gap-2 ${
-              presetsOpen ? 'translate-x-8' : ''
-            }`}
-          >
-            Prebuilds
-          </button>
-        </div>
+          {/* Presets button - top right (desktop only) */}
+          <div className="hidden lg:block absolute right-4 top-4">
+            <button
+              onClick={() => setPresetsOpen(!presetsOpen)}
+              className={`bg-yellow-600 hover:bg-yellow-700 text-black font-bold px-4 py-2 rounded-lg transition-all cursor-pointer flex items-center gap-2 ${
+                presetsOpen ? "translate-x-8" : ""
+              }`}
+            >
+              Prebuilds
+            </button>
+          </div>
 
-        <div className="space-y-4">
+          <div className="space-y-4">
             <h2 className="text-3xl lg:text-4xl font-bold text-white bg-clip-text flex items-center justify-center gap-2">
-            Pick Your Top 4
+              Pick Your Top 4
             </h2>
-            <div className='flex items-center justify-center gap-2'>
-              <p className="lg:text-xl lg:text-center text-gray-300">Search movie titles and add them to your deck</p><span><Layers className='hidden lg:block w-7 h-7' /></span>
+            <div className="flex items-center justify-center gap-2">
+              <p className="lg:text-xl lg:text-center text-gray-300">
+                Search movie titles and add them to your deck
+              </p>
+              <span>
+                <Layers className="hidden lg:block w-7 h-7" />
+              </span>
             </div>
-        </div>
-        
-        {/* Search Bar */}
-        <div className="flex gap-2 w-full lg:max-w-lg mx-auto mb-6 relative">
+          </div>
+
+          {/* Search Bar */}
+          <div className="flex gap-2 w-full lg:max-w-lg mx-auto mb-6 relative">
             <div className="flex-1 relative">
               <input
-              type="text"
-              value={search}
-              onChange={e => handleSearchChange(e.target.value)}
-              onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
-              onFocus={() => search.length >= 2 && suggestions.length > 0 && setShowSuggestions(true)}
-              placeholder="Type a film title"
-              className="w-full p-3 rounded bg-[#2C3440] border border-white/10 text-lg text-white"
-              disabled={loading || picked.length >= 4}
+                type="text"
+                value={search}
+                onChange={(e) => handleSearchChange(e.target.value)}
+                onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+                onFocus={() =>
+                  search.length >= 2 &&
+                  suggestions.length > 0 &&
+                  setShowSuggestions(true)
+                }
+                placeholder="Search for a movie..."
+                className="w-full p-3 rounded-lg bg-[#2C3440] border border-white/10 text-lg text-white"
+                disabled={loading || picked.length >= 4}
               />
-              
+
+              {/* Duplicate Error Popup */}
+              {duplicateError && (
+                <div className="absolute z-50 w-full mt-1 bg-red-500 border border-red-700 rounded-lg shadow-xl p-3 text-sm text-white animate-in fade-in duration-200">
+                  {duplicateError}
+                </div>
+              )}
+
               {/* Suggestions Dropdown */}
               {showSuggestions && suggestions.length > 0 && (
                 <div className="absolute z-50 w-[calc(100vw-6rem)] lg:w-full left-0 mt-1 bg-[#2C3440] border border-white/10 rounded-lg shadow-xl max-h-80 overflow-y-auto">
-                  {suggestions.map(movie => (
+                  {suggestions.map((movie) => (
                     <button
                       key={movie.id}
                       onClick={() => handleSelectSuggestion(movie)}
                       className="w-full p-3 hover:bg-[#3C4450] transition-colors cursor-pointer text-left flex items-center gap-3 border-b border-white/5 last:border-b-0"
                     >
                       {movie.poster_path ? (
-                        <img 
+                        <img
                           src={`https://image.tmdb.org/t/p/w92${movie.poster_path}`}
                           alt={movie.title}
                           className="w-12 h-18 object-cover rounded"
@@ -245,16 +299,20 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
                         </div>
                       )}
                       <div className="flex-1">
-                        <div className="font-bold text-white">{movie.title}</div>
+                        <div className="font-bold text-white">
+                          {movie.title}
+                        </div>
                         <div className="text-sm text-gray-400">
-                          {movie.release_date ? new Date(movie.release_date).getFullYear() : 'N/A'}
+                          {movie.release_date
+                            ? new Date(movie.release_date).getFullYear()
+                            : "N/A"}
                         </div>
                       </div>
                     </button>
                   ))}
                 </div>
               )}
-              
+
               {/* Runtime Error Popup */}
               {runtimeError && (
                 <div className="absolute z-50 w-full mt-1 bg-red-500 border border-red-700 rounded-lg shadow-xl p-3 text-sm text-white animate-in fade-in duration-200">
@@ -263,183 +321,213 @@ const PickTopFilms: React.FC<PickTopFilmsProps> = ({ onComplete }) => {
               )}
             </div>
             <button
-                onClick={handleRandomPick}
-                disabled={loading || picked.length === 4}
-                className={`py-3 rounded-lg font-bold text-lg text-white cursor-pointer flex items-center justify-center gap-2 w-20 lg:w-24 ${
-                    picked.length === 4 
-                        ? 'bg-gray-600 cursor-not-allowed' 
-                        : 'bg-orange-600 hover:bg-orange-700'
-                }`}
-                >
-                <Shuffle className="w-5 h-5" />
-                {picked.length === 0 ? '4' : `${4 - picked.length}`}
+              onClick={handleRandomPick}
+              disabled={loading || picked.length === 4}
+              className={`py-3 rounded-lg font-bold text-lg text-white cursor-pointer flex items-center justify-center gap-2 w-20 lg:w-24 ${
+                picked.length === 4
+                  ? "bg-gray-600 cursor-not-allowed"
+                  : "bg-orange-600 hover:bg-orange-700"
+              }`}
+            >
+              <Shuffle className="w-5 h-5" />
+              {picked.length === 0 ? "4" : `${4 - picked.length}`}
             </button>
             <button
-                onClick={() => setPresetsOpen(true)}
-                disabled={loading}
-                className="lg:hidden py-3 rounded-lg font-bold text-sm text-black cursor-pointer flex items-center justify-center w-20 bg-yellow-600 hover:bg-yellow-700 disabled:opacity-50"
-                >
-                Prebuilds
-            </button>
-        </div>
-        {error && <div className="text-red-400 mb-4 text-center">{error}</div>}
-        <div className="grid grid-cols-4 gap-2 lg:gap-4 mb-6 justify-items-center items-center">
-            {[0, 1, 2, 3].map(idx => (
-            <div
-                key={idx}
-                className="bg-[#2C3440] border border-white/10 rounded-lg flex flex-col items-center justify-center overflow-hidden relative w-[70px] h-[105px] lg:w-[130px] lg:h-[210px]"
+              onClick={() => setPresetsOpen(true)}
+              disabled={loading}
+              className="lg:hidden py-3 rounded-lg font-bold text-sm text-black cursor-pointer flex items-center justify-center w-20 bg-yellow-600 hover:bg-yellow-700 disabled:opacity-50"
             >
+              Prebuilds
+            </button>
+          </div>
+          {error && (
+            <div className="text-red-400 mb-4 text-center">{error}</div>
+          )}
+          <div className="grid grid-cols-4 gap-2 lg:gap-4 mb-6 justify-items-center items-center">
+            {[0, 1, 2, 3].map((idx) => (
+              <div
+                key={idx}
+                className="bg-[#2C3440] border border-white/10 rounded-lg flex flex-col items-center justify-center overflow-hidden relative w-[70px] h-[105px] md:w-[130px] md:h-[210px]"
+              >
                 {picked[idx] ? (
-                <>
+                  <>
                     <img
-                        src={picked[idx].poster_path ? `https://image.tmdb.org/t/p/w200${picked[idx].poster_path}` : ''}
-                        alt={picked[idx].title}
-                        className="w-full h-full object-cover"
+                      src={
+                        picked[idx].poster_path
+                          ? `https://image.tmdb.org/t/p/w200${picked[idx].poster_path}`
+                          : ""
+                      }
+                      alt={picked[idx].title}
+                      className="w-full h-full object-cover"
                     />
                     <button
-                        onClick={() => handleRemove(idx)}
-                        className="absolute top-1 right-1 bg-black bg-opacity-60 rounded-full p-1 hover:bg-opacity-90 transition cursor-pointer"
-                        aria-label="Remove"
+                      onClick={() => handleRemove(idx)}
+                      className="absolute top-1 right-1 bg-black bg-opacity-60 rounded-full p-1 hover:bg-opacity-90 transition cursor-pointer"
+                      aria-label="Remove"
                     >
-                        <X className="w-5 h-5 text-red-400" />
+                      <X className="w-5 h-5 text-red-400" />
                     </button>
-                </>
+                  </>
                 ) : (
-                <div className="flex flex-col items-center justify-center h-full w-full">
+                  <div className="flex flex-col items-center justify-center h-full w-full">
                     <Film className="w-8 h-8 text-gray-600 mb-2" />
                     <span className="text-gray-600">Empty</span>
-                </div>
+                  </div>
                 )}
-            </div>
+              </div>
             ))}
-        </div>
+          </div>
           <div>
-              <button
+            <button
               onClick={handleStart}
               disabled={picked.length !== 4}
               className={`px-8 py-3 rounded-full font-bold text-xl w-full transition-all text-white shadow-lg ${
-                  picked.length === 4 
-                      ? 'bg-linear-to-r from-green-600 to-green-500 hover:from-green-700 hover:to-green-600 cursor-pointer' 
-                      : 'bg-gray-600 cursor-not-allowed'
+                picked.length === 4
+                  ? "bg-linear-to-r from-green-600 to-green-500 hover:from-green-700 hover:to-green-600 cursor-pointer"
+                  : "bg-gray-600 cursor-not-allowed"
               }`}
-              >
+            >
               Start Game
-              </button>
+            </button>
           </div>
         </div>
 
-        {/* Presets Side Panel - Desktop */}
-        {presetsOpen && (
-          <div className="hidden lg:flex fixed left-1/2 ml-[calc(768px/2+1.5rem)] top-1/2 -translate-y-1/2 w-80 bg-white/10 backdrop-blur-sm p-6 rounded-lg border border-white/10 shadow-2xl flex-col z-50">
+        {/* Instructions button - mobile only, centered below */}
+        <div className="lg:hidden mt-4">
+          <InstructionsButton />
+        </div>
+      </div>
+
+      {/* Presets Side Panel - Desktop */}
+      {presetsOpen && (
+        <div className="hidden lg:flex fixed left-1/2 ml-[calc(768px/2+1.5rem)] top-1/2 -translate-y-1/2 w-80 bg-white/10 backdrop-blur-sm p-6 rounded-lg border border-white/10 shadow-2xl flex-col z-50">
           <div className="shrink-0">
             {/* Category Toggle */}
             <div className="flex gap-2 mb-3">
               <button
                 onClick={() => {
-                  setPresetCategory('celebrity');
-                  if (presetListRef.current) presetListRef.current.scrollTop = 0;
+                  setPresetCategory("celebrity");
+                  if (presetListRef.current)
+                    presetListRef.current.scrollTop = 0;
                 }}
                 className={`flex-1 px-3 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                  presetCategory === 'celebrity'
-                    ? 'bg-yellow-600 text-black'
-                    : 'bg-[#2C3440] text-gray-300 hover:bg-[#3C4450]'
+                  presetCategory === "celebrity"
+                    ? "bg-yellow-600 text-black"
+                    : "bg-[#2C3440] text-gray-300 hover:bg-[#3C4450]"
                 }`}
               >
                 Celebrity
               </button>
               <button
                 onClick={() => {
-                  setPresetCategory('archetype');
-                  if (presetListRef.current) presetListRef.current.scrollTop = 0;
+                  setPresetCategory("archetype");
+                  if (presetListRef.current)
+                    presetListRef.current.scrollTop = 0;
                 }}
                 className={`flex-1 px-3 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                  presetCategory === 'archetype'
-                    ? 'bg-yellow-600 text-black'
-                    : 'bg-[#2C3440] text-gray-300 hover:bg-[#3C4450]'
+                  presetCategory === "archetype"
+                    ? "bg-yellow-600 text-black"
+                    : "bg-[#2C3440] text-gray-300 hover:bg-[#3C4450]"
                 }`}
               >
                 Archetype
               </button>
             </div>
-            <div ref={presetListRef} className="space-y-2 max-h-96 overflow-y-auto scrollbar-thin pr-2">
-              {(presetCategory === 'celebrity' ? CELEBRITY_TOP4S : ARCHETYPE_TOP4S).map(preset => (
+            <div
+              ref={presetListRef}
+              className="space-y-2 max-h-96 overflow-y-auto scrollbar-thin pr-2"
+            >
+              {(presetCategory === "celebrity"
+                ? CELEBRITY_TOP4S
+                : ARCHETYPE_TOP4S
+              ).map((preset) => (
                 <button
                   key={preset.id}
                   onClick={() => handlePresetSelect(preset.id)}
                   disabled={loading}
                   className="w-full text-left p-3 rounded-lg bg-[#2C3440] border border-white/10 hover:bg-[#3C4450] hover:border-yellow-500/50 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <div className="font-bold text-sm text-white">{preset.title}</div>
+                  <div className="font-bold text-sm text-white">
+                    {preset.title}
+                  </div>
                 </button>
               ))}
             </div>
           </div>
-          </div>
-        )}
+        </div>
+      )}
 
-        {/* Presets Modal - Mobile */}
-        {presetsOpen && (
-          <div className="lg:hidden fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4">
-            <div className="bg-[#2C3440] rounded-lg w-full max-w-md max-h-[80vh] flex flex-col">
-              {/* Header */}
-              <div className="flex items-center justify-between p-4 border-b border-white/10">
-                <h3 className="text-xl font-bold text-white">Prebuilds</h3>
-                <button
-                  onClick={() => setPresetsOpen(false)}
-                  className="text-gray-400 hover:text-white transition cursor-pointer"
-                >
-                  <X className="w-6 h-6" />
-                </button>
-              </div>
+      {/* Presets Modal - Mobile */}
+      {presetsOpen && (
+        <div className="lg:hidden fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4">
+          <div className="bg-[#2C3440] rounded-lg w-full max-w-md max-h-[80vh] flex flex-col">
+            {/* Header */}
+            <div className="flex items-center justify-between p-4 border-b border-white/10">
+              <h3 className="text-xl font-bold text-white">Prebuilds</h3>
+              <button
+                onClick={() => setPresetsOpen(false)}
+                className="text-gray-400 hover:text-white transition cursor-pointer"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
 
-              {/* Category Toggle */}
-              <div className="flex gap-2 p-4 border-b border-white/10">
-                <button
-                  onClick={() => {
-                    setPresetCategory('celebrity');
-                    if (presetListRef.current) presetListRef.current.scrollTop = 0;
-                  }}
-                  className={`flex-1 px-4 py-2 rounded-lg font-bold transition-all cursor-pointer ${
-                    presetCategory === 'celebrity'
-                      ? 'bg-yellow-600 text-black'
-                      : 'bg-[#14181C] text-gray-300'
-                  }`}
-                >
-                  Celebrity
-                </button>
-                <button
-                  onClick={() => {
-                    setPresetCategory('archetype');
-                    if (presetListRef.current) presetListRef.current.scrollTop = 0;
-                  }}
-                  className={`flex-1 px-4 py-2 rounded-lg font-bold transition-all cursor-pointer ${
-                    presetCategory === 'archetype'
-                      ? 'bg-yellow-600 text-black'
-                      : 'bg-[#14181C] text-gray-300'
-                  }`}
-                >
-                  Archetype
-                </button>
-              </div>
+            {/* Category Toggle */}
+            <div className="flex gap-2 p-4 border-b border-white/10">
+              <button
+                onClick={() => {
+                  setPresetCategory("celebrity");
+                  if (presetListRef.current)
+                    presetListRef.current.scrollTop = 0;
+                }}
+                className={`flex-1 px-4 py-2 rounded-lg font-bold transition-all cursor-pointer ${
+                  presetCategory === "celebrity"
+                    ? "bg-yellow-600 text-black"
+                    : "bg-[#14181C] text-gray-300"
+                }`}
+              >
+                Celebrity
+              </button>
+              <button
+                onClick={() => {
+                  setPresetCategory("archetype");
+                  if (presetListRef.current)
+                    presetListRef.current.scrollTop = 0;
+                }}
+                className={`flex-1 px-4 py-2 rounded-lg font-bold transition-all cursor-pointer ${
+                  presetCategory === "archetype"
+                    ? "bg-yellow-600 text-black"
+                    : "bg-[#14181C] text-gray-300"
+                }`}
+              >
+                Archetype
+              </button>
+            </div>
 
-              {/* Preset List */}
-              <div ref={presetListRef} className="flex-1 overflow-y-auto p-4 space-y-2">
-                {(presetCategory === 'celebrity' ? CELEBRITY_TOP4S : ARCHETYPE_TOP4S).map(preset => (
-                  <button
-                    key={preset.id}
-                    onClick={() => handlePresetSelect(preset.id)}
-                    disabled={loading}
-                    className="w-full text-left p-4 rounded-lg bg-[#14181C] border border-white/10 hover:bg-[#1C2228] hover:border-yellow-500/50 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    <div className="font-bold text-white">{preset.title}</div>
-                  </button>
-                ))}
-              </div>
+            {/* Preset List */}
+            <div
+              ref={presetListRef}
+              className="flex-1 overflow-y-auto p-4 space-y-2"
+            >
+              {(presetCategory === "celebrity"
+                ? CELEBRITY_TOP4S
+                : ARCHETYPE_TOP4S
+              ).map((preset) => (
+                <button
+                  key={preset.id}
+                  onClick={() => handlePresetSelect(preset.id)}
+                  disabled={loading}
+                  className="w-full text-left p-4 rounded-lg bg-[#14181C] border border-white/10 hover:bg-[#1C2228] hover:border-yellow-500/50 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <div className="font-bold text-white">{preset.title}</div>
+                </button>
+              ))}
             </div>
           </div>
-        )}
-      </div>
-    );
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default PickTopFilms;

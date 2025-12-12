@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { HelpCircle, Shield, Sword, X } from 'lucide-react';
+import React, { useState } from "react";
+import { HelpCircle, Shield, Sword, X } from "lucide-react";
 
 interface InstructionsButtonProps {
   onClick?: () => void;
@@ -45,42 +45,66 @@ const InstructionsButton: React.FC<InstructionsButtonProps> = ({ onClick }) => {
             <div className="p-6 space-y-6">
               {/* Objective */}
               <section>
-                <h3 className="text-xl font-bold text-yellow-400 mb-2">Objective</h3>
+                <h3 className="text-xl font-bold text-yellow-400 mb-2">
+                  Objective
+                </h3>
                 <p className="text-gray-300">
-                  Play a hand of 1-4 movie cards, find synergies and defeat the boss.
+                  Play a hand of 1-4 movie cards, find synergies and defeat the
+                  boss.
                 </p>
               </section>
 
               {/* Synergies */}
               <section>
-                <h3 className="text-xl font-bold text-yellow-400 mb-2">Synergies</h3>
+                <h3 className="text-xl font-bold text-yellow-400 mb-2">
+                  Synergies
+                </h3>
                 <p className="text-gray-300 mb-2">
-                  Synergies multiply your damage and are found when movies have certain qualities in common.
+                  Synergies multiply your damage and are found when movies have
+                  certain qualities in common.
                 </p>
                 <p className="text-gray-300 mb-2">
                   Only cards with synergies will add to your attack.
                 </p>
                 <p className="text-gray-300">
-                  Currently, genre synergies are the only ones available, but era, popularity, and cast synergies are planned.
+                  Currently, genre synergies are the only ones available, but
+                  era, popularity, and cast synergies are planned.
                 </p>
               </section>
 
               {/* About the Combat */}
               <section>
-                <h3 className="text-xl font-bold text-yellow-400 mb-2">About the Combat</h3>
+                <h3 className="text-xl font-bold text-yellow-400 mb-2">
+                  About the Combat
+                </h3>
                 <p className="text-gray-300 mb-2">
-                  In short, your ATTACK <span className="inline-flex items-center"><Sword className="w-3 h-3 text-red-400" /></span> is based on the film's TMDB (The Movie Database) rating and your DEFENSE <span className="inline-flex items-center"><Shield className="w-3 h-3 text-blue-400" /></span> is based on the film's runtime. The details of the calculations are highly experimental at this stage.
+                  In short, your ATTACK{" "}
+                  <span className="inline-flex items-center">
+                    <Sword className="w-3 h-3 text-red-400" />
+                  </span>{" "}
+                  is based on the film's TMDB (The Movie Database) rating and
+                  your DEFENSE{" "}
+                  <span className="inline-flex items-center">
+                    <Shield className="w-3 h-3 text-blue-400" />
+                  </span>{" "}
+                  is based on the film's runtime. The details of the
+                  calculations are highly experimental at this stage.
                 </p>
                 <p className="text-gray-300">
-                  Each boss has a special ability you need to watch out for (some not yet implemented).
+                  Each boss has a special ability you need to watch out for
+                  (some not yet implemented).
                 </p>
               </section>
 
               {/* The Shop */}
               <section>
-                <h3 className="text-xl font-bold text-yellow-400 mb-2">The Ticket Booth</h3>
+                <h3 className="text-xl font-bold text-yellow-400 mb-2">
+                  The Ticket Booth
+                </h3>
                 <p className="text-gray-300">
-                  Each defeated boss will earn you a movie ticket. In between rounds, you can use a ticket to either get a new movie card or level up a movie already in your deck.
+                  Each defeated boss will earn you a movie ticket. In between
+                  rounds, you can use a ticket to either get a new movie card or
+                  level up a movie already in your deck.
                 </p>
               </section>
             </div>
