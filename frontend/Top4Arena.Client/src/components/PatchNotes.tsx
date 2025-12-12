@@ -15,27 +15,15 @@ const PatchNotes: React.FC<PatchNotesProps> = ({
 
   const patchNotes = {
     "0.2.0": {
-      title: "Version 0.2.0 - User Profiles & Leaderboards",
-      date: "December 7, 2024",
+      title: "v0.2.0 - Profiles, Leaderboards, Awards",
+      date: "December 12, 2025",
       features: [
-        "Added user authentication with Clerk",
-        "User profile dashboard with statistics tracking",
-        "Track Best Run, Total Games, and Highest Combo",
-        "Save your Top 4 movie preset for quick game starts",
-        "Toggle to use your preset as default in Pick Top 4 screen",
-        "Dedicated sign-in and sign-up pages",
-        "Auto-save functionality for user presets",
-      ],
-      improvements: [
-        "Improved header layout with unified component",
-        "Better mobile responsiveness for authentication flows",
-        "Enhanced database schema with user stats tracking",
-      ],
-      bugFixes: [
-        "Fixed auto-save race condition causing preset data loss",
-        "Fixed toggle switch not saving default preset preference",
-        "Improved CORS configuration for production deployment",
-      ],
+        "User authentication with Clerk",
+        "User profile dashboard with game statistics tracking (total games played, best run, highest combo)",
+        "Set Top 4 movie preset for quick game starts",
+        "Global leaderboards for highest round (daily, weekly, all-time)",
+        "Award system for in-game achievements",
+      ]
     },
   };
 
@@ -78,38 +66,8 @@ const PatchNotes: React.FC<PatchNotesProps> = ({
               <ul className="space-y-2 text-gray-300">
                 {notes.features.map((feature, index) => (
                   <li key={index} className="flex items-start gap-2">
-                    <span className="text-orange-400 mt-1">•</span>
+                    <span className="text-orange-400">•</span>
                     <span>{feature}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Improvements */}
-            <div>
-              <h3 className="text-lg font-bold text-orange-400 mb-3 flex items-center gap-2">
-                Improvements
-              </h3>
-              <ul className="space-y-2 text-gray-300">
-                {notes.improvements.map((improvement, index) => (
-                  <li key={index} className="flex items-start gap-2">
-                    <span className="text-orange-400 mt-1">•</span>
-                    <span>{improvement}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Bug Fixes */}
-            <div>
-              <h3 className="text-lg font-bold text-orange-400 mb-3 flex items-center gap-2">
-                Bug Fixes
-              </h3>
-              <ul className="space-y-2 text-gray-300">
-                {notes.bugFixes.map((fix, index) => (
-                  <li key={index} className="flex items-start gap-2">
-                    <span className="text-orange-400 mt-1">•</span>
-                    <span>{fix}</span>
                   </li>
                 ))}
               </ul>
