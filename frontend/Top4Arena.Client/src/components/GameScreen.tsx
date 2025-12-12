@@ -411,7 +411,7 @@ const GameScreen: React.FC = () => {
     const newBossHP = Math.max(0, bossHP - playerDamage);
     setBossHP(newBossHP);
 
-    if (playerDamage > 5000) {
+    if (playerDamage > 50000) {
       unlockAward("50k-hit");
     }
     else if (playerDamage > 100000) {
