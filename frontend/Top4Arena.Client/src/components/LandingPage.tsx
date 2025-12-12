@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { Swords, Film, Trophy, Mail, X } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import MovieCarousel from "./MovieCarousel";
 import Footer from "./Footer";
 import Header from "./Header";
@@ -19,6 +19,18 @@ const LandingPage = () => {
   });
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [isPatchNotesOpen, setIsPatchNotesOpen] = useState(false);
+
+  // Prevent scrolling when patch notes are open
+  useEffect(() => {
+    if (isPatchNotesOpen) {
+      document.body.classList.add("overflow-hidden");
+    } else {
+      document.body.classList.remove("overflow-hidden");
+    }
+    return () => {
+      document.body.classList.remove("overflow-hidden");
+    };
+  }, [isPatchNotesOpen]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
