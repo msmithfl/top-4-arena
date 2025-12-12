@@ -26,8 +26,7 @@ const SignInPage = () => {
       {/* Clerk Sign In Component */}
       <div className="w-full max-w-md">
         <SignIn
-          routing="path"
-          path="/sign-in"
+          routing="virtual"
           signUpUrl="/sign-up"
           forceRedirectUrl="/"
           appearance={{
