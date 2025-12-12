@@ -75,6 +75,8 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+await app.MigrateDbAsync();
+
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
@@ -93,7 +95,5 @@ app.MapWebhookEndpoints();
 app.MapUserEndpoints();
 app.MapTop4PresetEndpoints();
 app.MapLeaderboardEndpoints();
-
-await app.MigrateDbAsync();
 
 app.Run();
