@@ -8,7 +8,7 @@ const LeaderboardSection = () => {
   >([]);
   const [isLoading, setIsLoading] = useState(true);
   const [timePeriod, setTimePeriod] = useState<"all-time" | "weekly" | "daily">(
-    "daily"
+    "all-time"
   );
   const [selectedAwardHover, setSelectedAwardHover] = useState<{
     awardId: string;

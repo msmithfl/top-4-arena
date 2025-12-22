@@ -52,7 +52,7 @@ public static class LeaderboardEndpoints
                     .Where(u => u.BestRun > 0)
                     .OrderByDescending(u => u.BestRun)
                     .ThenByDescending(u => u.HighestCombo)
-                    .Take(10)
+                    .Take(15)
                     .Select(u => new
                     {
                         username = u.Username,
