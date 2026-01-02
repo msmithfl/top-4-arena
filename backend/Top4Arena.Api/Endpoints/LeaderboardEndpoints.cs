@@ -32,7 +32,7 @@ public static class LeaderboardEndpoints
                         bestRun = g.Max(x => x.Round)
                     })
                     .OrderByDescending(x => x.bestRun)
-                    .Take(10)
+                    .Take(15)
                     .Join(db.Users,
                         g => g.UserId,
                         u => u.Id,
